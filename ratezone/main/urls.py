@@ -1,8 +1,17 @@
 from django.urls import path
 from . import views
-# from .views import home
-# from ..artGallery import settings
+
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('course/', views.course, name='course'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('professor/', views.professor, name='professor'),
+    path('queue/', views.queue, name='queue'),
+    path('rate/', views.rate, name='rate'),
+    path('rateCourse', views.rate_course, name='rate_course'),
+    path( 'search/', views.search, name='search'),
+    path('searchResults/', views.searchResults, name='searchResults'),
+    path('login/', views.sign_in, name='sign_in'),
+    path('signup/', views.sign_up, name='sign_up')
 ]
