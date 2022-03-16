@@ -44,6 +44,7 @@ class Professor(models.Model):
     phd_from = models.CharField(max_length=50)
     prof_rank = models.CharField(max_length=50)
     research_area = models.CharField(max_length=50)
+    image = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
