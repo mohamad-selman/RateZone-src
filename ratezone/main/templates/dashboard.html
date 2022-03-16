@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./main.css">
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myInput");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+        function deleteProfessor0() {
+            var tmp = document.getElementById("prof");
+            tmp.style.display = "none";
+        }
+        function deleteProfessor1() {
+            var tmp = document.getElementById("prof1");
+            tmp.style.display = "none";
+        }
+        function modifyText(id) {
+            var tmp = document.getElementById(id);
+            // prompt the user to enter new text
+            var text = window.prompt('Enter the new value: ')
+            if (text === "") {
+                alert('ERROR! You must enter a value');
+                return;
+            }
+            tmp.innerHTML = text;
+        }
+    </script>
+    <!-- <title>RMP</title> -->
+</head>
+<body class="px-5 pt-2 pb-6
+text-xs sm:text-base lg:text-lg">
+    <header class="border-b text-left py-1">
+        <div class="container mx-auto flex items-center justify-between relative">
+            <a href="./index.html">
+                <img src="./logo.svg" alt="Logo" width=120>
+            </a>
+            <nav>
+                <ul class="flex gap-x-3 items-center">
+                    <li>
+                        <a href="./search.html" class="px-2 py-2 sm:px-4
+                        font-normal transition hover:bg-neutral-200
+                        rounded-md flex">
+                            Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./queue.html" class="px-2 py-2 sm:px-4
+                        font-normal transition hover:bg-neutral-200
+                        rounded-md flex">
+                            My Queue
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./signin.html" class="px-2 py-2 sm:px-4
+                        font-normal text-white
+                        rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]
+                        flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Hey, Omar!
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="mt-6
+    w-full sm:w-9/12 lg:w-7/12 xl:w-6/12">
+        <div>
+            <p class="px-1 py-0.5 border-b-2 border-black
+            font-extrabold antialiased w-fit
+            text-lg sm:text-xl lg:text-2xl
+            text-[#154854] items-center">
+                Profile
+            </p>
+            <div class="grid
+            grid-cols-1 sm:grid-cols-2
+            gap-x-4 sm:gap-x-10">
+                <div class="my-4 p-3 border border-neutral-300 rounded-lg
+                flex gap-x-4 justify-around overflow-hidden" >
+                    <strong>First Name:</strong><p id="Fname">Omar</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    onclick="modifyText('Fname')">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </div>
+
+                <div class="my-4 p-3 border border-neutral-300 rounded-lg
+                flex gap-x-4 justify-around overflow-hidden">
+                    <strong>Last Name:</strong><p  id="Lname">Aly</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    onclick="modifyText('Lname')">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </div>
+
+                <div class="my-4 p-3 border border-neutral-300 rounded-lg
+                flex gap-x-4 justify-around overflow-hidden">
+                    <strong>School:</strong><p id="school">Kuwait University</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    onclick="modifyText('school')">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </div>
+
+                <div class="my-4 p-3 border border-neutral-300 rounded-lg
+                flex gap-x-4 justify-around overflow-hidden" >
+                    <strong>Major:</strong><p id="major">Computer Science</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    onclick="modifyText('major')">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <p class="mt-10 px-1 py-0.5 border-b-2 border-black
+            font-extrabold antialiased w-fit
+            text-lg sm:text-xl lg:text-2xl
+            text-[#154854] items-center">
+                Account Settings
+            </p>
+            <div class="grid grid-cols-1 gap-4 gap-x-10">
+                <div class="my-4 p-3 border border-neutral-300 rounded-lg
+                flex gap-x-4 justify-around overflow-hidden">
+                    <strong>Email:</strong><p id= "email">aly.omar@cs.ku.edu.kw</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    onclick="modifyText('email')">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </div>
+
+                <div class="my-4 p-3 border border-neutral-300 rounded-lg
+                flex shrink overflow-hidden  md:shrink-0 gap-x-4 justify-around">
+                    <strong>Password:</strong><input type="password" value="DFG#$#$%rfrg1@" id="myInput">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    onclick="myFunction()">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <p class="mt-10 px-1 py-0.5 border-b-2 border-black
+        font-extrabold antialiased w-fit
+        text-lg sm:text-xl lg:text-2xl
+        text-[#154854] items-center">
+            Ratings
+        </p>
+
+        <div class="text-base">
+            <a href="#">
+                <div class="my-4 p-3 bg-neutral-300 rounded-lg
+                 flex gap-x-4 justify-around overflow-hidden" id="prof">
+                    <span>
+                        <span class="font-medium">Hussain Almohri</span><br>
+                        Computer Science department<br>
+                        Kuwait University
+                    </span>
+                    <div>
+                        <p>Overall Rating</p>
+                        <p class="ml-2"><span class="text-2xl">4.5</span>/5</p>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    onclick="deleteProfessor0()">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="my-4 p-3 rounded-lg bg-neutral-300
+                flex gap-x-4 justify-around overflow-hidden" id="prof1">
+                    <span>
+                        <span class="font-medium">Hussain Ibrahim</span><br>
+                        Computer Science department<br>
+                        Kuwait University
+                    </span>
+                    <div>
+                        <p>Overall Rating</p>
+                        <p class="ml-2"><span class="text-2xl">4.5</span>/5</p>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    onclick="deleteProfessor1()">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
