@@ -44,7 +44,6 @@ class Professor(models.Model):
     phd_from = models.CharField(max_length=50)
     prof_rank = models.CharField(max_length=50)
     research_area = models.CharField(max_length=50)
-    image = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -192,6 +191,7 @@ class FacultyCourse(models.Model):
     class Meta:
         managed = False
         db_table = 'faculty_course'
+        unique_together = (('faculty', 'dept_code'),)
 
 
 class FacultyMiscellaneous(models.Model):
@@ -229,20 +229,22 @@ class FacultyWorkload(models.Model):
 
 class SimilarCourses(models.Model):
     course_code = models.ForeignKey(Course, models.DO_NOTHING, db_column='course_code')
-    similar_course = models.IntegerField(primary_key=True)
+    similar_course = models.IntegerField()
 
     class Meta:
         managed = False
         db_table = 'similar_courses'
+        unique_together = (('course_code', 'similar_course'),)
 
 
 class SimilarFaculty(models.Model):
     fid = models.ForeignKey(Faculty, models.DO_NOTHING, db_column='fid')
-    similar_faculty = models.IntegerField(primary_key=True)
+    similar_faculty = models.IntegerField()
 
     class Meta:
         managed = False
         db_table = 'similar_faculty'
+        unique_together = (('fid', 'similar_faculty'),)
 
 
 class UserCourseRev(models.Model):
@@ -271,6 +273,7 @@ class UserDept(models.Model):
     class Meta:
         managed = False
         db_table = 'user_dept'
+        unique_together = (('uid', 'dept_code'),)
 
 
 class UserFacultyRev(models.Model):
