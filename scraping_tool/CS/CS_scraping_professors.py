@@ -22,7 +22,16 @@ for i in list_of_professors:
     parsed_list.append(i.split())
     # print(i)
 
-# Filtration process to clean the data
-for p in parsed_list:
-    print(p)
+# # Filtration process to clean the data
+# for p in parsed_list:
+#     print(p)
     
+
+
+page2 = requests.get('https://www.cs.ku.edu.kw/people/faculty-members/')
+soup2 = BeautifulSoup(page.content, 'html.parser')
+
+images = soup.select("table tbody tr td img")
+
+for i in images:
+    print(i)

@@ -1,7 +1,7 @@
 
-['Adel', 'Aljomah', 'rank', 'Assistant Professor','Research Area:', 'Computer Networks', 'aljomah@cs.ku.edu.kw', 'Office: S01A1-120,', 'Phone:', '249-85363']
+['Adel', 'Aljomah', 'Assistant Professor', 'Computer Networks', 'aljomah@cs.ku.edu.kw', 'Office: S01A1-120,', 'Phone:', '249-85363']
 
-['Ayman', 'Alawadhi', 'rank', 'Assistant Professor','Research Area:', 'Computer Networks', 'alawadi@cs.ku.edu.kw', 'Office: S01A1-95,', 'Phone:', '249-85347']
+['Ayman', 'Alawadhi', 'rank', 'Assistant Professor', 'Computer Networks', 'alawadi@cs.ku.edu.kw', 'Office: S01A1-95,', 'Phone:', '249-85347']
 
 ['Bader', 'Albader', 'rank', 'Assistant Professor', 'Research Area:', 'Parallel Computing', 'albader@cs.ku.edu.kw', 'Office: S01A1-101,', 'Phone:', '249-85378']
 
