@@ -87,7 +87,7 @@ text-xs sm:text-base lg:text-lg">
 
     <div class="mt-6 w-full lg:w-1/2">
         <p class="mt-4 mb-4">
-            <span class="font-medium">4</span> total search results
+            <span class="font-medium">{{ count }}</span> total search results
         </p>
 
         <div class="dropdown inline-block relative">
@@ -113,12 +113,16 @@ text-xs sm:text-base lg:text-lg">
         </div>
 
         <div id="Professors">
+            {% for prof in professors%}
             <a href="{% url 'professor' %}">
                 <div class="my-4 p-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-around
                 hover:bg-neutral-300">
+
                     <span>
-                        <span class="font-medium">Hussain Almohri</span><br>
+                        <span class="font-medium">{{ prof.fname }} {{ prof.lname }}</span><br>
+<!--                        rank: {{ prof.prof_rank }}<br>-->
+<!--                        research area: {{ prof.research_area }}<br>-->
                         Computer Science department<br>
                         Kuwait University
                     </span>
@@ -128,29 +132,16 @@ text-xs sm:text-base lg:text-lg">
                     </div>
                 </div>
             </a>
-            <a href="#">
-                <div class="my-4 p-3 border border-gray-300 rounded-lg
-                flex gap-x-4 justify-around
-                hover:bg-neutral-300">
-                    <span>
-                        <span class="font-medium">Mohamad Smaoui</span><br>
-                        Computer Science department<br>
-                        Kuwait University
-                    </span>
-                    <div>
-                        <p>Overall Rating</p>
-                        <p class="md:ml-2"><span class="text-2xl">4.5</span>/5</p>
-                    </div>
-                </div>
-            </a>
+            {% endfor %}
         </div>
         <div id="TAs">
+            {% for ta in TAs %}
             <a href="#">
                 <div class="my-4 p-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-around
                 hover:bg-neutral-300">
                     <span>
-                        <span class="font-medium">Amro Khattab</span><br>
+                        <span class="font-medium">{{ ta.fname }} {{ ta.lname }}</span><br>
                         Computer Science department<br>
                         Kuwait University
                     </span>
@@ -160,14 +151,16 @@ text-xs sm:text-base lg:text-lg">
                     </div>
                 </div>
             </a>
+            {% endfor %}
         </div>
         <div id="Courses">
+            {% for course in courses %}
             <a href="{% url 'course' %}">
                 <div class="my-4 p-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-around
                 hover:bg-neutral-300">
                     <span>
-                        <span class="font-medium">Theory of Computation</span><br>
+                        <span class="font-medium">{{ course.course_name}}</span><br>
                         Computer Science department<br>
                         Kuwait University
                     </span>
@@ -177,21 +170,7 @@ text-xs sm:text-base lg:text-lg">
                     </div>
                 </div>
             </a>
-            <a href="#">
-                <div class="my-4 p-3 border border-gray-300 rounded-lg
-                flex gap-x-4 justify-around
-                hover:bg-neutral-300">
-                    <span>
-                        <span class="font-medium">Systems Programming</span><br>
-                        Computer Science department<br>
-                        Kuwait University
-                    </span>
-                    <div>
-                        <p>Overall Rating</p>
-                        <p class="md:ml-2"><span class="text-2xl">4.5</span>/5</p>
-                    </div>
-                </div>
-            </a>
+            {% endfor %}
         </div>
     </div>
 </body>

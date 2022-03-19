@@ -45,7 +45,7 @@ class Faculty(models.Model):
 
 
 class Professor(models.Model):
-    faculty = models.ForeignKey(Faculty, models.DO_NOTHING)
+    faculty_id = models.ForeignKey(Faculty, models.DO_NOTHING)
     phd_from = models.CharField(max_length=50)
     prof_rank = models.CharField(max_length=50)
     research_area = models.CharField(max_length=50)
