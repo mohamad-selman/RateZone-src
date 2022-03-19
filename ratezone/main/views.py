@@ -15,6 +15,11 @@ def searchResults(request):
     return render(request, './searchResults.html')
 
 def professor(request):
+    if request.method == 'POST':
+        for i in request.POST:
+            print(request.POST['getrow'])
+        # prof = Professor.objects.get_
+
     return render(request, './professor.html')
 
 def rate(request):

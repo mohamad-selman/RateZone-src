@@ -12,6 +12,8 @@ class Course(models.Model):
     course_code = models.IntegerField(primary_key=True)
     course_name = models.CharField(max_length=50)
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'Course'
@@ -22,6 +24,8 @@ class Department(models.Model):
     dept_name = models.CharField(max_length=50)
     overall_rating = models.IntegerField()
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'Department'
@@ -30,9 +34,10 @@ class Department(models.Model):
 class Faculty(models.Model):
     faculty_id = models.AutoField(primary_key=True)
     dept_code = models.ForeignKey(Department, models.DO_NOTHING, db_column='dept_code')
-    years_of_exp = models.IntegerField()
     fname = models.CharField(max_length=50)
     lname = models.CharField(max_length=50)
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -44,6 +49,9 @@ class Professor(models.Model):
     phd_from = models.CharField(max_length=50)
     prof_rank = models.CharField(max_length=50)
     research_area = models.CharField(max_length=50)
+    image = models.CharField(max_length=255, blank=True, null=True)
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -53,6 +61,8 @@ class Professor(models.Model):
 class TeachingAssistant(models.Model):
     faculty = models.ForeignKey(Faculty, models.DO_NOTHING)
     masters_from = models.CharField(max_length=50)
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -179,6 +189,7 @@ class DjangoSession(models.Model):
     session_data = models.TextField()
     expire_date = models.DateTimeField()
 
+
     class Meta:
         managed = False
         db_table = 'django_session'
@@ -186,12 +197,15 @@ class DjangoSession(models.Model):
 
 class FacultyCourse(models.Model):
     faculty = models.ForeignKey(Faculty, models.DO_NOTHING)
-    dept_code = models.ForeignKey(Department, models.DO_NOTHING, db_column='dept_code')
+    c_code = models.ForeignKey(Course, models.DO_NOTHING, db_column='c_code')
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
         db_table = 'faculty_course'
-        unique_together = (('faculty', 'dept_code'),)
+        unique_together = (('faculty', 'c_code'),)
+
 
 
 class FacultyMiscellaneous(models.Model):
@@ -199,6 +213,8 @@ class FacultyMiscellaneous(models.Model):
     miscellaneous = models.CharField(primary_key=True, max_length=50)
     uid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='uid')
     rid = models.ForeignKey('UserFacultyRev', models.DO_NOTHING, db_column='rid')
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -211,6 +227,8 @@ class FacultyPersonality(models.Model):
     uid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='uid')
     rid = models.ForeignKey('UserFacultyRev', models.DO_NOTHING, db_column='rid')
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'faculty_personality'
@@ -222,6 +240,8 @@ class FacultyWorkload(models.Model):
     uid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='uid')
     rid = models.ForeignKey('UserFacultyRev', models.DO_NOTHING, db_column='rid')
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'faculty_workload'
@@ -230,6 +250,8 @@ class FacultyWorkload(models.Model):
 class SimilarCourses(models.Model):
     course_code = models.ForeignKey(Course, models.DO_NOTHING, db_column='course_code')
     similar_course = models.IntegerField()
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -240,6 +262,8 @@ class SimilarCourses(models.Model):
 class SimilarFaculty(models.Model):
     fid = models.ForeignKey(Faculty, models.DO_NOTHING, db_column='fid')
     similar_faculty = models.IntegerField()
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -261,6 +285,8 @@ class UserCourseRev(models.Model):
     course_tag = models.CharField(max_length=50)
     enjoyment_rating = models.IntegerField()
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'user_course_rev'
@@ -269,6 +295,8 @@ class UserCourseRev(models.Model):
 class UserDept(models.Model):
     uid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='uid')
     dept_code = models.ForeignKey(Department, models.DO_NOTHING, db_column='dept_code')
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -289,6 +317,8 @@ class UserFacultyRev(models.Model):
     semester_period = models.CharField(max_length=50)
     student_thoughts = models.CharField(max_length=255)
     teaching_quality = models.IntegerField()
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
