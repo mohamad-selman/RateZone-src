@@ -5,7 +5,7 @@ from .models import DeptGeneralcomments, FacultyCourse, FacultyMiscellaneous, Fa
 from .models import SimilarCourses, SimilarFaculty, UserCourseRev, UserDept, UserFacultyRev
 from django.db import connections
 from django.contrib.auth import logout, login
-cursor = connections['rdb'].cursor()
+cursors = connections['default'].cursor()
 
 # Create your views here.
 def home(request):
@@ -17,9 +17,9 @@ def searchResults(request):
 
     prof_query = "SELECT fname,lname, prof_rank, research_area FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id"
 
-    cursor.execute(prof_query)
-    prof_row = cursor.fetchall()
-    tmp = cursor.description
+    cursors.execute(prof_query)
+    prof_row = cursors.fetchall()
+    tmp = cursors.description
     prof = []
     for r in prof_row:
         total_count += 1
@@ -34,9 +34,9 @@ def searchResults(request):
     #     print(p)
 
     ta_query = "SELECT fname, lname FROM Faculty as F INNER JOIN Teaching_Assistant as T ON F.faculty_id = T.faculty_id"
-    cursor.execute(ta_query)
-    ta_row = cursor.fetchall()
-    tmp = cursor.description
+    cursors.execute(ta_query)
+    ta_row = cursors.fetchall()
+    tmp = cursors.description
     ta = []
 
     for r in ta_row:
@@ -51,11 +51,11 @@ def searchResults(request):
     # for t in ta:
     #     print(t)
 
-    dept = Department.objects.using('rdb').all()
-    courses = Course.objects.using('rdb').all()
+    dept = Department.objects.all()
+    courses = Course.objects.all()
 
-    tmp1 = Department.objects.using('rdb').all().count()
-    tmp2 = Course.objects.using('rdb').all().count()
+    tmp1 = Department.objects.all().count()
+    tmp2 = Course.objects.all().count()
     total_count += tmp1 + tmp2
 
     result = {

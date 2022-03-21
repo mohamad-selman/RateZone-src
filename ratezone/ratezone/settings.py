@@ -77,10 +77,6 @@ WSGI_APPLICATION = 'ratezone.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'rdb': {
         'NAME': 'ratezone_DB',
         'ENGINE': 'django.db.backends.mysql',
         'USER': 'ratezone_userAdmin',
