@@ -36,7 +36,6 @@ CREATE TABLE Department (
 CREATE TABLE Faculty (
   faculty_id INTEGER(30) NOT NULL AUTO_INCREMENT,
   dept_code INTEGER(30) NOT NULL,
-  years_of_exp INTEGER(10) NOT NULL DEFAULT 0,
   fname VARCHAR(50) NOT NULL,
   lname VARCHAR(50) NOT NULL,
   
@@ -57,6 +56,7 @@ CREATE TABLE Professor (
   phd_from VARCHAR(50) NOT NULL,
   prof_rank VARCHAR(50) NOT NULL,
   research_area VARCHAR(50) NOT NULL,
+  image VARCHAR(255) NULL,
   
   CONSTRAINT prof_fid_FK
   	FOREIGN KEY (faculty_id)
