@@ -15,7 +15,7 @@ def home(request):
 def searchResults(request):
     total_count = 0
 
-    prof_query = "SELECT fname,lname, prof_rank, research_area FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id"
+    prof_query = "SELECT fname, lname, dept_name FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id INNER JOIN Department AS D ON D.dept_code=F.dept_code"
 
     cursors.execute(prof_query)
     prof_row = cursors.fetchall()
@@ -51,7 +51,6 @@ def searchResults(request):
     # for t in ta:
     #     print(t)
 
-    dept = Department.objects.all()
     courses = Course.objects.all()
 
     tmp1 = Department.objects.all().count()
@@ -62,7 +61,6 @@ def searchResults(request):
         'professors': prof,
         'TAs': ta,
         'courses': courses,
-        'dept': dept,
         'count': total_count
     }
     return render(request, './searchResults.html', result)
