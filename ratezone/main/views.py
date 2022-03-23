@@ -51,6 +51,56 @@ def searchResults(request):
     # for t in ta:
     #     print(t)
 
+    # CS query
+
+    CS_dept_query = "SELECT fname, lname, dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=418"
+    cursors.execute(CS_dept_query)
+    dept_row = cursors.fetchall()
+    tmp = cursors.description
+    CS_dept = []
+
+    for dep in dept_row:
+        i = 0
+        d = {}
+        while i < len(tmp):
+            d[tmp[i][0]] = dep[i]
+            i += 1
+        CS_dept.append(d)
+
+    # CE query
+
+    CE_dept_query = "SELECT fname, lname, dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=1612"
+    cursors.execute(CE_dept_query)
+    dept_row = cursors.fetchall()
+    tmp = cursors.description
+    CE_dept = []
+
+    for dep in dept_row:
+        i = 0
+        d = {}
+        while i < len(tmp):
+            d[tmp[i][0]] = dep[i]
+            i += 1
+        CE_dept.append(d)
+
+    # IS query
+
+    IS_dept_query = "SELECT fname, lname, dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=1830"
+    cursors.execute(IS_dept_query)
+    dept_row = cursors.fetchall()
+    tmp = cursors.description
+    IS_dept = []
+
+    for dep in dept_row:
+        i = 0
+        d = {}
+        while i < len(tmp):
+            d[tmp[i][0]] = dep[i]
+            i += 1
+        IS_dept.append(d)
+
+
+
     courses = Course.objects.all()
 
     tmp1 = Department.objects.all().count()
@@ -60,6 +110,9 @@ def searchResults(request):
     result = {
         'professors': prof,
         'TAs': ta,
+        'CS_dept': CS_dept,
+        'CE_dept': CE_dept,
+        'IS_dept': IS_dept,
         'courses': courses,
         'count': total_count
     }

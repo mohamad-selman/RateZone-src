@@ -5,43 +5,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
+
     <link rel="stylesheet" href="../static/admin/css/main.css">
     <script>
         function loadAll() {
             var ptmp = document.getElementById("Professors");
             var ctmp = document.getElementById("Courses");
             var tatmp = document.getElementById("TAs");
+
+            var CSdept_vals = document.getElementById("CSDept");
+            var CEdept_vals = document.getElementById("CEDept");
+            var ISdept_vals = document.getElementById("ISDept");
+
             ctmp.style.display = "block";
             ptmp.style.display = "block";
             tatmp.style.display = "block";
+
+            CSdept_vals.style.display = "none";
+            CEdept_vals.style.display = "none";
+            ISdept_vals.style.display = "none";
         }
 
         function loadCourses() {
             var ptmp = document.getElementById("Professors");
             var ctmp = document.getElementById("Courses");
             var tatmp = document.getElementById("TAs");
+
+            var CSdept_vals = document.getElementById("CSDept");
+            var CEdept_vals = document.getElementById("CEDept");
+            var ISdept_vals = document.getElementById("ISDept");
+
             ctmp.style.display = "block";
             ptmp.style.display = "none";
             tatmp.style.display = "none";
+            CSdept_vals.style.display = "none";
+            CEdept_vals.style.display = "none";
+            ISdept_vals.style.display = "none";
+
+
         }
 
         function loadProfessors() {
             var ptmp = document.getElementById("Professors");
             var ctmp = document.getElementById("Courses");
             var tatmp = document.getElementById("TAs");
+
+            var CSdept_vals = document.getElementById("CSDept");
+            var CEdept_vals = document.getElementById("CEDept");
+            var ISdept_vals = document.getElementById("ISDept");
+
             ptmp.style.display = "block";
             ctmp.style.display = "none";
             tatmp.style.display = "none";
+
+            CSdept_vals.style.display = "none";
+            CEdept_vals.style.display = "none";
+            ISdept_vals.style.display = "none";
         }
 
         function loadTAs() {
             var ptmp = document.getElementById("Professors");
             var ctmp = document.getElementById("Courses");
             var tatmp = document.getElementById("TAs");
+
+            var CSdept_vals = document.getElementById("CSDept");
+            var CEdept_vals = document.getElementById("CEDept");
+            var ISdept_vals = document.getElementById("ISDept");
+
             tatmp.style.display = "block";
             ctmp.style.display = "none";
             ptmp.style.display = "none";
+
+            CSdept_vals.style.display = "none";
+            CEdept_vals.style.display = "none";
+            ISdept_vals.style.display = "none";
         }
+
+        function load_CS() {
+            var ptmp = document.getElementById("Professors");
+            var ctmp = document.getElementById("Courses");
+            var tatmp = document.getElementById("TAs");
+
+            var CSdept_vals = document.getElementById("CSDept");
+            var CEdept_vals = document.getElementById("CEDept");
+            var ISdept_vals = document.getElementById("ISDept");
+
+            ctmp.style.display = "none";
+            tatmp.style.display = "none";
+            ptmp.style.display = "none";
+
+            CSdept_vals.style.display = "block";
+            CEdept_vals.style.display = "none";
+            ISdept_vals.style.display = "none";
+        }
+        function load_CE() {
+            var ptmp = document.getElementById("Professors");
+            var ctmp = document.getElementById("Courses");
+            var tatmp = document.getElementById("TAs");
+
+            var CSdept_vals = document.getElementById("CSDept");
+            var CEdept_vals = document.getElementById("CEDept");
+            var ISdept_vals = document.getElementById("ISDept");
+
+            ctmp.style.display = "none";
+            tatmp.style.display = "none";
+            ptmp.style.display = "none";
+
+            CSdept_vals.style.display = "none";
+            CEdept_vals.style.display = "block";
+            ISdept_vals.style.display = "none";
+        }
+        function load_IS() {
+            var ptmp = document.getElementById("Professors");
+            var ctmp = document.getElementById("Courses");
+            var tatmp = document.getElementById("TAs");
+
+            var CSdept_vals = document.getElementById("CSDept");
+            var CEdept_vals = document.getElementById("CEDept");
+            var ISdept_vals = document.getElementById("ISDept");
+
+            ctmp.style.display = "none";
+            tatmp.style.display = "none";
+            ptmp.style.display = "none";
+
+            CSdept_vals.style.display = "none";
+            CEdept_vals.style.display = "none";
+            ISdept_vals.style.display = "block";
+        }
+
     </script>
 
     <!-- <title>RMP</title> -->
@@ -101,6 +193,24 @@ text-xs sm:text-base lg:text-lg">
                     <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="loadAll()">All results</button>
                 </li>
                 <li class="">
+
+                    <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" id="dropdownRightButton" data-dropdown-toggle="dropdownRight" data-dropdown-placement="right">Departments</button>
+                    <!-- Dropdown menu -->
+                    <div id="dropdownRight" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRightButton">
+                          <li>
+                            <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_CS()">Computer Science</button>
+                          </li>
+                          <li>
+                            <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_CE()">Computer Engineering</button>
+                          </li>
+                          <li>
+                            <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_IS()">Information Science</button>
+                          </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="">
                     <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="loadProfessors()">Professors</button>
                 </li>
                 <li class="">
@@ -132,6 +242,7 @@ text-xs sm:text-base lg:text-lg">
             </a>
             {% endfor %}
         </div>
+
         <div id="TAs">
             {% for ta in TAs %}
             <a href="#">
@@ -151,6 +262,7 @@ text-xs sm:text-base lg:text-lg">
             </a>
             {% endfor %}
         </div>
+
         <div id="Courses">
             {% for course in courses %}
             <a href="{% url 'course' %}">
@@ -170,6 +282,71 @@ text-xs sm:text-base lg:text-lg">
             </a>
             {% endfor %}
         </div>
+
+        <div id="CSDept">
+            {% for dep in CS_dept %}
+            <a href="#">
+                <div class="my-4 p-3 border border-gray-300 rounded-lg
+                flex gap-x-4 justify-around
+                hover:bg-neutral-300">
+                    <span>
+                        <span class="font-medium">{{ dep.fname }} {{ dep.lname }}</span><br>
+                        {{ dep.dept_name }} department<br>
+                        Kuwait University
+                    </span>
+                    <div>
+                        <p>Overall Rating</p>
+                        <p class="md:ml-2"><span class="text-2xl">4.5</span>/5</p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        <div id="CEDept">
+            {% for dep in CE_dept %}
+            <a href="#">
+                <div class="my-4 p-3 border border-gray-300 rounded-lg
+                flex gap-x-4 justify-around
+                hover:bg-neutral-300">
+                    <span>
+                        <span class="font-medium">{{ dep.fname }} {{ dep.lname }}</span><br>
+                        {{ dep.dept_name }} department<br>
+                        Kuwait University
+                    </span>
+                    <div>
+                        <p>Overall Rating</p>
+                        <p class="md:ml-2"><span class="text-2xl">4.5</span>/5</p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+
+
+        <div id="ISDept">
+            {% for dep in IS_dept %}
+            <a href="#">
+                <div class="my-4 p-3 border border-gray-300 rounded-lg
+                flex gap-x-4 justify-around
+                hover:bg-neutral-300">
+                    <span>
+                        <span class="font-medium">{{ dep.fname }} {{ dep.lname }}</span><br>
+                        {{ dep.dept_name }} department<br>
+                        Kuwait University
+                    </span>
+                    <div>
+                        <p>Overall Rating</p>
+                        <p class="md:ml-2"><span class="text-2xl">4.5</span>/5</p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+
+
     </div>
 </body>
 </html>
