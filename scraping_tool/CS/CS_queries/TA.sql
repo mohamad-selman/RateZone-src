@@ -1,0 +1,11 @@
+INSERT INTO Teaching_Assistant VALUES (23, 'Kuwait University');
+INSERT INTO Teaching_Assistant VALUES (24, 'Kuwait University');
+INSERT INTO Teaching_Assistant VALUES (25, 'Kuwait University');
+INSERT INTO Teaching_Assistant VALUES (26, 'Kuwait University');
+INSERT INTO Teaching_Assistant VALUES (27, 'Kuwait University');
+INSERT INTO Teaching_Assistant VALUES (28, 'Kuwait University');
+INSERT INTO Teaching_Assistant VALUES (29, 'Kuwait University');
+INSERT INTO Teaching_Assistant VALUES (30, 'University of Massachusetts');
+INSERT INTO Teaching_Assistant VALUES (31, 'Kuwait University');
+INSERT INTO Teaching_Assistant VALUES (32, 'Kuwait University');
+INSERT INTO Teaching_Assistant VALUES (33, 'Kuwait University');
