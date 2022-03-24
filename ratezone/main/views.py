@@ -101,7 +101,25 @@ def searchResults(request):
 
 
 
-    courses = Course.objects.all()
+    # courses = Course.objects.all()
+
+    course_query = "SELECT * FROM Course AS C INNER JOIN Department AS D ON C.course_code LIKE CONCAT('%', D.dept_code, '%')"
+    cursors.execute(course_query)
+    course_row = cursors.fetchall()
+    tmp = cursors.description
+    courses = []
+
+    for element in course_row:
+        i = 0
+        c = {}
+        while i < len(tmp):
+            c[tmp[i][0]] = element[i]
+            i += 1
+        courses.append(c)
+
+    # print(courses)
+
+
 
     tmp1 = Department.objects.all().count()
     tmp2 = Course.objects.all().count()

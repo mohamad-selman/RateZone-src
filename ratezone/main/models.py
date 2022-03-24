@@ -14,6 +14,7 @@ class Course(models.Model):
 
     objects = models.Manager()
 
+
     class Meta:
         managed = False
         db_table = 'Course'
@@ -38,6 +39,9 @@ class Faculty(models.Model):
     lname = models.CharField(max_length=50)
 
     objects = models.Manager()
+
+    def __str__(self):
+        return self.fname + ' ' + self.lname
 
     class Meta:
         managed = False
