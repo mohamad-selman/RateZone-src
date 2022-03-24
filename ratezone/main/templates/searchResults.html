@@ -193,11 +193,10 @@ text-xs sm:text-base lg:text-lg">
                     <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="loadAll()">All results</button>
                 </li>
                 <li class="">
-
                     <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" id="dropdownRightButton" data-dropdown-toggle="dropdownRight" data-dropdown-placement="right">Departments</button>
                     <!-- Dropdown menu -->
                     <div id="dropdownRight" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
-                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRightButton">
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRightButton" style="margin-left:-10px;">
                           <li>
                             <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_CS()">Computer Science</button>
                           </li>

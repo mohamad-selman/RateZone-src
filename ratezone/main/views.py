@@ -120,7 +120,23 @@ def searchResults(request):
 
 
 def professor(request):
-    return render(request, './professor.html')
+    prof_query = "SELECT * FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id"
+    cursors.execute(prof_query)
+    prof_row = cursors.fetchall()
+    tmp = cursors.description
+    prof = []
+    for r in prof_row:
+        i = 0
+        d = {}
+        while i < len(tmp):
+            d[tmp[i][0]] = r[i]
+            i += 1
+        prof.append(d)
+
+    result = {
+        'prof': prof
+    }
+    return render(request, './professor.html', result)
 
 def rate(request):
     return render(request, './rate.html')
