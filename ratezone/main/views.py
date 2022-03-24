@@ -15,7 +15,7 @@ def home(request):
 def searchResults(request):
     total_count = 0
 
-    prof_query = "SELECT fname, lname, dept_name FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id INNER JOIN Department AS D ON D.dept_code=F.dept_code"
+    prof_query = "SELECT fname, lname, dept_name, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id INNER JOIN Department AS D ON D.dept_code=F.dept_code"
 
     cursors.execute(prof_query)
     prof_row = cursors.fetchall()
@@ -119,9 +119,10 @@ def searchResults(request):
     return render(request, './searchResults.html', result)
 
 
-def professor(request):
-    prof_query = "SELECT * FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id"
-    cursors.execute(prof_query)
+def professor(request, prof_id):
+    print(prof_id)
+    prof_query = "SELECT * FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s"
+    cursors.execute(prof_query, [prof_id])
     prof_row = cursors.fetchall()
     tmp = cursors.description
     prof = []
@@ -132,6 +133,8 @@ def professor(request):
             d[tmp[i][0]] = r[i]
             i += 1
         prof.append(d)
+
+    # print(prof)
 
     result = {
         'prof': prof

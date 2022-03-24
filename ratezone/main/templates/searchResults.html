@@ -223,7 +223,7 @@ text-xs sm:text-base lg:text-lg">
 
         <div id="Professors">
             {% for prof in professors%}
-            <a href="{% url 'professor' %}">
+            <a href="{% url 'professor' prof_id=prof.faculty_id %}">
                 <div class="my-4 p-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-around
                 hover:bg-neutral-300">

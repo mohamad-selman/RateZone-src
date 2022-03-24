@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../static/admin/css/main.css">
+    <link rel="stylesheet" href=" {% static '/admin/css/main.css' %}">
     <script>
         function loadContent() {
             var loadB = document.getElementById("loadContentButton");
@@ -23,7 +24,7 @@ text-xs sm:text-base lg:text-lg">
     <header class="border-b text-left py-1">
         <div class="container mx-auto flex items-center justify-between relative">
             <a href="{% url 'home' %}">
-                <img src="../static/admin/img/logo.svg" alt="Logo" width=120>
+                <img src="{% static '/admin/img/logo.svg' %}" alt="Logo" width=120>
             </a>
             <nav>
                 <ul class="flex gap-x-3 items-center">
@@ -60,17 +61,17 @@ text-xs sm:text-base lg:text-lg">
     <div class="mt-6 sm:px-10 md:px-14">
         <section>
             <div class="md:flex md:gap-x-6 md:justify-between md:items-center">
-
+                {% for p in prof %}
                 <div class="ml-3 flex gap-x-3 items-center">
-                    <img src="../static/admin/img/prof_imgs/CS/Almohri.png" alt="Almohri" class="inline rounded h-40">
+                    <img src="{{ p.image }}" alt="Almohri" class="inline rounded h-40">
                     <div>
                         <span class="font-semibold
                         text-xl md:text-2xl mb-2">
-                            Hussain Almohri
+                            {{ p.fname }} {{ p.lname }}
                         </span><br>
                         <span>
                             Kuwait University<br>
-                            Computer Science department
+                            {{ p.dept_name}} department
                         </span>
                     </div>
                 </div>
@@ -88,7 +89,7 @@ text-xs sm:text-base lg:text-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                        Add Professor Almohri to My Queue
+                        Add Professor {{ p.lname }} to My Queue
                     </button>
                     <button class="mb-3 py-2 px-4 w-full
                     flex gap-x-2 items-center text-left
@@ -97,7 +98,7 @@ text-xs sm:text-base lg:text-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                        Rate Professor Almohri
+                        Rate Professor {{ p.lname }}
                     </button>
                     <button class="mb-3 py-2 px-4 w-full
                     flex gap-x-2 items-center text-left
@@ -109,6 +110,7 @@ text-xs sm:text-base lg:text-lg">
                         Follow Updates
                     </button>
                 </div>
+                {% endfor %}
             </div>
 
             <div class="mt-4 md:mt-6 px-10 py-3
