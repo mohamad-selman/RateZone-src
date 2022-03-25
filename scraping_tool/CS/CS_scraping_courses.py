@@ -17,6 +17,7 @@ for c in courses:
 tmp = []
 for e in extraction_list:
     tmp.append(e.split('/n'))
+    print(e)
 
 
 
