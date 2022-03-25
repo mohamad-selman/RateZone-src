@@ -139,6 +139,9 @@ def searchResults(request):
     tmp2 = Course.objects.all().count()
     total_count += tmp1 + tmp2
 
+
+    print(prof)
+
     result = {
         'professors': prof,
         'TAs': ta,
