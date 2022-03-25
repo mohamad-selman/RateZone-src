@@ -17,6 +17,7 @@
             var CSdept_vals = document.getElementById("CSDept");
             var CEdept_vals = document.getElementById("CEDept");
             var ISdept_vals = document.getElementById("ISDept");
+            var MATHdept_vals = document.getElementById("MATHDept");
 
             ctmp.style.display = "block";
             ptmp.style.display = "block";
@@ -25,6 +26,8 @@
             CSdept_vals.style.display = "none";
             CEdept_vals.style.display = "none";
             ISdept_vals.style.display = "none";
+            MATHdept_vals.style.display = "none";
+
         }
 
         function loadCourses() {
@@ -35,6 +38,7 @@
             var CSdept_vals = document.getElementById("CSDept");
             var CEdept_vals = document.getElementById("CEDept");
             var ISdept_vals = document.getElementById("ISDept");
+            var MATHdept_vals = document.getElementById("MATHDept");
 
             ctmp.style.display = "block";
             ptmp.style.display = "none";
@@ -42,6 +46,7 @@
             CSdept_vals.style.display = "none";
             CEdept_vals.style.display = "none";
             ISdept_vals.style.display = "none";
+            MATHdept_vals.style.display = "none";
 
 
         }
@@ -54,6 +59,7 @@
             var CSdept_vals = document.getElementById("CSDept");
             var CEdept_vals = document.getElementById("CEDept");
             var ISdept_vals = document.getElementById("ISDept");
+            var MATHdept_vals = document.getElementById("MATHDept");
 
             ptmp.style.display = "block";
             ctmp.style.display = "none";
@@ -62,6 +68,8 @@
             CSdept_vals.style.display = "none";
             CEdept_vals.style.display = "none";
             ISdept_vals.style.display = "none";
+            MATHdept_vals.style.display = "none";
+
         }
 
         function loadTAs() {
@@ -72,6 +80,7 @@
             var CSdept_vals = document.getElementById("CSDept");
             var CEdept_vals = document.getElementById("CEDept");
             var ISdept_vals = document.getElementById("ISDept");
+            var MATHdept_vals = document.getElementById("MATHDept");
 
             tatmp.style.display = "block";
             ctmp.style.display = "none";
@@ -80,6 +89,8 @@
             CSdept_vals.style.display = "none";
             CEdept_vals.style.display = "none";
             ISdept_vals.style.display = "none";
+            MATHdept_vals.style.display = "none";
+
         }
 
         function load_CS() {
@@ -90,6 +101,7 @@
             var CSdept_vals = document.getElementById("CSDept");
             var CEdept_vals = document.getElementById("CEDept");
             var ISdept_vals = document.getElementById("ISDept");
+            var MATHdept_vals = document.getElementById("MATHDept");
 
             ctmp.style.display = "none";
             tatmp.style.display = "none";
@@ -98,6 +110,7 @@
             CSdept_vals.style.display = "block";
             CEdept_vals.style.display = "none";
             ISdept_vals.style.display = "none";
+            MATHdept_vals.style.display = "none";
         }
         function load_CE() {
             var ptmp = document.getElementById("Professors");
@@ -107,6 +120,7 @@
             var CSdept_vals = document.getElementById("CSDept");
             var CEdept_vals = document.getElementById("CEDept");
             var ISdept_vals = document.getElementById("ISDept");
+            var MATHdept_vals = document.getElementById("MATHDept");
 
             ctmp.style.display = "none";
             tatmp.style.display = "none";
@@ -115,6 +129,7 @@
             CSdept_vals.style.display = "none";
             CEdept_vals.style.display = "block";
             ISdept_vals.style.display = "none";
+            MATHdept_vals.style.display = "none";
         }
         function load_IS() {
             var ptmp = document.getElementById("Professors");
@@ -124,6 +139,7 @@
             var CSdept_vals = document.getElementById("CSDept");
             var CEdept_vals = document.getElementById("CEDept");
             var ISdept_vals = document.getElementById("ISDept");
+            var MATHdept_vals = document.getElementById("MATHDept");
 
             ctmp.style.display = "none";
             tatmp.style.display = "none";
@@ -131,9 +147,29 @@
 
             CSdept_vals.style.display = "none";
             CEdept_vals.style.display = "none";
+            MATHdept_vals.style.display = "none";
             ISdept_vals.style.display = "block";
         }
 
+        function load_MATH() {
+            var ptmp = document.getElementById("Professors");
+            var ctmp = document.getElementById("Courses");
+            var tatmp = document.getElementById("TAs");
+
+            var CSdept_vals = document.getElementById("CSDept");
+            var CEdept_vals = document.getElementById("CEDept");
+            var ISdept_vals = document.getElementById("ISDept");
+            var MATHdept_vals = document.getElementById("MATHDept");
+
+            ctmp.style.display = "none";
+            tatmp.style.display = "none";
+            ptmp.style.display = "none";
+
+            CSdept_vals.style.display = "none";
+            CEdept_vals.style.display = "none";
+            ISdept_vals.style.display = "none";
+            MATHdept_vals.style.display = "block";
+        }
     </script>
 
     <!-- <title>RMP</title> -->
@@ -206,6 +242,9 @@ text-xs sm:text-base lg:text-lg">
                           <li>
                             <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_IS()">Information Science</button>
                           </li>
+                          <li>
+                            <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_MATH()">Mathematics</button>
+                          </li>
                         </ul>
                     </div>
                 </li>
@@ -244,13 +283,13 @@ text-xs sm:text-base lg:text-lg">
 
         <div id="TAs">
             {% for ta in TAs %}
-            <a href="#">
+            <a href=" url 'professor' prof_id=ta.faculty_id %}">
                 <div class="my-4 p-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-around
                 hover:bg-neutral-300">
                     <span>
                         <span class="font-medium">{{ ta.fname }} {{ ta.lname }}</span><br>
-                        Computer Science department<br>
+                        {{ ta.dept_name }} department<br>
                         Kuwait University
                     </span>
                     <div>
@@ -284,7 +323,7 @@ text-xs sm:text-base lg:text-lg">
 
         <div id="CSDept">
             {% for dep in CS_dept %}
-            <a href="#">
+            <a href="{% url 'professor' prof_id=dep.faculty_id %}">
                 <div class="my-4 p-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-around
                 hover:bg-neutral-300">
@@ -304,7 +343,7 @@ text-xs sm:text-base lg:text-lg">
 
         <div id="CEDept">
             {% for dep in CE_dept %}
-            <a href="#">
+            <a href="{% url 'professor' prof_id=dep.faculty_id %}">
                 <div class="my-4 p-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-around
                 hover:bg-neutral-300">
@@ -326,7 +365,7 @@ text-xs sm:text-base lg:text-lg">
 
         <div id="ISDept">
             {% for dep in IS_dept %}
-            <a href="#">
+            <a href="{% url 'professor' prof_id=dep.faculty_id %}">
                 <div class="my-4 p-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-around
                 hover:bg-neutral-300">
@@ -344,6 +383,25 @@ text-xs sm:text-base lg:text-lg">
             {% endfor %}
         </div>
 
+        <div id="MATHDept">
+            {% for dep in MATH_dept %}
+            <a href="{% url 'professor' prof_id=dep.faculty_id %}">
+                <div class="my-4 p-3 border border-gray-300 rounded-lg
+                flex gap-x-4 justify-around
+                hover:bg-neutral-300">
+                    <span>
+                        <span class="font-medium">{{ dep.fname }} {{ dep.lname }}</span><br>
+                        {{ dep.dept_name }} department<br>
+                        Kuwait University
+                    </span>
+                    <div>
+                        <p>Overall Rating</p>
+                        <p class="md:ml-2"><span class="text-2xl">4.5</span>/5</p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
 
 
     </div>
