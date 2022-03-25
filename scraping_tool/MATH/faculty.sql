@@ -34,3 +34,20 @@ INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Maryam', 'Alkandari');
 INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Mishari', 'Al-Foraih');
 INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Saleh', 'Baqer');
   
+
+
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Abdulrahman', 'Mubarak');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Adnan', 'Al-Sayed');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Alaa', 'Alqaderi');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Amal', 'Alrashdan');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Ayman', 'EzzElarab');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Baba', 'Amoro');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Hameed', 'Al-Fahad');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Maale', 'Al-Motairi');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Mayada', 'Yousif');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Muna', 'Aljazzaf');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Rayouf', 'Alsahli');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Samer', 'Al-Sahhar');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Shorouq', 'Al-Ghunaim');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Wafa', 'Abdulrahman');
+INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Yousef', 'Alenazi');
