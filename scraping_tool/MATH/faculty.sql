@@ -1,3 +1,5 @@
+
+
 INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Hani', 'Farran');
 INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Ismail', 'Taqi');
 INSERT INTO Faculty(dept_code, fname,lname) VALUES (410, 'Marian', 'Deaconescu');
