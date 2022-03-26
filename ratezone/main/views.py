@@ -1,9 +1,10 @@
+import numpy as np
+from sklearn.neighbors import NearestNeighbors
+from sklearn.preprocessing import Normalizer
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Course, Department, Faculty, Professor, TeachingAssistant, AuthUser
-from .models import DeptGeneralcomments, FacultyCourse, FacultyMiscellaneous, FacultyPersonality, FacultyWorkload
-from .models import SimilarCourses, SimilarFaculty, UserCourseRev, UserDept, UserFacultyRev
 from django.db import connections
+from .models import *
 from django.contrib.auth import logout, login
 cursors = connections['default'].cursor()
 
@@ -15,7 +16,7 @@ def home(request):
 def searchResults(request):
     total_count = 0
 
-    prof_query = "SELECT fname, lname, dept_name, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id INNER JOIN Department AS D ON D.dept_code=F.dept_code"
+    prof_query = "SELECT fname, lname, dept_name, ROUND(F.overall_rating, 2) AS 'overall_rating', F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id INNER JOIN Department AS D ON D.dept_code=F.dept_code"
 
     cursors.execute(prof_query)
     prof_row = cursors.fetchall()
@@ -53,7 +54,7 @@ def searchResults(request):
 
     # CS query
 
-    CS_dept_query = "SELECT F.faculty_id, fname, lname, dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=418"
+    CS_dept_query = "SELECT F.faculty_id, F.fname, F.lname, ROUND(F.overall_rating,2), dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=418"
     cursors.execute(CS_dept_query)
     dept_row = cursors.fetchall()
     tmp = cursors.description
@@ -69,7 +70,7 @@ def searchResults(request):
 
     # CE query
 
-    CE_dept_query = "SELECT F.faculty_id, fname, lname, dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=1612"
+    CE_dept_query = "SELECT F.faculty_id, fname, lname,ROUND(F.overall_rating,2), dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=1612"
     cursors.execute(CE_dept_query)
     dept_row = cursors.fetchall()
     tmp = cursors.description
@@ -85,7 +86,7 @@ def searchResults(request):
 
     # IS query
 
-    IS_dept_query = "SELECT F.faculty_id, fname, lname, dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=1830"
+    IS_dept_query = "SELECT F.faculty_id, fname, lname, ROUND(F.overall_rating, 2), dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=1830"
     cursors.execute(IS_dept_query)
     dept_row = cursors.fetchall()
     tmp = cursors.description
@@ -99,7 +100,7 @@ def searchResults(request):
             i += 1
         IS_dept.append(d)
 
-    Math_dept_query = "SELECT F.faculty_id, fname, lname, dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=410"
+    Math_dept_query = "SELECT F.faculty_id, fname, lname, ROUND(F.overall_rating, 2),dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=410"
     cursors.execute(Math_dept_query)
     dept_row = cursors.fetchall()
     tmp = cursors.description
@@ -157,7 +158,7 @@ def searchResults(request):
 
 def professor(request, prof_id):
     print(prof_id)
-    prof_query = "SELECT * FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s"
+    prof_query = "SELECT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',F.teaching_quality,F.faculty_id,D.dept_name,P.image FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s"
     cursors.execute(prof_query, [prof_id])
     prof_row = cursors.fetchall()
     tmp = cursors.description
@@ -170,10 +171,25 @@ def professor(request, prof_id):
             i += 1
         prof.append(d)
 
-    # print(prof)
+    print(prof)
+
+    second_faculty_rev_query = "SELECT COUNT(R.review_id) AS 'rev_count' FROM Faculty AS F INNER JOIN user_faculty_rev AS R ON F.faculty_id=R.faculty_id WHERE F.faculty_id=%s"
+    cursors.execute(second_faculty_rev_query, [prof_id])
+    prof_row = cursors.fetchall()
+    tmp = cursors.description
+    rev_prof = []
+    for r in prof_row:
+        i = 0
+        d = {}
+        while i < len(tmp):
+            d[tmp[i][0]] = r[i]
+            i += 1
+        rev_prof.append(d)
+
+    prof[0].update(rev_prof[0])
 
     result = {
-        'prof': prof
+        'prof': prof,
     }
     return render(request, './professor.html', result)
 

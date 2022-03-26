@@ -172,7 +172,6 @@
         }
     </script>
 
-    <!-- <title>RMP</title> -->
 </head>
 <body class="px-5 pt-2 pb-6
 text-xs sm:text-base lg:text-lg">
@@ -234,16 +233,16 @@ text-xs sm:text-base lg:text-lg">
                     <div id="dropdownRight" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRightButton" style="margin-left:-10px;">
                           <li>
-                            <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_CS()">Computer Science</button>
+                            <button class="w-full text-left text-black bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_CS()">Computer Science</button>
                           </li>
                           <li>
-                            <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_CE()">Computer Engineering</button>
+                            <button class="w-full text-left text-black bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_CE()">Computer Engineering</button>
                           </li>
                           <li>
-                            <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_IS()">Information Science</button>
+                            <button class="w-full text-left text-black bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_IS()">Information Science</button>
                           </li>
                           <li>
-                            <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_MATH()">Mathematics</button>
+                            <button class="w-full text-left text-black bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_MATH()">Mathematics</button>
                           </li>
                         </ul>
                     </div>
@@ -259,9 +258,9 @@ text-xs sm:text-base lg:text-lg">
                 </li>
             </ul>
         </div>
-
+	
         <div id="Professors">
-            {% for prof in professors%}
+	    {% for prof in professors %}
             <a href="{% url 'professor' prof_id=prof.faculty_id %}">
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-between px-12
@@ -272,15 +271,21 @@ text-xs sm:text-base lg:text-lg">
                         {{ prof.dept_name }} Department<br>
                         Kuwait University
                     </span>
+                    {% if prof.overall_rating %}
+		    <div>
+                        <p>Overall Rating</p>
+			<p class="md:ml-2"><span class="text-2xl">{{ prof.overall_rating }}</span>/5</p>
+                    </div>
+		    {% else %}
                     <div>
                         <p>Overall Rating</p>
-                        <p class="md:ml-2"><span class="text-2xl">4.5</span>/5</p>
-                    </div>
-                </div>
+                        <p class="md:ml-2"><span class="text-2xl">NA</span>/5</p>
+		    </div>
+                    {% endif %}
+		</div>
             </a>
-            {% endfor %}
+	    {% endfor %}
         </div>
-
         <div id="TAs">
             {% for ta in TAs %}
             <a href=" url 'professor' prof_id=ta.faculty_id %}">
@@ -322,24 +327,25 @@ text-xs sm:text-base lg:text-lg">
         </div>
 
         <div id="CSDept">
-            {% for dep in CS_dept %}
+	    {% for dep in CS_dept %}
             <a href="{% url 'professor' prof_id=dep.faculty_id %}">
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-between px-12
                 hover:bg-neutral-300">
                     <span>
                         <span class="font-medium">{{ dep.fname }} {{ dep.lname }}</span><br>
-                        {{ dep.dept_name }} department<br>
+                        {{ dep.dept_name }} Department<br>
                         Kuwait University
                     </span>
                     <div>
                         <p>Overall Rating</p>
-                        <p class="md:ml-2"><span class="text-2xl">4.5</span>/5</p>
+			<p class="md:ml-2"><span class="text-2xl">{{ dep.overall_rating }}</span>/5</p>
                     </div>
                 </div>
             </a>
-            {% endfor %}
+	    {% endfor %}
         </div>
+
 
         <div id="CEDept">
             {% for dep in CE_dept %}
@@ -354,7 +360,7 @@ text-xs sm:text-base lg:text-lg">
                     </span>
                     <div>
                         <p>Overall Rating</p>
-                        <p class="md:ml-2"><span class="text-2xl">4.5</span>/5</p>
+			<p class="md:ml-2"><span class="text-2xl">{{dep.overall_rating}}</span>/5</p>
                     </div>
                 </div>
             </a>
@@ -376,15 +382,15 @@ text-xs sm:text-base lg:text-lg">
                     </span>
                     <div>
                         <p>Overall Rating</p>
-                        <p class="md:ml-2"><span class="text-2xl">4.5</span>/5</p>
+			<p class="md:ml-2"><span class="text-2xl">{{dep.overall_rating}}</span>/5</p>
                     </div>
                 </div>
             </a>
             {% endfor %}
         </div>
-
+	
         <div id="MATHDept">
-            {% for dep in MATH_dept %}
+	    {% for dep in MATH_dept %}
             <a href="{% url 'professor' prof_id=dep.faculty_id %}">
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-between px-12
@@ -396,11 +402,11 @@ text-xs sm:text-base lg:text-lg">
                     </span>
                     <div>
                         <p>Overall Rating</p>
-                        <p class="md:ml-2"><span class="text-2xl">4.5</span>/5</p>
+			<p class="md:ml-2"><span class="text-2xl">{{dep.overall_rating}}</span>/5</p>
                     </div>
                 </div>
             </a>
-            {% endfor %}
+	    {% endfor %}
         </div>
 
 
