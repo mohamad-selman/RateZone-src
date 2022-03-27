@@ -218,18 +218,18 @@ text-xs sm:text-base lg:text-lg">
                         <div class="swiper-wrapper text-center">
                             <!-- Slides -->
 			    <!-- Loop here -->
-
+		            {% for professor in similar_professors %}
                             <div class="swiper-slide p-4">
                                 <div class="flex flex-col h-full rounded-lg shadow overflow-hidden">
                                     <a href="#" class="flex-shrink-0 p-2
                                     border-neutral-300 bg-neutral-200 hover:bg-neutral-300">
-                                        <h3 class="font-semibold my-2">Naser AlDuaij</h3>
+					    <h3 class="font-semibold my-2">{{ professor.fname}} {{professor.lname }}</h3>
                                         <p class="mb-2">Computer Science Department</p>
-                                        <p>Overall Rating: <span class="font-semibold">4.5/5</span></p>
+					<p>Overall Rating: <span class="font-semibold">{{ professor.overall_rating}}/5</span></p>
                                     </a>
                                 </div>
                             </div>
-            
+           		    {% endfor %} 
 			    <!-- end loop here --> 
                         </div>
                     </div>

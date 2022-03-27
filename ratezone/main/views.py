@@ -188,8 +188,24 @@ def professor(request, prof_id):
 
     prof[0].update(rev_prof[0])
 
+    similar_query = "SELECT F.fname,F.lname, F2.fname,F2.lname, F2.overall_rating from Faculty F inner join similar_faculty S1 on S1.fid=F.faculty_id inner join Faculty F2 on S1.similar_faculty=F2.faculty_id WHERE F.faculty_id=%s"
+    cursors.execute(similar_query, [prof_id])
+    sim_row = cursors.fetchall()
+    tmp = cursors.description
+    sim_prof = []
+    for r in sim_row:
+        i = 0
+        d = {}
+        while i < len(tmp):
+            d[tmp[i][0]] = r[i]
+            i += 1
+        sim_prof.append(d)
+
+
+
     result = {
         'prof': prof,
+        'similar_professors': sim_prof
     }
     return render(request, './professor.html', result)
 
