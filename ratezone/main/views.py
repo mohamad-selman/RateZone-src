@@ -157,7 +157,7 @@ def searchResults(request):
 
 
 def professor(request, prof_id):
-    print(prof_id)
+    # print(prof_id)
     prof_query = "SELECT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',F.teaching_quality,F.faculty_id,D.dept_name,P.image FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s"
     cursors.execute(prof_query, [prof_id])
     prof_row = cursors.fetchall()
@@ -171,7 +171,7 @@ def professor(request, prof_id):
             i += 1
         prof.append(d)
 
-    print(prof)
+    # print(prof)
 
     second_faculty_rev_query = "SELECT COUNT(R.review_id) AS 'rev_count' FROM Faculty AS F INNER JOIN user_faculty_rev AS R ON F.faculty_id=R.faculty_id WHERE F.faculty_id=%s"
     cursors.execute(second_faculty_rev_query, [prof_id])
@@ -188,7 +188,7 @@ def professor(request, prof_id):
 
     prof[0].update(rev_prof[0])
 
-    similar_query = "SELECT F.fname,F.lname, F2.fname,F2.lname, F2.overall_rating from Faculty F inner join similar_faculty S1 on S1.fid=F.faculty_id inner join Faculty F2 on S1.similar_faculty=F2.faculty_id WHERE F.faculty_id=%s"
+    similar_query = "SELECT F.fname,F.lname, F2.fname,F2.lname, ROUND(F2.overall_rating, 2) AS 'overall_rating' from Faculty F inner join similar_faculty S1 on S1.fid=F.faculty_id inner join Faculty F2 on S1.similar_faculty=F2.faculty_id WHERE F.faculty_id=%s"
     cursors.execute(similar_query, [prof_id])
     sim_row = cursors.fetchall()
     tmp = cursors.description
