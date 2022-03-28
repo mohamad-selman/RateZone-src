@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./main.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <!-- <title>RMP</title> -->
+</head>
+<body class="px-5 pt-2 pb-6
+text-xs sm:text-base lg:text-lg">
+    <header class="border-b text-left py-1">
+        <div class="container mx-auto flex items-center justify-between relative">
+            <a href="./index.html">
+                <img src="./logo.svg" alt="Logo" width=120>
+            </a>
+            <nav>
+                <ul class="flex gap-x-3 items-center">
+                    <li>
+                        <a href="./search.html" class="px-2 py-2 sm:px-4
+                        font-normal transition hover:bg-neutral-200
+                        rounded-md flex">
+                            Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./queue.html" class="px-2 py-2 sm:px-4
+                        font-normal transition hover:bg-neutral-200
+                        rounded-md flex">
+                            My Queue
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./signin.html" class="px-2 py-2 sm:px-4
+                        font-normal text-white
+                        rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]
+                        flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Log In
+                        </a>
+                    </li>
+                </ul>    
+            </nav>
+        </div>
+    </header>
+
+    <div class="mt-6">
+        <div class="md:flex md:gap-x-3 md:items-center justify-center">
+            <div class="overflow-hidden">
+                <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_la3rbh6t.json" background="transparent" speed="1" style="width: 400px; height: 400px;" loop autoplay></lottie-player>
+            </div>
+            <div>
+                <h1 class="text-3xl sm:text-5xl font-medium text-center md:text-left">
+                    Thank you for your rating!
+                </h1>
+                <p class="mt-6 text-xl sm:text-2xl text-center md:text-left">
+                    We will update the page soon!
+                </p>        
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4 flex justify-center gap-x-6">
+        <a href="./professor.html"
+        class="px-4 py-2 sm:px-6
+        font-normal text-white text-center
+        rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]">
+            Return to Professor Page
+        </a>
+        <a href="./index.html"
+        class="px-4 py-2 sm:px-6
+        font-normal text-white text-center
+        rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]">
+            Return to Home Page
+        </a>
+    </div>
+</body>
+</html>
