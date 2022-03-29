@@ -146,7 +146,7 @@ def searchResults(request):
     total_count += tmp1 + tmp2
 
 
-    print(prof)
+#    print(prof)
 
     result = {
         'professors': prof,
@@ -229,31 +229,33 @@ def queue(request, prof_id):
     user_id = user.id
     faculty_id = prof_id
     
-    try:
-        print('Before inserting')
-        # query_entry = UserQueue(uid=user_id, fid=faculty_id)
-        query = 'INSERT INTO user_queue VALUES (%s, %s)'
-        data = (user_id, faculty_id)
-        cursors.execute(query, data)
-        print('Made it here')
-        # query_entry.save()
-        print('Confirmed entry')
-    except:
-        print('Error occured')
+    if prof.id:
+        
+        try:
+            print('Before inserting')
+            # query_entry = UserQueue(uid=user_id, fid=faculty_id)
+            query = 'INSERT INTO user_queue VALUES (%s, %s)'
+            data = (user_id, faculty_id)
+            cursors.execute(query, data)
+            print('Made it here')
+            # query_entry.save()
+            print('Confirmed entry')
+        except:
+            print('Error occured')
 
-
-    fetch = "SELECT F.fname, F.lname, F.faculty_id, P.image, P.prof_rank, ROUND(F.overall_rating, 2) AS 'overall_rating' FROM Faculty AS F INNER JOIN user_queue AS U ON F.faculty_id=U.fid INNER JOIN Professor AS P ON P.faculty_id=F.faculty_id WHERE U.uid=%s"
-    cursors.execute(fetch, [user_id])
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    prof = []
-    for r in prof_row:
-        i = 0
-        d = {}
-        while i < len(tmp):
-            d[tmp[i][0]] = r[i]
-            i += 1
-        prof.append(d)
+    else:
+        fetch = "SELECT F.fname, F.lname, F.faculty_id, P.image, P.prof_rank, ROUND(F.overall_rating, 2) AS 'overall_rating' FROM Faculty AS F INNER JOIN user_queue AS U ON F.faculty_id=U.fid INNER JOIN Professor AS P ON P.faculty_id=F.faculty_id WHERE U.uid=%s"
+        cursors.execute(fetch, [user_id])
+        prof_row = cursors.fetchall()
+        tmp = cursors.description
+        prof = []
+        for r in prof_row:
+            i = 0
+            d = {}
+            while i < len(tmp):
+                d[tmp[i][0]] = r[i]
+                i += 1
+            prof.append(d)
 
     result = {
         'professors': prof
