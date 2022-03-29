@@ -261,7 +261,7 @@ def sign_up(request):
             User.objects.create_user(password=passw, username=username, first_name=fname, email=user_email)
             print('HI')
             print('Got here')
-            return redirect('home')
+            return redirect('sign_in')
         except:
             return render(request, './error.html')
     return render(request, './signup.html')
