@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href=" {% static '/admin/css/main.css' %}">
 
     <link rel="stylesheet" href="https://unpkg.com/swiper@6.8.4/swiper-bundle.min.css">
     <script src="https://unpkg.com/swiper@6.8.4/swiper-bundle.min.js"></script>
@@ -15,10 +15,52 @@
 </head>
 <body class="px-5 pt-2 pb-6
 text-xs sm:text-base lg:text-lg">
-    <header class="border-b text-left py-1">
+{% if user.is_authenticated %}
+    <header class="border-b border-neutral-300 text-left py-1">
         <div class="container mx-auto flex items-center justify-between relative">
             <a href="{% url 'home' %}">
-                <img src="../static/admin/img/logo.svg" alt="Logo" width=120>
+                <img src="{% static '/admin/img/logo.svg' %}" alt="Logo" width=120>
+            </a>
+            <nav>
+                <ul class="flex gap-x-3 items-center">
+                    <li>
+                        <a href="#" class="px-2 py-2 sm:px-4
+                        font-normal text-white
+                        rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]
+                        flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Hey {{ user.get_username}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'queue' %}" class="px-2 py-2 sm:px-4
+                        font-normal transition hover:bg-neutral-200
+                        rounded-md flex">
+                            My Queue
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logoutUser' %}" class="px-2 py-2 sm:px-4
+                        font-normal text-white
+                        rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]
+                        flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Log out
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+{% else %}
+    <header class="border-b border-neutral-300 text-left py-1">
+        <div class="container mx-auto flex items-center justify-between relative">
+            <a href="{% url 'home' %}">
+		    <img src="{% static '/admin/img/logo.svg' %}" alt="Logo" width=120>
             </a>
             <nav>
                 <ul class="flex gap-x-3 items-center">
@@ -30,13 +72,6 @@ text-xs sm:text-base lg:text-lg">
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'queue' %}" class="px-2 py-2 sm:px-4
-                        font-normal transition hover:bg-neutral-200
-                        rounded-md flex">
-                            My Queue
-                        </a>
-                    </li>
-                    <li>
                         <a href="{% url 'sign_in' %}" class="px-2 py-2 sm:px-4
                         font-normal text-white
                         rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]
@@ -44,13 +79,14 @@ text-xs sm:text-base lg:text-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
-                            Log In
+                            Log In/Sign Up
                         </a>
                     </li>
                 </ul>
             </nav>
         </div>
     </header>
+{% endif %}
 
     <p class="mt-6 w-10/12
     font-medium text-left mx-auto
@@ -93,13 +129,14 @@ text-xs sm:text-base lg:text-lg">
         <div class="swiper-container" x-ref="container">
             <div class="swiper-wrapper text-center">
                 <!-- Slides -->
+                {% for p in professors %}
                 <div class="swiper-slide p-4">
                     <div class="flex flex-col h-full rounded-lg shadow overflow-hidden">
                         <div class="flex-shrink-0 p-2">
-                            <img class="h-40 rounded mx-auto object-cover" src="../static/admin/img/prof_imgs/CS/Hamid.png" alt="">
-                            <h3 class="font-semibold my-2">Hamid Alhamadi</h3>
+                            <img class="h-40 rounded mx-auto object-cover" src="{{ p.image }}" alt="">
+                            <h3 class="font-semibold my-2">{{ p.fname }}</h3>
                             <p>Recommended by <span class="font-semibold">89%</span> of students</p>
-                            <p>Overall Rating: <span class="font-semibold">4.5/5</span></p>
+                            <p>Overall Rating: <span class="font-semibold">{{ p.overall_rating }}/5</span></p>
 
                             <p class="font-semibold mt-2">Top Tags:</p>
                             <ul class="mb-2 flex flex-wrap">
@@ -132,68 +169,68 @@ text-xs sm:text-base lg:text-lg">
                         </div>
                     </div>
                 </div>
+                {% endfor %}
+<!--                <div class="swiper-slide p-4">-->
+<!--                    <div class="flex flex-col h-full rounded-lg shadow overflow-hidden">-->
+<!--                        <div class="flex-shrink-0 p-2">-->
+<!--                            <img class="h-40 rounded mx-auto object-cover" src="{% static '/admin/img/prof_imgs/CS/Almohri_w.png' %}" alt="">-->
+<!--                            <h3 class="font-semibold my-2">Hussain Almohri</h3>-->
+<!--                            <p>Recommended by <span class="font-semibold">89%</span> of students</p>-->
+<!--                            <p>Overall Rating: <span class="font-semibold">4.5/5</span></p>-->
 
-                <div class="swiper-slide p-4">
-                    <div class="flex flex-col h-full rounded-lg shadow overflow-hidden">
-                        <div class="flex-shrink-0 p-2">
-                            <img class="h-40 rounded mx-auto object-cover" src="../static/admin/img/prof_imgs/CS/Almohri_w.png" alt="">
-                            <h3 class="font-semibold my-2">Hussain Almohri</h3>
-                            <p>Recommended by <span class="font-semibold">89%</span> of students</p>
-                            <p>Overall Rating: <span class="font-semibold">4.5/5</span></p>
+<!--                            <p class="font-semibold mt-2">Top Tags:</p>-->
+<!--                            <ul class="mb-2 flex flex-wrap">-->
+<!--                                <li class="border rounded-full-->
+<!--                                py-1 px-4 my-1.5 w-fit mx-auto">-->
+<!--                                    Lecture Heavy-->
+<!--                                </li>-->
+<!--                                <li class="border rounded-full-->
+<!--                                py-1 px-4 my-1.5 w-fit mx-auto">-->
+<!--                                    No curves-->
+<!--                                </li>-->
+<!--                                <li class="border rounded-full-->
+<!--                                py-1 px-4 my-1.5 w-fit mx-auto">-->
+<!--                                    Passionate-->
+<!--                                </li>-->
+<!--                                <li class="border rounded-full-->
+<!--                                py-1 px-4 my-1.5 w-fit mx-auto">-->
+<!--                                    Attendance Mandatory-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
-                            <p class="font-semibold mt-2">Top Tags:</p>
-                            <ul class="mb-2 flex flex-wrap">
-                                <li class="border rounded-full
-                                py-1 px-4 my-1.5 w-fit mx-auto">
-                                    Lecture Heavy
-                                </li>
-                                <li class="border rounded-full
-                                py-1 px-4 my-1.5 w-fit mx-auto">
-                                    No curves
-                                </li>
-                                <li class="border rounded-full
-                                py-1 px-4 my-1.5 w-fit mx-auto">
-                                    Passionate
-                                </li>
-                                <li class="border rounded-full
-                                py-1 px-4 my-1.5 w-fit mx-auto">
-                                    Attendance Mandatory
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+<!--                <div class="swiper-slide p-4">-->
+<!--                    <div class="flex flex-col h-full rounded-lg shadow overflow-hidden">-->
+<!--                        <div class="flex-shrink-0 p-2">-->
+<!--                            <img class="h-40 rounded mx-auto object-cover" src="{% static '/admin/img/prof_imgs/CS/Mansour.png' %}" alt="">-->
+<!--                            <h3 class="font-semibold my-2">Masnour Abdulaziz</h3>-->
+<!--                            <p>Recommended by <span class="font-semibold">89%</span> of students</p>-->
+<!--                            <p>Overall Rating: <span class="font-semibold">4.5/5</span></p>-->
 
-                <div class="swiper-slide p-4">
-                    <div class="flex flex-col h-full rounded-lg shadow overflow-hidden">
-                        <div class="flex-shrink-0 p-2">
-                            <img class="h-40 rounded mx-auto object-cover" src="../static/admin/img/prof_imgs/CS/Mansour.png" alt="">
-                            <h3 class="font-semibold my-2">Masnour Abdulaziz</h3>
-                            <p>Recommended by <span class="font-semibold">89%</span> of students</p>
-                            <p>Overall Rating: <span class="font-semibold">4.5/5</span></p>
-
-                            <p class="font-semibold mt-2">Top Tags:</p>
-                            <ul class="mb-2 flex flex-wrap">
-                                <li class="border rounded-full
-                                py-1 px-4 my-1.5 w-fit mx-auto">
-                                    Lecture Heavy
-                                </li>
-                                <li class="border rounded-full
-                                py-1 px-4 my-1.5 w-fit mx-auto">
-                                    Lots of HW
-                                </li>
-                                <li class="border rounded-full
-                                py-1 px-4 my-1.5 w-fit mx-auto">
-                                    Friendly
-                                </li>
-                                <li class="border rounded-full
-                                py-1 px-4 my-1.5 w-fit mx-auto">
-                                    Attendance Mandatory
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+<!--                            <p class="font-semibold mt-2">Top Tags:</p>-->
+<!--                            <ul class="mb-2 flex flex-wrap">-->
+<!--                                <li class="border rounded-full-->
+<!--                                py-1 px-4 my-1.5 w-fit mx-auto">-->
+<!--                                    Lecture Heavy-->
+<!--                                </li>-->
+<!--                                <li class="border rounded-full-->
+<!--                                py-1 px-4 my-1.5 w-fit mx-auto">-->
+<!--                                    Lots of HW-->
+<!--                                </li>-->
+<!--                                <li class="border rounded-full-->
+<!--                                py-1 px-4 my-1.5 w-fit mx-auto">-->
+<!--                                    Friendly-->
+<!--                                </li>-->
+<!--                                <li class="border rounded-full-->
+<!--                                py-1 px-4 my-1.5 w-fit mx-auto">-->
+<!--                                    Attendance Mandatory-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="swiper-slide p-4">
                     <div class="flex flex-col h-full rounded-lg shadow overflow-hidden">
                         <div class="flex-shrink-0 m-auto p-2 cursor-pointer"

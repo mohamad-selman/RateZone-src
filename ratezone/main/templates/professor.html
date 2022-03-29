@@ -128,7 +128,7 @@ text-xs sm:text-base lg:text-lg">
                     <button class="mb-3 py-2 px-4 w-full
                     flex gap-x-2 items-center text-left
                     hover:bg-neutral-300 border border-neutral-300 rounded-lg"
-                    onclick="location.href = `{% url 'queue' %}`;">
+                    onclick="location.href = `{% url 'queue' prof_id=p.faculty_id %}`;">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
@@ -157,12 +157,7 @@ text-xs sm:text-base lg:text-lg">
                 <div class="mt-3 md:mt-0">
                     <button class="mb-3 py-2 px-4 w-full
                     flex gap-x-2 items-center text-left
-                    hover:bg-neutral-300 border border-neutral-300 rounded-lg"
-<<<<<<< HEAD
-                    onclick="location.href = `{% url 'signin' %}`;">
-=======
-                    onclick="location.href = `{% url 'sign_in' %}`;">
->>>>>>> ef353dbe4b7f6c6dba0c4a3436b604fe22e4df96
+                    hover:bg-neutral-300 border border-neutral-300 rounded-lg" onclick="location.href = `{% url 'sign_in' %}`;">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
@@ -170,12 +165,7 @@ text-xs sm:text-base lg:text-lg">
                     </button>
                     <button class="mb-3 py-2 px-4 w-full
                     flex gap-x-2 items-center text-left
-                    hover:bg-neutral-300 border border-neutral-300 rounded-lg"
-<<<<<<< HEAD
-                    onclick="location.href = `{% url 'signin' %}`;" >
-=======
-                    onclick="location.href = `{% url 'sign_in' %}`;" >
->>>>>>> ef353dbe4b7f6c6dba0c4a3436b604fe22e4df96
+                    hover:bg-neutral-300 border border-neutral-300 rounded-lg" onclick="location.href = `{% url 'sign_in' %}`;" >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
@@ -190,11 +180,8 @@ text-xs sm:text-base lg:text-lg">
                         </svg>
                         Follow Updates
                     </button>
-<<<<<<< HEAD
+
                 </div>
-=======
-                </div>		
->>>>>>> ef353dbe4b7f6c6dba0c4a3436b604fe22e4df96
     {% endif %}
 
                 {% endfor %}

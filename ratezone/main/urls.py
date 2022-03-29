@@ -9,6 +9,7 @@ urlpatterns = [
     path('professor/', views.professor, name='professor'),
     path('professor/<int:prof_id>/', views.professor, name='professor'),
     path('queue/', views.queue, name='queue'),
+    path('queue/<int:prof_id>/', views.queue, name='queue'),
     path('rate/', views.rate, name='rate'),
     path('rateCourse', views.rate_course, name='rate_course'),
     path('search/', views.search, name='search'),

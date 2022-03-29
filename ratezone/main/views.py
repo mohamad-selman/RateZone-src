@@ -222,8 +222,44 @@ def search(request):
     return render(request, './search.html')
 
 @login_required(login_url='sign_in')
-def queue(request):
-    return render(request, './queue.html')
+def queue(request, prof_id):
+    # we need professor id and user id
+    # print(prof_id)
+    faculty_id = prof_id
+    uname = request.user.username
+    # print(uname)
+    user = User.objects.get(username=uname)
+    user_id = user.id
+    try:
+        print('Before inserting')
+        # query_entry = UserQueue(uid=user_id, fid=faculty_id)
+        query = 'INSERT INTO user_queue VALUES (%s, %s)'
+        data = (user_id, faculty_id)
+        cursors.execute(query, data)
+        print('Made it here')
+        # query_entry.save()
+        print('Confirmed entry')
+    except:
+        print('Error occured')
+        # return render(request, './error.html')
+
+    fetch = "SELECT F.fname, F.lname, F.faculty_id, P.image, P.prof_rank, ROUND(F.overall_rating, 2) AS 'overall_rating' FROM Faculty AS F INNER JOIN user_queue AS U ON F.faculty_id=U.fid INNER JOIN Professor AS P ON P.faculty_id=F.faculty_id WHERE U.uid=%s"
+    cursors.execute(fetch, [user_id])
+    prof_row = cursors.fetchall()
+    tmp = cursors.description
+    prof = []
+    for r in prof_row:
+        i = 0
+        d = {}
+        while i < len(tmp):
+            d[tmp[i][0]] = r[i]
+            i += 1
+        prof.append(d)
+
+    result = {
+        'professors': prof
+    }
+    return render(request, './queue.html', result)
 
 @unauthenticated_user
 def sign_in(request):
