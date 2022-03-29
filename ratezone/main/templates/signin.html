@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href=" {% static '/admin/css/main.css' %}">
     <!-- <title>RMP</title> -->
 </head>
 <body class="px-5 pt-2 pb-6
@@ -69,12 +69,13 @@ text-xs sm:text-base lg:text-lg">
             </div>
 
             <div class="mt-10">
-                <form action="#">
+                <form action="{% url 'sign_in' %}" method="post">
+                    {% csrf_token %}
                     <div class="flex flex-col mb-5">
                         <label
-                            for="email"
+                            for="username"
                             class="mb-1 text-xs tracking-wide text-gray-600">
-                            E-Mail Address:
+                            Username:
                         </label>
                         <div class="relative">
                             <div
@@ -93,9 +94,9 @@ text-xs sm:text-base lg:text-lg">
                             </div>
 
                             <input
-                                id="email"
-                                type="email"
-                                name="email"
+                                id="username"
+                                type="text"
+                                name="username"
                                 class="
                                     text-sm
                                     placeholder-gray-500
@@ -107,7 +108,7 @@ text-xs sm:text-base lg:text-lg">
                                     py-2
                                     focus:outline-none focus:border-blue-400
                                 "
-                                placeholder="Enter your email"
+                                placeholder="Enter your username"
                             />
                         </div>
                     </div>
@@ -177,7 +178,7 @@ text-xs sm:text-base lg:text-lg">
                                 ease-in
                             "
                             >
-                            <span class="mr-2 uppercase"><a href="dashboard.html">Sign In</a></span>
+                            <span class="mr-2 uppercase">Sign In</span>
                             <span>
                                 <svg
                                     class="h-6 w-6"
@@ -212,7 +213,7 @@ text-xs sm:text-base lg:text-lg">
                 <span class="ml-2">
                     You don't have an account?
                     <a
-                    href="./signup.html"
+                    href="{% url 'sign_up' %}"
                     class="text-xs ml-2 text-[#F0A501] font-semibold">
                         Register now
                     </a>
