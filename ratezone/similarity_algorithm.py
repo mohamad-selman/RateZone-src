@@ -47,7 +47,7 @@ for p in prof:
 
 
 numarray = np.array(l3)
-print(numarray)
+# print(numarray)
 
 
 map_query = "SELECT F.faculty_id FROM Faculty AS F WHERE F.overall_rating"

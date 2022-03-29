@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="{% static '/admin/css/main.css' %}">
     <!-- <title>RMP</title> -->
 </head>
 <body class="px-5 pt-2 pb-6
@@ -70,10 +70,11 @@ text-xs sm:text-base lg:text-lg">
                 </div>
 
                 <div class="mt-10">
-                    <form action="#">
+                    <form action="{% url 'sign_up' %}" method="POST">
+                        {% csrf_token %}
                         <div class="flex flex-col mb-5">
                             <label
-                            for="email"
+                            for="name"
                             class="mb-1 text-xs tracking-wide text-gray-600">
                                 Name:
                             </label>
@@ -93,9 +94,9 @@ text-xs sm:text-base lg:text-lg">
                                 </div>
 
                                 <input
-                                id="email"
-                                type="email"
-                                name="email"
+                                id="name"
+                                type="text"
+                                name="name" required
                                 class="
                                     text-sm
                                     placeholder-gray-500
@@ -108,6 +109,47 @@ text-xs sm:text-base lg:text-lg">
                                     focus:outline-none focus:border-blue-400
                                 "
                                 placeholder="Enter your name"
+                                />
+                            </div>
+                        </div>
+                        <div class="flex flex-col mb-5">
+                            <label
+                            for="username"
+                            class="mb-1 text-xs tracking-wide text-gray-600">
+                                Username:
+                            </label>
+                            <div class="relative">
+                                <div
+                                class="
+                                    inline-flex
+                                    items-center
+                                    justify-center
+                                    absolute
+                                    left-0
+                                    top-0
+                                    h-full
+                                    w-10
+                                    text-gray-400"
+                                >
+                                    <i class="fas fa-at text-blue-500"></i>
+                                </div>
+
+                                <input
+                                id="username"
+                                type="text"
+                                name="username" required
+                                class="
+                                    text-sm
+                                    placeholder-gray-500
+                                    pl-10
+                                    pr-4
+                                    rounded-2xl
+                                    border border-gray-400
+                                    w-full
+                                    py-2
+                                    focus:outline-none focus:border-blue-400
+                                "
+                                placeholder="Enter your username"
                                 />
                             </div>
                         </div>
@@ -136,7 +178,7 @@ text-xs sm:text-base lg:text-lg">
                                 <input
                                 id="email"
                                 type="email"
-                                name="email"
+                                name="email" required
                                 class="
                                     text-sm
                                     placeholder-gray-500
@@ -178,7 +220,7 @@ text-xs sm:text-base lg:text-lg">
                                 <input
                                 id="password"
                                 type="password"
-                                name="password"
+                                name="password" required
                                 class="
                                     text-sm
                                     placeholder-gray-500
@@ -215,7 +257,7 @@ text-xs sm:text-base lg:text-lg">
                                 duration-150
                                 ease-in"
                             >
-                                <span class="mr-2 uppercase">Sign Up</span>
+                                <span class="mr-2 uppercase" >Sign Up</span>
                                 <span>
                                     <svg
                                         class="h-6 w-6"
@@ -251,7 +293,7 @@ text-xs sm:text-base lg:text-lg">
                     <span class="ml-2">
                         You have an account?
                         <a
-                            href="./signin.html"
+                            href="{% url 'sign_in' %}"
                             class="text-xs ml-2 text-[#F0A501] font-semibold">
                                 Login here
                         </a>

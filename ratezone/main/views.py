@@ -5,7 +5,12 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db import connections
 from .models import *
-from django.contrib.auth import logout, login
+
+from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .decorators import *
 cursors = connections['default'].cursor()
 
 # Create your views here.
@@ -209,26 +214,70 @@ def professor(request, prof_id):
     }
     return render(request, './professor.html', result)
 
+@login_required(login_url='sign_in')
 def rate(request):
     return render(request, './rate.html')
 
 def search(request):
     return render(request, './search.html')
 
+@login_required(login_url='sign_in')
 def queue(request):
     return render(request, './queue.html')
 
+@unauthenticated_user
 def sign_in(request):
+
+    if request.method == 'POST':
+        username = request.POST['username']
+        passw = request.POST['password']
+
+        print(f'user email is {username} and the password is {passw}')
+        user = authenticate(request, username=username, password=passw)
+
+        if user is not None:
+            print('HEy HO')
+            login(request, user)
+            print('Yo YO')
+            return redirect('dashboard')
+        else:
+            return render(request, './signin.html')
     return render(request, './signin.html')
 
+@unauthenticated_user
 def sign_up(request):
+
+    if request.method == 'POST':
+        fname = request.POST['name']
+        username = request.POST['username']
+        user_email = request.POST['email']
+        passw = request.POST['password']
+
+
+
+        print(f'Record: {fname}, {username}, {user_email}, {passw}')
+
+        try:
+            User.objects.create_user(password=passw, username=username, first_name=fname, email=user_email)
+            print('HI')
+            print('Got here')
+            return redirect('home')
+        except:
+            return render(request, './error.html')
     return render(request, './signup.html')
+
+
+def logoutUser(request):
+    logout(request)
+    return redirect('home')
 
 def course(request):
     return render(request, './course.html')
 
+@login_required(login_url='sign_in')
 def rate_course(request):
     return render(request, './rateCourse.html')
 
+@login_required(login_url='sign_in')
 def dashboard(request):
     return render(request, './dashboard.html')
