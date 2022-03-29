@@ -26,11 +26,7 @@ INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_
 INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_rating,teaching_quality) VALUES (22,26,3,5,4,5);
 INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_rating,teaching_quality) VALUES (6,27,4,4,3,4);
 INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_rating,teaching_quality) VALUES (7,28,4,5,1,5);
-<<<<<<< HEAD
 INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_rating,teaching_quality) VALUES (8,29,4,3,4,1);
-=======
-INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_rating,teaching_quality) VALUES (8,29,4,4,1);
->>>>>>> c1c19a284547a4701b721e8e769823be052345f2
 INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_rating,teaching_quality) VALUES (9,30,4,1,5,1);
 INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_rating,teaching_quality) VALUES (10,31,4,3,4,4);
 INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_rating,teaching_quality) VALUES (11,32,4,5,3,5);
@@ -97,7 +93,3 @@ INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_
 INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_rating,teaching_quality) VALUES (18,93,8,1,2,1);
 INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_rating,teaching_quality) VALUES (19,94,8,5,5,5);
 INSERT INTO user_faculty_rev(faculty_id,review_id,uid,overall_rating,difficulty_rating,teaching_quality) VALUES (22,95,8,5,2,5);
-<<<<<<< HEAD
-=======
-
->>>>>>> c1c19a284547a4701b721e8e769823be052345f2
