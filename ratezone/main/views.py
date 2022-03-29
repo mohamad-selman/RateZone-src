@@ -221,15 +221,14 @@ def rate(request):
 def search(request):
     return render(request, './search.html')
 
+
 @login_required(login_url='sign_in')
 def queue(request, prof_id):
-    # we need professor id and user id
-    # print(prof_id)
-    faculty_id = prof_id
     uname = request.user.username
-    # print(uname)
     user = User.objects.get(username=uname)
     user_id = user.id
+    faculty_id = prof_id
+    
     try:
         print('Before inserting')
         # query_entry = UserQueue(uid=user_id, fid=faculty_id)
@@ -241,7 +240,7 @@ def queue(request, prof_id):
         print('Confirmed entry')
     except:
         print('Error occured')
-        # return render(request, './error.html')
+
 
     fetch = "SELECT F.fname, F.lname, F.faculty_id, P.image, P.prof_rank, ROUND(F.overall_rating, 2) AS 'overall_rating' FROM Faculty AS F INNER JOIN user_queue AS U ON F.faculty_id=U.fid INNER JOIN Professor AS P ON P.faculty_id=F.faculty_id WHERE U.uid=%s"
     cursors.execute(fetch, [user_id])
@@ -260,6 +259,9 @@ def queue(request, prof_id):
         'professors': prof
     }
     return render(request, './queue.html', result)
+
+
+
 
 @unauthenticated_user
 def sign_in(request):
