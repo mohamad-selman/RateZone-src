@@ -1,10 +1,6 @@
--- UPDATE Faculty set overall_rating = (SELECT (SUM(overall_rating) / COUNT(review_id)) AS 'total overall' FROM user_faculty_rev AS U WHERE U.faculty_id=1 GROUP BY 'total overall') WHERE faculty_id=1;
-
--- UPDATE Faculty set teaching_quality = (SELECT (SUM(teaching_quality) / COUNT(review_id)) AS 'total overall' FROM user_faculty_rev AS U WHERE U.faculty_id=1 GROUP BY 'total overall') WHERE faculty_id=1;
-
--- UPDATE Faculty set exams_difficulty = (SELECT (SUM(difficulty_rating) / COUNT(review_id)) AS 'total overall' FROM user_faculty_rev AS U WHERE U.faculty_id=1 GROUP BY 'total overall') WHERE faculty_id=1;
-
-
+UPDATE Faculty set overall_rating = (SELECT (SUM(overall_rating) / COUNT(review_id)) AS 'total overall' FROM user_faculty_rev AS U WHERE U.faculty_id=1 GROUP BY 'total overall') WHERE faculty_id=1;
+UPDATE Faculty set teaching_quality = (SELECT (SUM(teaching_quality) / COUNT(review_id)) AS 'total overall' FROM user_faculty_rev AS U WHERE U.faculty_id=1 GROUP BY 'total overall') WHERE faculty_id=1;
+UPDATE Faculty set exams_difficulty = (SELECT (SUM(difficulty_rating) / COUNT(review_id)) AS 'total overall' FROM user_faculty_rev AS U WHERE U.faculty_id=1 GROUP BY 'total overall') WHERE faculty_id=1;
 
 UPDATE Faculty set overall_rating = (SELECT (SUM(overall_rating) / COUNT(review_id)) AS 'total overall' FROM user_faculty_rev AS U WHERE U.faculty_id=5 GROUP BY 'total overall') WHERE faculty_id=5;
 UPDATE Faculty set teaching_quality = (SELECT (SUM(teaching_quality) / COUNT(review_id)) AS 'total overall' FROM user_faculty_rev AS U WHERE U.faculty_id=5 GROUP BY 'total overall') WHERE faculty_id=5;

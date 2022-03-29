@@ -88,8 +88,8 @@ for i in range(len(similar)):
     for j in similar[i]:
         if i != j:
             print(map[j])
-            query = "INSERT INTO similar_faculty VALUES (%s, %s)"
-            data = (map[i]['faculty_id'], map[j]['faculty_id'])
-            cursors.execute(query, data)
+            #query = "INSERT INTO similar_faculty VALUES (%s, %s)"
+            #data = (map[i]['faculty_id'], map[j]['faculty_id'])
+            #cursors.execute(query, data)
     print("\n")
 
