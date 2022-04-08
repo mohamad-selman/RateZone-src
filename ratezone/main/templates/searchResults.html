@@ -183,48 +183,8 @@ text-xs sm:text-base lg:text-lg">
             <span class="font-medium">{{ count }}</span> total search results
         </p>
 
-        <div class="dropdown inline-block relative">
-            <button class="font-semibold text-base
-            rounded-md inline-flex items-center">
-            <span class="mr-1">FILTER</span>
-            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
-            </button>
-            <ul class="dropdown-menu absolute hidden text-black pt-1">
-                <li class="">
-                    <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="loadAll()">All results</button>
-                </li>
-                <li class="">
-                    <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" id="dropdownRightButton" data-dropdown-toggle="dropdownRight" data-dropdown-placement="right">Departments</button>
-                    <!-- Dropdown menu -->
-                    <div id="dropdownRight" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
-                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRightButton" style="margin-left:-10px;">
-                          <li>
-                            <button class="w-full text-left text-black bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_CS()">Computer Science</button>
-                          </li>
-                          <li>
-                            <button class="w-full text-left text-black bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_CE()">Computer Engineering</button>
-                          </li>
-                          <li>
-                            <button class="w-full text-left text-black bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_IS()">Information Science</button>
-                          </li>
-                          <li>
-                            <button class="w-full text-left text-black bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="load_MATH()">Mathematics</button>
-                          </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="">
-                    <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="loadProfessors()">Professors</button>
-                </li>
-                <li class="">
-                    <button class="w-full text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="loadTAs()">TAs</button>
-                </li>
-                <li class="">
-                    <button class="w-full text-left rounded-b bg-neutral-300 hover:bg-neutral-400 py-2 px-4 block whitespace-no-wrap" onclick="loadCourses()">Courses</button>
-                </li>
-            </ul>
-        </div>
-	
+	{% include 'filter_dropdown.html' %}
+
         <div id="Professors">
 	    {% for prof in professors %}
             <a href="{% url 'professor' prof_id=prof.faculty_id %}">
