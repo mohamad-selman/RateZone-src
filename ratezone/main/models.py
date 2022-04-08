@@ -341,3 +341,28 @@ class UserQueue(models.Model):
         managed = False
         db_table = 'user_queue'
         unique_together = (('uid', 'fid'),)
+
+
+class UserWatchCourse(models.Model):
+    uid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='uid')
+    cid = models.ForeignKey(Course, models.DO_NOTHING, db_column='cid')
+
+    objects = models.Manager()
+
+    class Meta:
+        managed = False
+        db_table = 'user_watch_course'
+        unique_together = (('uid', 'cid'),)
+
+
+class UserWatchFaculty(models.Model):
+    uid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='uid')
+    fid = models.ForeignKey(Faculty, models.DO_NOTHING, db_column='fid')
+
+    objects = models.Manager()
+
+    class Meta:
+        managed = False
+        db_table = 'user_watch_faculty'
+        unique_together = (('uid', 'fid'),)
+
