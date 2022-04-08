@@ -8,11 +8,14 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import *
+
 cursors = connections['default'].cursor()
+
 
 # Create your views here.
 def home(request):
     return render(request, './index.html')
+
 
 # the function takes the query result and the cursor description of an executed query
 # converts from a tuple-like notation to dictionary-like notation
@@ -29,7 +32,8 @@ def convert_to_dictionary(cursor_description, query_result):
             d[cursor_description[i][0]] = r[i]
             i += 1
         returning_value.append(d)
-    return (returning_value,total_count)
+    return returning_value, total_count
+
 
 def searchResults(request):
     total_count = 0
@@ -57,7 +61,6 @@ def searchResults(request):
     ta_count = 0
     (ta, ta_count) = convert_to_dictionary(tmp, ta_row)
 
-
     # CS query
 
     CS_dept_query = "SELECT DISTINCT F.faculty_id, F.fname, F.lname, ROUND(F.overall_rating,2), dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=418"
@@ -66,7 +69,6 @@ def searchResults(request):
     tmp = cursors.description
     cs_count = 0
     (CS_dept, cs_count) = convert_to_dictionary(tmp, dept_row)
-
 
     # CE query
 
@@ -86,15 +88,12 @@ def searchResults(request):
     is_count = 0
     (IS_dept, is_count) = convert_to_dictionary(tmp, dept_row)
 
-
     Math_dept_query = "SELECT DISTINCT F.faculty_id, fname, lname, ROUND(F.overall_rating, 2),dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=410"
     cursors.execute(Math_dept_query)
     dept_row = cursors.fetchall()
     tmp = cursors.description
     math_count = 0
     (MATH_dept, math_count) = convert_to_dictionary(tmp, dept_row)
-
-
 
     # courses = Course.objects.all()
 
@@ -107,12 +106,9 @@ def searchResults(request):
 
     # print(courses)
 
-
-
     tmp1 = Department.objects.all().count()
     tmp2 = Course.objects.all().count()
     total_count = tmp1 + tmp2 + prof_count + ce_count + cs_count + math_count
-
 
     result = {
         'professors': prof,
@@ -126,13 +122,12 @@ def searchResults(request):
     }
     return render(request, './searchResults.html', result)
 
-def professor(request, prof_id):
 
+def professor(request, prof_id):
     # for all the custom queries executed!
     # cursors return the query result in the form of a tuple
     # needs to be converted to dictionary-like notation
     # that is what the loop does
-
 
     prof_query = "SELECT DISTINCT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',F.teaching_quality,F.faculty_id,D.dept_name,P.image FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s"
     cursors.execute(prof_query, [prof_id])
@@ -163,9 +158,11 @@ def professor(request, prof_id):
     }
     return render(request, './professor.html', result)
 
+
 @login_required(login_url='sign_in')
 def rate(request):
     return render(request, './rate.html')
+
 
 def search(request):
     return render(request, './search.html')
@@ -205,12 +202,8 @@ def queue(request, prof_id=None):
     return render(request, './queue.html', result)
 
 
-
-
-
 @unauthenticated_user
 def sign_in(request):
-
     if request.method == 'POST':
         username = request.POST['username']
         passw = request.POST['password']
@@ -227,16 +220,14 @@ def sign_in(request):
             return render(request, './signin.html')
     return render(request, './signin.html')
 
+
 @unauthenticated_user
 def sign_up(request):
-
     if request.method == 'POST':
         fname = request.POST['name']
         username = request.POST['username']
         user_email = request.POST['email']
         passw = request.POST['password']
-
-
 
         print(f'Record: {fname}, {username}, {user_email}, {passw}')
 
@@ -254,12 +245,15 @@ def logoutUser(request):
     logout(request)
     return redirect('home')
 
+
 def course(request):
     return render(request, './course.html')
+
 
 @login_required(login_url='sign_in')
 def rate_course(request):
     return render(request, './rateCourse.html')
+
 
 @login_required(login_url='sign_in')
 def dashboard(request):
