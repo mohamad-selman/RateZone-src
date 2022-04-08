@@ -14,7 +14,10 @@ cursors = connections['default'].cursor()
 def home(request):
     return render(request, './index.html')
 
-
+# the function takes the query result and the cursor description of an executed query
+# converts from a tuple-like notation to dictionary-like notation
+# needed for each custom query executed
+# Not needed if django ORM is used
 def convert_to_dictionary(cursor_description, query_result):
     total_count = 0
     returning_value = []
@@ -31,15 +34,17 @@ def convert_to_dictionary(cursor_description, query_result):
 def searchResults(request):
     total_count = 0
 
+    # for all the custom queries executed!
+    # cursors return the query result in the form of a tuple
+    # needs to be converted to dictionary-like notation
+    # that is what the loop does
+
     # the following is a query that returns all professors
     # with their desired attributes
     prof_query = "SELECT DISTINCT F.fname, F.lname, D.dept_name, ROUND(F.overall_rating, 2) AS 'overall_rating', F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id INNER JOIN Department AS D ON D.dept_code=F.dept_code"
 
     # executing the query through connection cursor
     cursors.execute(prof_query)
-    # cursors return the query result in the form of a tuple
-    # needs to be converted to dictionary-like notation
-    # that is what the loop does
     prof_row = cursors.fetchall()
     tmp = cursors.description
     prof_count = 0
@@ -109,8 +114,6 @@ def searchResults(request):
     total_count = tmp1 + tmp2 + prof_count + ce_count + cs_count + math_count
 
 
-#    print(prof)
-
     result = {
         'professors': prof,
         'TAs': ta,
@@ -124,7 +127,13 @@ def searchResults(request):
     return render(request, './searchResults.html', result)
 
 def professor(request, prof_id):
-    # print(prof_id)
+
+    # for all the custom queries executed!
+    # cursors return the query result in the form of a tuple
+    # needs to be converted to dictionary-like notation
+    # that is what the loop does
+
+
     prof_query = "SELECT DISTINCT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',F.teaching_quality,F.faculty_id,D.dept_name,P.image FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s"
     cursors.execute(prof_query, [prof_id])
     prof_row = cursors.fetchall()
