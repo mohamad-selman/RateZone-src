@@ -113,6 +113,7 @@ text-xs sm:text-base lg:text-lg">
 
     <div class="mt-6
     w-full sm:w-9/12 lg:w-7/12 xl:w-6/12">
+        {% for element in user_object %}
         <div>
             <p class="px-1 py-0.5 border-b-2 border-black
             font-extrabold antialiased w-fit
@@ -125,7 +126,7 @@ text-xs sm:text-base lg:text-lg">
             gap-x-4 sm:gap-x-10">
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden" >
-                    <strong>First Name:</strong><p id="Fname">{{ user.get_short_name }}</p>
+                    <strong>First Name:</strong><p id="Fname">{{ element.username }}</p>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="modifyText('Fname')">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -134,7 +135,11 @@ text-xs sm:text-base lg:text-lg">
 
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden">
-                    <strong>Last Name:</strong><p  id="Lname">Aly</p>
+                    {% if element.last_name %}
+                        <strong>Last Name:</strong><p  id="Lname">Aly</p>
+                    {% else %}
+                        <strong>Last Name:</strong><p  id="">--------</p>
+                    {% endif %}
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="modifyText('Lname')">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -160,7 +165,6 @@ text-xs sm:text-base lg:text-lg">
                 </div>
             </div>
         </div>
-
         <div>
             <p class="mt-10 px-1 py-0.5 border-b-2 border-black
             font-extrabold antialiased w-fit
@@ -171,7 +175,7 @@ text-xs sm:text-base lg:text-lg">
             <div class="grid grid-cols-1 gap-4 gap-x-10">
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden">
-                    <strong>Email:</strong><p id= "email">{{ user.get_full_name }}</p>
+                    <strong>Email:</strong><p id= "email">{{ element.email }}</p>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="modifyText('email')">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -180,7 +184,7 @@ text-xs sm:text-base lg:text-lg">
 
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex shrink overflow-hidden  md:shrink-0 gap-x-4 justify-around">
-                    <strong>Password:</strong><input type="password" value="DFG#$#$%rfrg1@" id="myInput">
+                    <strong>Password:</strong><input type="password" value="{{ element.password }}" id="myInput">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="myFunction()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -236,6 +240,7 @@ text-xs sm:text-base lg:text-lg">
                 </div>
             </a>
         </div>
+        {% endfor %}
     </div>
 </body>
 </html>

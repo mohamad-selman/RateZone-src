@@ -257,4 +257,9 @@ def rate_course(request):
 
 @login_required(login_url='sign_in')
 def dashboard(request):
-    return render(request, './dashboard.html')
+    uname = request.user.username
+    user = User.objects.filter(username=uname)
+    content = {
+        'user_object': user
+    }
+    return render(request, './dashboard.html', content)
