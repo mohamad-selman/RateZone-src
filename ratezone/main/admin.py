@@ -16,4 +16,4 @@ admin.site.register(SimilarFaculty)
 admin.site.register(UserCourseRev)
 admin.site.register(UserDept)
 admin.site.register(UserFacultyRev)
-
+admin.site.register(UserQueue)
