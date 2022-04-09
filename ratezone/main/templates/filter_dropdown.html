@@ -1,0 +1,88 @@
+{% load static %}
+
+<div class="group inline-block">
+    <button class="outline-none focus:outline-none py-1 font-semibold text-base
+    flex items-center min-w-32">
+        <span class="pr-1 font-semibold">FILTER</span>
+        <svg class="fill-current h-4 w-4 transform group-hover:-rotate-180 transition duration-150 ease-in-out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+    </button>
+
+    <ul class="divide-y divide-gray-200 shadow mt-1
+    transform scale-0 group-hover:scale-100 absolute 
+    transition duration-150 ease-in-out origin-top min-w-32">
+
+        <li class="rounded-sm bg-neutral-300 hover:bg-neutral-400 py-2">
+            <button class="text-left w-full px-4" onclick="loadAll()">
+                All results
+            </button>
+        </li>
+
+        <li class="rounded-sm relative text-left bg-neutral-300 hover:bg-neutral-400 py-2 px-4">
+        <button class="w-full text-left flex items-center outline-none focus:outline-none">
+            <span class="pr-1 flex-1">Departments</span>
+            <span class="mr-auto">
+            <svg class="fill-current h-4 w-4 transition duration-150 ease-in-out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </span>
+        </button>
+
+        <ul class="divide-y divide-gray-200 shadow ml-1 absolute top-0 right-0 
+        transition duration-150 ease-in-out origin-top-left
+        min-w-32">
+            <li class="rounded-sm bg-neutral-300 hover:bg-neutral-400 py-2">
+                <button class="text-left w-full px-4" onclick="load_CS()">
+                    Computer Science
+                </button>
+            </li>
+
+            <li class="rounded-sm bg-neutral-300 hover:bg-neutral-400 py-2">
+                <button class="text-left w-full px-4" onclick="load_CE()">
+                    Computer Engineering
+                </button>
+            </li>
+
+            <li class="rounded-sm bg-neutral-300 hover:bg-neutral-400 py-2">
+                <button class="text-left w-full px-4" onclick="load_IS()">
+                    Information Science
+                </button>
+            </li>
+
+            <li class="rounded-sm bg-neutral-300 hover:bg-neutral-400 py-2">
+                <button class="text-left w-full px-4" onclick="load_MATH()">
+                    Mathematics
+                </button>
+            </li>
+
+        </ul>
+        </li>
+
+        <li class="rounded-sm bg-neutral-300 hover:bg-neutral-400 py-2">
+            <button class="text-left w-full px-4" onclick="loadProfessors()">
+                Professors
+            </button>
+        </li>
+
+        <li class="rounded-sm bg-neutral-300 hover:bg-neutral-400 py-2">
+            <button class="text-left w-full px-4" onclick="loadTAs()">
+                TAs
+            </button>
+        </li>
+
+        <li class="rounded-sm bg-neutral-300 hover:bg-neutral-400 py-2">
+            <button class="text-left w-full px-4" onclick="loadCourses()">
+                Courses
+            </button>
+        </li>
+    </ul>
+</div>
+
+<style>
+    li>ul                 { transform: translatex(100%) scale(0) }
+    li:hover>ul           { transform: translatex(101%) scale(1) }
+    li > button svg       { transform: rotate(-90deg) }
+    li:hover > button svg { transform: rotate(-270deg) }
+
+    .group:hover .group-hover\:scale-100 { transform: scale(1) }
+    .group:hover .group-hover\:-rotate-180 { transform: rotate(180deg) }
+    .scale-0 { transform: scale(0) }
+    .min-w-32 { min-width: 8rem }
+</style>
