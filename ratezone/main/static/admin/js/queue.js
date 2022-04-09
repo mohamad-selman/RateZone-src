@@ -3,7 +3,6 @@ $(document).ready(function() {
     $('#add-to-queue').click(function(event) {
         event.preventDefault();
         var tmp = $(this).val();
-        alert(tmp);
         $.ajax({
             url: '/queue/' + tmp,
             success: function() {
