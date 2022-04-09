@@ -201,6 +201,36 @@ def queue(request, prof_id=None):
     }
     return render(request, './queue.html', result)
 
+@login_required(login_url='sign_in')
+def remove_from_queue(request, prof_id):
+    print('Removing a professor from queue')
+    print(prof_id)
+    faculty_id = prof_id
+    uname = request.user.username
+    print(uname)
+    user = User.objects.get(username=uname)
+    user_id = user.id
+    print(f'{user_id} and {faculty_id}')
+
+    try:
+        deletion_query = "DELETE FROM user_queue WHERE uid=%s AND fid=%s"
+        data = (user_id, faculty_id)
+        cursors.execute(deletion_query, data)
+        print('executed successfully')
+    except:
+        print('Error')
+
+    fetch = "SELECT F.fname, F.lname, F.faculty_id, P.image, ROUND(F.overall_rating, 2) AS 'overall_rating' FROM Faculty AS F INNER JOIN user_queue AS U ON F.faculty_id=U.fid INNER JOIN Professor AS P ON P.faculty_id=F.faculty_id WHERE U.uid=%s"
+    cursors.execute(fetch, [user_id])
+    prof_row = cursors.fetchall()
+    tmp = cursors.description
+    prof_count = 0
+    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
+
+    result = {
+        'professors': prof
+    }
+    return render(request, './queue.html', result)
 
 @unauthenticated_user
 def sign_in(request):
