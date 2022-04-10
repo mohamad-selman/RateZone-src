@@ -116,6 +116,7 @@ class AuthUser(models.Model):
     date_joined = models.DateTimeField(blank=True)
     user_level = models.IntegerField(blank=True)
     discarded_rev_count = models.IntegerField(blank=True)
+    major = models.CharField(max_length=150, blank=True, null=True)
 
     objects = models.Manager()
 
