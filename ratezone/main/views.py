@@ -37,7 +37,27 @@ def convert_to_dictionary(cursor_description, query_result):
 
 def searchResults(request):
     total_count = 0
-
+    print('Here')
+    if request.method == "POST":
+        print('Here again')
+        get_name = request.POST.get('tags')
+        print(get_name)
+        L = get_name.split(' ')
+        print(L)
+        query = '''
+                SELECT DISTINCT F.fname, F.lname, D.dept_name, ROUND(F.overall_rating, 2) AS 'overall_rating', 
+                F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id 
+                INNER JOIN Department AS D ON D.dept_code=F.dept_code WHERE CONCAT(F.fname, ' ', F.lname) LIKE %s
+                '''
+        cursors.execute(query, [get_name])
+        prof_row = cursors.fetchall()
+        tmp = cursors.description
+        (prof, total_count) = convert_to_dictionary(tmp, prof_row)
+        print(prof)
+        result = {
+            'professors': prof
+        }
+        return render(request, './searchResults.html', result)
     # for all the custom queries executed!
     # cursors return the query result in the form of a tuple
     # needs to be converted to dictionary-like notation
@@ -120,6 +140,7 @@ def searchResults(request):
         'courses': courses,
         'count': total_count
     }
+
     return render(request, './searchResults.html', result)
 
 
