@@ -189,7 +189,6 @@ def professor(request, prof_id):
 
 
 @login_required(login_url='sign_in')
-<<<<<<< HEAD
 def rate(request, prof_id):
     prof_query = '''
                     SELECT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',F.teaching_quality,
@@ -252,8 +251,6 @@ def rate(request, prof_id):
         'prof': prof
     }
     return render(request, './rate.html', result)
-=======
->>>>>>> 6bb600f760f170bb8364ce085c0eb67216f26596
 
 def rate(request,prof_id):
     prof_query = "SELECT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',F.teaching_quality,F.faculty_id,D.dept_name,P.image FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s"
@@ -296,7 +293,7 @@ def rate(request,prof_id):
     result = {
         'prof': prof
     }
-    return render(request, './rate.html',result)
+    return render(request, './rate.html', result)
 
 def search(request):
     return render(request, './search.html')
