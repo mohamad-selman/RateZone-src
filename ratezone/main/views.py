@@ -181,9 +181,49 @@ def professor(request, prof_id):
 
 
 @login_required(login_url='sign_in')
-def rate(request):
-    return render(request, './rate.html')
 
+def rate(request,prof_id):
+    prof_query = "SELECT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',F.teaching_quality,F.faculty_id,D.dept_name,P.image FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s"
+    cursors.execute(prof_query, [prof_id])
+    prof_row = cursors.fetchall()
+    tmp = cursors.description
+    prof = []
+    for r in prof_row:
+        i = 0
+        d = {}
+        while i < len(tmp):
+            d[tmp[i][0]] = r[i]
+            i += 1
+        prof.append(d)
+    # print(prof)
+
+
+
+    if request.method == 'POST':
+
+        # D=request.POST['D']
+        quality=request.POST['quality']
+        difficulty=request.POST['difficulty']
+        rate=request.POST['rate']
+        workload=request.POST.getlist('workload')
+        personality=request.POST.getlist('personality')
+        misc=request.POST.getlist('misc')
+        comment=request.POST['comment']
+        print( 'id = ',prof_id)
+        # print(D)
+        print("quality = ",quality)
+        print("difficulty = ",difficulty)
+        print("rate = ",rate)
+        print("workload = ",workload)
+        print("personality = ", personality)
+        print("misc = ",misc)
+        print("comment = ",comment)
+
+    #print(request.POST)
+    result = {
+        'prof': prof
+    }
+    return render(request, './rate.html',result)
 
 def search(request):
     return render(request, './search.html')

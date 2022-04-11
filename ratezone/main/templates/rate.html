@@ -6,59 +6,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href=" {% static '/admin/css/main.css' %}">
     <!-- <title>RMP</title> -->
 </head>
 <body class="px-5 pt-2 pb-6
 text-xs sm:text-base lg:text-lg">
-    {% include 'header.html' %}
+    <header class="border-b text-left py-1">
+        <div class="container mx-auto flex items-center justify-between relative">
+            <a href="{% url 'home' %}">
+                <img src="{% static '/admin/img/logo.svg' %}" alt="Logo" width=120>
+            </a>
+            <nav>
+                <ul class="flex gap-x-3 items-center">
+                    <li>
+                        <a href="{% url 'search' %}" class="px-2 py-2 sm:px-4
+                        font-normal transition hover:bg-neutral-200
+                        rounded-md flex">
+                            Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'queue' %}" class="px-2 py-2 sm:px-4
+                        font-normal transition hover:bg-neutral-200
+                        rounded-md flex">
+                            My Queue
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'sign_in' %}" class="px-2 py-2 sm:px-4
+                        font-normal text-white
+                        rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]
+                        flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Log In
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    
 
     <div class="mt-6">
         <div class="flex gap-x-4 items-center">
-            <p class="pl-2 font-normal text-2xl">You are rating Professor Hussain Almohri</p>
+            {% for p in prof %}
+            <p class="pl-2 font-normal text-2xl">You are rating Professor {{ p.fname }} {{ p.lname }}  </p>
+            
             <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_drbe9mf2.json"  background="transparent" style="width: 300px;" speed="1" loop autoplay></lottie-player>
         </div>
 
-        <form action="" class="mt-5">
+        <form action="#" method="post" class="mt-5">
+            {% csrf_token %}
             <p class="font-semibold
             text-base sm:text-lg lg:text-xl">
                 First, your rating.
             </p>
+            
+
+            
             <div>
+                <!-- <input style="display: none;" type="checkbox" checked id="ID_ofForm" name="D" value="{{ p.faculty_id}}"> -->
+                
                 <p class="font-normal mt-6
                 text-base sm:text-lg lg:text-xl">
                     1. What is your rating for the teaching quality?
                 </p>
                 <div class="mt-3 ml-6 flex gap-x-2">
-                    <input class="hidden" type="radio" id="q1" name="quality">
+                    <input class="hidden" type="radio" id="q1" name="quality" value="1">
                     <label for="q1"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         1
                     </label><br>
 
-                    <input class="hidden" type="radio" id="q2" name="quality">
+                    <input class="hidden" type="radio" id="q2" name="quality" value="2">
                     <label for="q2"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         2
                     </label><br>
 
-                    <input class="hidden" type="radio" id="q3" name="quality" checked>
+                    <input class="hidden" type="radio" id="q3" name="quality" checked value = "3">
                     <label for="q3"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         3
                     </label><br>
 
-                    <input class="hidden" type="radio" id="q4" name="quality">
+                    <input class="hidden" type="radio" id="q4" name="quality" value="4">
                     <label for="q4"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         4
                     </label><br>
 
-                    <input class="hidden" type="radio" id="q5" name="quality">
+                    <input class="hidden" type="radio" id="q5" name="quality" value="5">
                     <label for="q5"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
@@ -71,35 +116,35 @@ text-xs sm:text-base lg:text-lg">
                     2. What is your rating for the difficulty?
                 </p>
                 <div class="mt-3 ml-6 flex gap-x-2">
-                    <input class="hidden" type="radio" id="d1" name="difficulty">
+                    <input class="hidden" type="radio" id="d1" name="difficulty" value="1">
                     <label for="d1"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         1
                     </label><br>
 
-                    <input class="hidden" type="radio" id="d2" name="difficulty">
+                    <input class="hidden" type="radio" id="d2" name="difficulty" value="2">
                     <label for="d2"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         2
                     </label><br>
 
-                    <input class="hidden" type="radio" id="d3" name="difficulty" checked>
+                    <input class="hidden" type="radio" id="d3" name="difficulty" checked value="3" >
                     <label for="d3"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         3
                     </label><br>
 
-                    <input class="hidden" type="radio" id="d4" name="difficulty">
+                    <input class="hidden" type="radio" id="d4" name="difficulty" value="4">
                     <label for="d4"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         4
                     </label><br>
 
-                    <input class="hidden" type="radio" id="d5" name="difficulty">
+                    <input class="hidden" type="radio" id="d5" name="difficulty" value="5">
                     <label for="d5"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
@@ -112,35 +157,35 @@ text-xs sm:text-base lg:text-lg">
                     3. What is your overall rating for this professor?
                 </p>
                 <div class="mt-3 ml-6 flex gap-x-2">
-                    <input class="hidden" type="radio" id="r1" name="rate">
+                    <input class="hidden" type="radio" id="r1" name="rate" value="1">
                     <label for="r1"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         1
                     </label><br>
 
-                    <input class="hidden" type="radio" id="r2" name="rate">
+                    <input class="hidden" type="radio" id="r2" name="rate" value="2">
                     <label for="r2"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         2
                     </label><br>
 
-                    <input class="hidden" type="radio" id="r3" name="rate" checked>
+                    <input class="hidden" type="radio" id="r3" name="rate" checked value="3">
                     <label for="r3"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         3
                     </label><br>
 
-                    <input class="hidden" type="radio" id="r4" name="rate">
+                    <input class="hidden" type="radio" id="r4" name="rate" value="4">
                     <label for="r4"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
                         4
                     </label><br>
 
-                    <input class="hidden" type="radio" id="r5" name="rate">
+                    <input class="hidden" type="radio" id="r5" name="rate" value="5">
                     <label for="r5"
                     class="border rounded-full text-base
                     py-1 px-4 md:px-8">
@@ -156,7 +201,7 @@ text-xs sm:text-base lg:text-lg">
                     <p class="mt-4 font-semibold text-base sm:text-lg lg:text-xl">Workload</p>
                     <div class="text-center flex flex-wrap gap-x-4">
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="wl1" name="workload">
+                            <input class="hidden" type="checkbox" id="wl1" name="workload" value ="Lots of HW">
                             <label for="wl1"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -165,7 +210,7 @@ text-xs sm:text-base lg:text-lg">
                         </div>
 
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="wl2" name="workload">
+                            <input class="hidden" type="checkbox" id="wl2" name="workload" value="Lecture Heavy">
                             <label for="wl2"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -174,7 +219,7 @@ text-xs sm:text-base lg:text-lg">
                         </div>
 
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="wl3" name="workload">
+                            <input class="hidden" type="checkbox" id="wl3" name="workload" value="No Curves">
                             <label for="wl3"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -183,7 +228,7 @@ text-xs sm:text-base lg:text-lg">
                         </div>
 
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="wl4" name="workload">
+                            <input class="hidden" type="checkbox" id="wl4" name="workload" value="Curves">
                             <label for="wl4"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -195,7 +240,7 @@ text-xs sm:text-base lg:text-lg">
                     <p class="mt-4 font-semibold text-base sm:text-lg lg:text-xl">Personality</p>
                     <div class="text-center flex flex-wrap gap-x-4">
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="ps1" name="personality">
+                            <input class="hidden" type="checkbox" id="ps1" name="personality" value="Humorous">
                             <label for="ps1"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -204,7 +249,7 @@ text-xs sm:text-base lg:text-lg">
                         </div>
 
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="ps2" name="personality">
+                            <input class="hidden" type="checkbox" id="ps2" name="personality" value="Inspirational">
                             <label for="ps2"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -213,7 +258,7 @@ text-xs sm:text-base lg:text-lg">
                         </div>
 
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="ps3" name="personality">
+                            <input class="hidden" type="checkbox" id="ps3" name="personality" value="Caring">
                             <label for="ps3"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -222,7 +267,7 @@ text-xs sm:text-base lg:text-lg">
                         </div>
 
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="ps4" name="personality">
+                            <input class="hidden" type="checkbox" id="ps4" name="personality" value="Passionate">
                             <label for="ps4"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -230,7 +275,7 @@ text-xs sm:text-base lg:text-lg">
                             </label>
                         </div>
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="ps5" name="personality">
+                            <input class="hidden" type="checkbox" id="ps5" name="personality" value="Friendly">
                             <label for="ps5"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -238,7 +283,7 @@ text-xs sm:text-base lg:text-lg">
                             </label>
                         </div>
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="ps6" name="personality">
+                            <input class="hidden" type="checkbox" id="ps6" name="personality" value="Monotone">
                             <label for="ps6"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -246,7 +291,7 @@ text-xs sm:text-base lg:text-lg">
                             </label>
                         </div>
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="ps7" name="personality">
+                            <input class="hidden" type="checkbox" id="ps7" name="personality" value="Uncaring">
                             <label for="ps7"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -258,7 +303,7 @@ text-xs sm:text-base lg:text-lg">
                     <p class="mt-4 font-semibold text-base sm:text-lg lg:text-xl">Miscellaneous</p>
                     <div class="text-center flex flex-wrap gap-x-4">
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="misc1" name="misc">
+                            <input class="hidden" type="checkbox" id="misc1" name="misc" value="Attendance Mandatory">
                             <label for="misc1"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -266,7 +311,7 @@ text-xs sm:text-base lg:text-lg">
                             </label><br>
                         </div>
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="misc2" name="misc">
+                            <input class="hidden" type="checkbox" id="misc2" name="misc" value="Attendance Non Mandatory">
                             <label for="misc2"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -275,7 +320,7 @@ text-xs sm:text-base lg:text-lg">
                         </div>
 
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="misc3" name="misc">
+                            <input class="hidden" type="checkbox" id="misc3" name="misc" value="Textbook Required">
                             <label for="misc3"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -284,7 +329,7 @@ text-xs sm:text-base lg:text-lg">
                         </div>
 
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="misc4" name="misc">
+                            <input class="hidden" type="checkbox" id="misc4" name="misc" value="Boring Lecture">
                             <label for="misc4"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -293,7 +338,7 @@ text-xs sm:text-base lg:text-lg">
                         </div>
 
                         <div class="py-2 md:py-3 my-1">
-                            <input class="hidden" type="checkbox" id="misc5" name="misc">
+                            <input class="hidden" type="checkbox" id="misc5" name="misc" value="Easy Exams">
                             <label for="misc5"
                             class="border rounded-full text-center
                             py-2 px-4 md:py-3 md:px-8">
@@ -312,7 +357,7 @@ text-xs sm:text-base lg:text-lg">
                 <textarea class="w-full p-3 mt-3
                 bg-neutral-100 border border-neutral-300 rounded-md"
                 rows="4"
-                placeholder="Anything you want to say!"></textarea>
+                placeholder="Anything you want to say!"  name="comment" ></textarea>
             </div>
 
             <div class="flex justify-center m-3">
@@ -323,7 +368,15 @@ text-xs sm:text-base lg:text-lg">
                     Submit my Review
                 </button>
             </div>
+
+            <div class="success-msg" style="color: #270;
+            background-color: #DFF2BF; display: none;">
+                <i class="fa fa-check"></i>
+                Success Rate.
+              </div>
         </form>
+        {% endfor %}
     </div>
 </body>
 </html>
+

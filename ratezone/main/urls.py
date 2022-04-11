@@ -12,6 +12,7 @@ urlpatterns = [
     path('queue/<int:prof_id>/', views.queue, name='queue'),
     path('remove_from_queue/<int:prof_id>/', views.remove_from_queue, name='remove_from_queue'),
     path('rate/', views.rate, name='rate'),
+    path('rate/<int:prof_id>/', views.rate, name='rate'),
     path('rateCourse', views.rate_course, name='rate_course'),
     path('search/', views.search, name='search'),
     path('searchResults/', views.searchResults, name='searchResults'),
