@@ -166,23 +166,23 @@ def professor(request, prof_id):
     # cursors return the query result in the form of a tuple
     # needs to be converted to dictionary-like notation
     # that is what the loop does
-
+    faculty_id = prof_id
     prof_query = "SELECT DISTINCT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',F.teaching_quality,F.faculty_id,D.dept_name,P.image FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s"
-    cursors.execute(prof_query, [prof_id])
+    cursors.execute(prof_query, [faculty_id])
     prof_row = cursors.fetchall()
     tmp = cursors.description
     prof_count = 0
     (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
 
     second_faculty_rev_query = "SELECT COUNT(R.review_id) AS 'rev_count' FROM Faculty AS F INNER JOIN user_faculty_rev AS R ON F.faculty_id=R.faculty_id WHERE F.faculty_id=%s"
-    cursors.execute(second_faculty_rev_query, [prof_id])
+    cursors.execute(second_faculty_rev_query, [faculty_id])
     prof_row = cursors.fetchall()
     tmp = cursors.description
     (rev_prof, rev_count) = convert_to_dictionary(tmp, prof_row)
     prof[0].update(rev_prof[0])
 
     similar_query = "SELECT F.fname,F.lname, F2.fname,F2.lname, ROUND(F2.overall_rating, 2) AS 'overall_rating' from Faculty F inner join similar_faculty S1 on S1.fid=F.faculty_id inner join Faculty F2 on S1.similar_faculty=F2.faculty_id WHERE F.faculty_id=%s"
-    cursors.execute(similar_query, [prof_id])
+    cursors.execute(similar_query, [faculty_id])
     sim_row = cursors.fetchall()
     tmp = cursors.description
     sim_count = 0
@@ -190,9 +190,14 @@ def professor(request, prof_id):
 
     total_count = sim_count + prof_count + rev_count
 
+    print(faculty_id)
+    # get all revs
+    reviews = UserFacultyRev.objects.filter(faculty=faculty_id)
+
     result = {
         'prof': prof,
-        'similar_professors': sim_prof
+        'similar_professors': sim_prof,
+        'revs': reviews
     }
     return render(request, './professor.html', result)
 
