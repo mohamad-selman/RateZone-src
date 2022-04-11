@@ -236,70 +236,33 @@ def rate(request, prof_id):
 
 
         try:
-            u = UserFacultyRev(faculty_id=prof_id, uid=user_id, overall_rating=overall_rate,
-                                          difficulty_rating=difficulty, upvotes=0, downvotes=0, report_count=0,
-                                          semester_period='', student_thoughts=comment,
-                                          teaching_quality=quality)
-            u.save()
-            print('Success')
+            faculty_id = prof_id
+            # u = UserFacultyRev(faculty_id=prof_id, uid=user_id, overall_rating=overall_rate,
+            #                               difficulty_rating=difficulty, upvotes=0, downvotes=0, report_count=0,
+            #                               semester_period='', student_thoughts=comment,
+            #                               teaching_quality=quality)
+            # u.save()
+            print('Here')
             # data = (prof_id, user_id, 5, difficulty, comment, quality)
-            #
+
             # UserFacultyRev.objects.raw('''
             #     INSERT INTO user_faculty_rev (faculty_id, uid, overall_rating, difficulty_rating, student_thoughts,
             #     teaching_quality)
             #     VALUES (%s, %s, %s, %s, %s, %s)
             #     ''', [prof_id, user_id, overall_rate, difficulty, comment, quality])
-            # data = (prof_id, user_id, 5, difficulty, comment, quality)
-            # cursors.execute(insertion_query, data)
+            insertion_query = '''
+                INSERT INTO user_faculty_rev (faculty_id, uid, overall_rating, difficulty_rating, student_thoughts,
+                 teaching_quality)
+                 VALUES (%s, %s, %s, %s, %s, %s)
+            
+            '''
+            data = (faculty_id, user_id, overall_rate, difficulty, comment, quality)
+            cursors.execute(insertion_query, data)
             print('Success')
         except:
             print('Could not review')
 
-    print('fail')
     # print(request.POST)
-    result = {
-        'prof': prof
-    }
-    return render(request, './rate.html', result)
-
-def rate(request,prof_id):
-    prof_query = "SELECT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',F.teaching_quality,F.faculty_id,D.dept_name,P.image FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s"
-    cursors.execute(prof_query, [prof_id])
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    prof = []
-    for r in prof_row:
-        i = 0
-        d = {}
-        while i < len(tmp):
-            d[tmp[i][0]] = r[i]
-            i += 1
-        prof.append(d)
-    # print(prof)
-
-
-
-    if request.method == 'POST':
-
-        # D=request.POST['D']
-        quality=request.POST['quality']
-        difficulty=request.POST['difficulty']
-        rate=request.POST['rate']
-        workload=request.POST.getlist('workload')
-        personality=request.POST.getlist('personality')
-        misc=request.POST.getlist('misc')
-        comment=request.POST['comment']
-        print( 'id = ',prof_id)
-        # print(D)
-        print("quality = ", quality)
-        print("difficulty = ", difficulty)
-        print("rate = ", rate)
-        print("workload = ", workload)
-        print("personality = ", personality)
-        print("misc = ", misc)
-        print("comment = ", comment)
-
-    #print(request.POST)
     result = {
         'prof': prof
     }
