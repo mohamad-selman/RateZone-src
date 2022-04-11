@@ -42,22 +42,31 @@ def searchResults(request):
         print('Here again')
         get_name = request.POST.get('tags')
         print(get_name)
-        l = get_name.split(' ')
+        name = get_name.strip()
+        l = name.split(' ')
         print(l)
+        print('length: ')
+        print(len(l))
         if len(l) == 1:
             query = '''
                     SELECT F.fname, F.lname, D.dept_name, ROUND(F.overall_rating, 2) AS 'overall_rating', 
-                    F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id 
+                    F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON 
+                    F.faculty_id = P.faculty_id 
                     INNER JOIN Department AS D ON D.dept_code=F.dept_code WHERE F.fname LIKE %s OR F.lname LIKE %s
                     '''
+            data = (get_name, get_name)
+            print(f'data is {data}')
+            cursors.execute(query, data)
         else:
             query = '''
                     SELECT F.fname, F.lname, D.dept_name, ROUND(F.overall_rating, 2) AS 'overall_rating', 
-                    F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id 
+                    F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON 
+                    F.faculty_id = P.faculty_id 
                     INNER JOIN Department AS D ON D.dept_code=F.dept_code WHERE CONCAT(F.fname, ' ', F.lname) LIKE %s
                     '''
-        data = (get_name, get_name)
-        cursors.execute(query, data)
+            print('executing here')
+            cursors.execute(query, [name])
+
         prof_row = cursors.fetchall()
         tmp = cursors.description
         (prof, total_count) = convert_to_dictionary(tmp, prof_row)
@@ -210,7 +219,7 @@ def rate(request, prof_id):
         # D=request.POST['D']
         quality = request.POST['quality']
         difficulty = request.POST['difficulty']
-        ratee = request.POST['rate']
+        overall_rate = request.POST['rate']
         workload = request.POST.getlist('workload')
         personality = request.POST.getlist('personality')
         misc = request.POST.getlist('misc')
@@ -227,25 +236,26 @@ def rate(request, prof_id):
 
 
         try:
-            u = UserFacultyRev(faculty_id=prof_id, uid=user_id, overall_rating=ratee,
+            u = UserFacultyRev(faculty_id=prof_id, uid=user_id, overall_rating=overall_rate,
                                           difficulty_rating=difficulty, upvotes=0, downvotes=0, report_count=0,
                                           semester_period='', student_thoughts=comment,
                                           teaching_quality=quality)
             u.save()
             print('Success')
             # data = (prof_id, user_id, 5, difficulty, comment, quality)
-
-            UserFacultyRev.objects.raw('''
-                INSERT INTO user_faculty_rev (faculty_id, uid, overall_rating, difficulty_rating, student_thoughts, 
-                teaching_quality)
-                VALUES (%s, %s, %s, %s, %s, %s)
-                ''', [prof_id, user_id, 5, difficulty, comment, 4])
+            #
+            # UserFacultyRev.objects.raw('''
+            #     INSERT INTO user_faculty_rev (faculty_id, uid, overall_rating, difficulty_rating, student_thoughts,
+            #     teaching_quality)
+            #     VALUES (%s, %s, %s, %s, %s, %s)
+            #     ''', [prof_id, user_id, overall_rate, difficulty, comment, quality])
             # data = (prof_id, user_id, 5, difficulty, comment, quality)
             # cursors.execute(insertion_query, data)
             print('Success')
         except:
             print('Could not review')
 
+    print('fail')
     # print(request.POST)
     result = {
         'prof': prof
@@ -281,13 +291,13 @@ def rate(request,prof_id):
         comment=request.POST['comment']
         print( 'id = ',prof_id)
         # print(D)
-        print("quality = ",quality)
-        print("difficulty = ",difficulty)
-        print("rate = ",rate)
-        print("workload = ",workload)
+        print("quality = ", quality)
+        print("difficulty = ", difficulty)
+        print("rate = ", rate)
+        print("workload = ", workload)
         print("personality = ", personality)
-        print("misc = ",misc)
-        print("comment = ",comment)
+        print("misc = ", misc)
+        print("comment = ", comment)
 
     #print(request.POST)
     result = {

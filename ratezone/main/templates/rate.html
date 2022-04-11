@@ -364,7 +364,7 @@ text-xs sm:text-base lg:text-lg">
                 <button class="px-2 py-2 sm:px-4
                 font-normal text-white
                 rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]"
-                onclick="location.href = {% url 'rate' %};">
+                onclick="location.href = {% url 'rate' prof_id=p.faculty_id  %};">
                     Submit my Review
                 </button>
             </div>
