@@ -8,8 +8,13 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import *
+import mysql.connector
 
-cursors = connection.cursor()
+
+#cursors = connection.cursor()
+mydb = mysql.connector.connect(database='ratezone_DB', 
+        user='ratezone_userAdmin', password='ratezone@123')
+cursors = mydb.cursor()
 
 # Create your views here.
 def home(request):
