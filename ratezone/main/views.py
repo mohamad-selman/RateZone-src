@@ -11,7 +11,6 @@ from .decorators import *
 import mysql.connector
 
 
-#cursors = connection.cursor()
 mydb = mysql.connector.connect(database='ratezone_DB', 
         user='ratezone_userAdmin', password='ratezone@123')
 cursors = mydb.cursor()
