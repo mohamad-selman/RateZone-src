@@ -15,7 +15,6 @@ cursors = connection.cursor()
 def home(request):
     return render(request, './index.html')
 
-
 # the function takes the query result and the cursor description of an executed query
 # converts from a tuple-like notation to dictionary-like notation
 # needed for each custom query executed
