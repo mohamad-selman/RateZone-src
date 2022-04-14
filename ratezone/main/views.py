@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.db import connections
+from django.db import connection
 from .models import *
 
 from django.contrib.auth import logout, login, authenticate
@@ -9,8 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import *
 
-cursors = connections['default'].cursor()
-
+cursors = connection.cursor()
 
 # Create your views here.
 def home(request):
