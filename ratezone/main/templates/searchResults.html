@@ -265,7 +265,15 @@ text-xs sm:text-base lg:text-lg">
                     </span>
                     <div>
                         <p>Overall Rating</p>
-			<p class="md:ml-2"><span class="text-2xl">{{ dep.overall_rating }}</span>/5</p>
+                        {% if dep.overall_rating %}
+			            <p class="md:ml-2">
+                            <span class="text-2xl">{{ dep.overall_rating }}</span>/5
+                        </p>
+                        {% else %}
+			            <p class="md:ml-2">
+                            <span class="text-2xl">NA</span>/5
+                        </p>
+                        {% endif %}
                     </div>
                 </div>
             </a>
@@ -285,8 +293,17 @@ text-xs sm:text-base lg:text-lg">
                         Kuwait University
                     </span>
                     <div>
-                        <p>Overall Rating</p>
-			<p class="md:ml-2"><span class="text-2xl">{{dep.overall_rating}}</span>/5</p>
+                        {% if dep.overall_rating %}
+                            <p>Overall Rating</p>
+                            <p class="md:ml-2">
+                                <span class="text-2xl">{{dep.overall_rating}}</span>/5
+                            </p>
+                        {% else %}
+                            <p>Overall Rating</p>
+                            <p class="md:ml-2">
+                                <span class="text-2xl">NA</span>/5
+                            </p>
+                        {% endif %}
                     </div>
                 </div>
             </a>
@@ -308,7 +325,15 @@ text-xs sm:text-base lg:text-lg">
                     </span>
                     <div>
                         <p>Overall Rating</p>
-			<p class="md:ml-2"><span class="text-2xl">{{dep.overall_rating}}</span>/5</p>
+                        {% if dep.overall_rating %}
+			            <p class="md:ml-2">
+                            <span class="text-2xl">{{ dep.overall_rating }}</span>/5
+                        </p>
+                        {% else %}
+			            <p class="md:ml-2">
+                            <span class="text-2xl">NA</span>/5
+                        </p>
+                        {% endif %}
                     </div>
                 </div>
             </a>
@@ -328,7 +353,15 @@ text-xs sm:text-base lg:text-lg">
                     </span>
                     <div>
                         <p>Overall Rating</p>
-			<p class="md:ml-2"><span class="text-2xl">{{dep.overall_rating}}</span>/5</p>
+                        {% if dep.overall_rating %}
+			            <p class="md:ml-2">
+                            <span class="text-2xl">{{ dep.overall_rating }}</span>/5
+                        </p>
+                        {% else %}
+			            <p class="md:ml-2">
+                            <span class="text-2xl">NA</span>/5
+                        </p>
+                        {% endif %}
                     </div>
                 </div>
             </a>

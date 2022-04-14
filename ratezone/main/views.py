@@ -10,14 +10,15 @@ from django.contrib.auth.decorators import login_required
 from .decorators import *
 import mysql.connector
 
-
-mydb = mysql.connector.connect(database='ratezone_DB', 
-        user='ratezone_userAdmin', password='ratezone@123')
+mydb = mysql.connector.connect(database='ratezone_DB',
+                               user='ratezone_userAdmin', password='ratezone@123')
 cursors = mydb.cursor()
+
 
 # Create your views here.
 def home(request):
     return render(request, './index.html')
+
 
 # the function takes the query result and the cursor description of an executed query
 # converts from a tuple-like notation to dictionary-like notation
@@ -99,7 +100,11 @@ def searchResults(request):
     prof_count = 0
     (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
 
-    ta_query = "SELECT DISTINCT F.faculty_id, fname, lname, dept_name FROM Faculty as F INNER JOIN Teaching_Assistant as T ON F.faculty_id = T.faculty_id INNER JOIN Department AS D ON D.dept_code=F.dept_code"
+    ta_query = '''
+                SELECT DISTINCT F.faculty_id, fname, lname, dept_name FROM Faculty as F 
+                INNER JOIN Teaching_Assistant as T ON F.faculty_id = T.faculty_id 
+                INNER JOIN Department AS D ON D.dept_code=F.dept_code
+               '''
     cursors.execute(ta_query)
     ta_row = cursors.fetchall()
     tmp = cursors.description
@@ -108,7 +113,11 @@ def searchResults(request):
 
     # CS query
 
-    CS_dept_query = "SELECT DISTINCT F.faculty_id, F.fname, F.lname, ROUND(F.overall_rating,2), dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=418"
+    CS_dept_query = '''
+                SELECT DISTINCT F.faculty_id, F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating', 
+                dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code 
+                WHERE D.dept_code=418 ORDER BY overall_rating DESC
+                '''
     cursors.execute(CS_dept_query)
     dept_row = cursors.fetchall()
     tmp = cursors.description
@@ -117,7 +126,11 @@ def searchResults(request):
 
     # CE query
 
-    CE_dept_query = "SELECT DISTINCT F.faculty_id, fname, lname,ROUND(F.overall_rating,2), dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=1612"
+    CE_dept_query = '''
+                SELECT DISTINCT F.faculty_id, fname, lname,ROUND(F.overall_rating,2) AS 'overall_rating', dept_name 
+                FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code 
+                WHERE D.dept_code=1612 ORDER BY overall_rating DESC
+                '''
     cursors.execute(CE_dept_query)
     dept_row = cursors.fetchall()
     tmp = cursors.description
@@ -126,14 +139,22 @@ def searchResults(request):
 
     # IS query
 
-    IS_dept_query = "SELECT DISTINCT F.faculty_id, fname, lname, ROUND(F.overall_rating, 2), dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=1830"
+    IS_dept_query = '''
+                SELECT DISTINCT F.faculty_id, fname, lname, ROUND(F.overall_rating, 2) AS 'overall_rating', dept_name 
+                FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code 
+                WHERE D.dept_code=1830 ORDER BY overall_rating DESC
+                '''
     cursors.execute(IS_dept_query)
     dept_row = cursors.fetchall()
     tmp = cursors.description
     is_count = 0
     (IS_dept, is_count) = convert_to_dictionary(tmp, dept_row)
 
-    Math_dept_query = "SELECT DISTINCT F.faculty_id, fname, lname, ROUND(F.overall_rating, 2),dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code WHERE D.dept_code=410"
+    Math_dept_query = '''
+                SELECT DISTINCT F.faculty_id, fname, lname, ROUND(F.overall_rating, 2) AS 'overall_rating',dept_name 
+                FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code 
+                WHERE D.dept_code=410 ORDER BY overall_rating DESC
+                '''
     cursors.execute(Math_dept_query)
     dept_row = cursors.fetchall()
     tmp = cursors.description
@@ -142,7 +163,10 @@ def searchResults(request):
 
     # courses = Course.objects.all()
 
-    course_query = "SELECT * FROM Course AS C INNER JOIN Department AS D ON C.course_code LIKE CONCAT('%', D.dept_code, '%')"
+    course_query = '''
+                SELECT * FROM Course AS C INNER JOIN Department AS D ON C.course_code 
+                LIKE CONCAT('%', D.dept_code, '%')
+                '''
     cursors.execute(course_query)
     course_row = cursors.fetchall()
     tmp = cursors.description
@@ -247,7 +271,6 @@ def rate(request, prof_id):
         print("misc = ", misc)
         print("comment = ", comment)
 
-
         try:
             faculty_id = prof_id
             # u = UserFacultyRev(faculty_id=prof_id, uid=user_id, overall_rating=overall_rate,
@@ -280,6 +303,7 @@ def rate(request, prof_id):
         'prof': prof
     }
     return render(request, './rate.html', result)
+
 
 def search(request):
     return render(request, './search.html')
@@ -318,6 +342,7 @@ def queue(request, prof_id=None):
     }
     return render(request, './queue.html', result)
 
+
 @login_required(login_url='sign_in')
 def remove_from_queue(request, prof_id):
     print('Removing a professor from queue')
@@ -348,6 +373,7 @@ def remove_from_queue(request, prof_id):
         'professors': prof
     }
     return render(request, './queue.html', result)
+
 
 @unauthenticated_user
 def sign_in(request):
