@@ -84,7 +84,13 @@ def searchResults(request):
 
     # the following is a query that returns all professors
     # with their desired attributes
-    prof_query = "SELECT DISTINCT F.fname, F.lname, D.dept_name, ROUND(F.overall_rating, 2) AS 'overall_rating', F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id = P.faculty_id INNER JOIN Department AS D ON D.dept_code=F.dept_code"
+    prof_query = '''
+                    SELECT DISTINCT F.fname, F.lname, D.dept_name, 
+                    ROUND(F.overall_rating, 2) AS 'overall_rating',
+                    F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P 
+                    ON F.faculty_id = P.faculty_id INNER JOIN Department AS D ON 
+                    D.dept_code=F.dept_code ORDER BY overall_rating DESC
+                  '''
 
     # executing the query through connection cursor
     cursors.execute(prof_query)
