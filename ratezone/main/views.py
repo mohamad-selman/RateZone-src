@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db import connection
 from .models import *
-
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -101,9 +100,10 @@ def searchResults(request):
     (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
 
     ta_query = '''
-                SELECT DISTINCT F.faculty_id, fname, lname, dept_name FROM Faculty as F 
+                SELECT DISTINCT F.faculty_id, fname, lname, ROUND(F.overall_rating,2) AS 'overall_rating', dept_name FROM Faculty as F 
                 INNER JOIN Teaching_Assistant as T ON F.faculty_id = T.faculty_id 
                 INNER JOIN Department AS D ON D.dept_code=F.dept_code
+                ORDER BY overall_rating DESC
                '''
     cursors.execute(ta_query)
     ta_row = cursors.fetchall()
