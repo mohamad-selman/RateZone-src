@@ -390,7 +390,7 @@ def sign_in(request):
 
         if user is not None:
             print('HEy HO')
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             print('Yo YO')
             return redirect('dashboard')
         else:
