@@ -366,7 +366,11 @@ def remove_from_queue(request, prof_id):
     except:
         print('Error')
 
-    fetch = "SELECT F.fname, F.lname, F.faculty_id, P.image, ROUND(F.overall_rating, 2) AS 'overall_rating' FROM Faculty AS F INNER JOIN user_queue AS U ON F.faculty_id=U.fid INNER JOIN Professor AS P ON P.faculty_id=F.faculty_id WHERE U.uid=%s"
+    fetch = '''
+         SELECT F.fname, F.lname, F.faculty_id, P.image, ROUND(F.overall_rating, 2) AS 'overall_rating' FROM Faculty AS F
+         INNER JOIN user_queue AS U ON F.faculty_id=U.fid INNER JOIN Professor AS P ON P.faculty_id=F.faculty_id 
+         WHERE U.uid=%s
+         '''
     cursors.execute(fetch, [user_id])
     prof_row = cursors.fetchall()
     tmp = cursors.description
