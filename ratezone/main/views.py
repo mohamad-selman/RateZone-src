@@ -5,6 +5,8 @@ from .models import *
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .decorators import *
 import mysql.connector
@@ -16,8 +18,22 @@ cursors = mydb.cursor()
 
 # Create your views here.
 def home(request):
+
     return render(request, './index.html')
 
+
+def test(request):
+    query = "SELECT F.faculty_id FROM Faculty AS F"
+    cursors.execute(query)
+    prof_row = cursors.fetchall()
+    tmp = cursors.description
+    prof_count = 0
+    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
+
+    result = {
+        'professor': prof
+    }
+    return render(request, './index_old.html', result)
 
 # the function takes the query result and the cursor description of an executed query
 # converts from a tuple-like notation to dictionary-like notation
@@ -193,27 +209,52 @@ def searchResults(request):
     return render(request, './searchResults.html', result)
 
 
+
+
+def professorTwo(request, prof_name):
+    print(prof_name)
+    name = prof_name.split(' ')
+    first_name = name[0]
+    second_name = name[1]
+    query = Faculty.objects.filter(fname=first_name, lname=second_name).get()
+    print(query)
+    return HttpResponse(status=200)
+
+
 def professor(request, prof_id):
     # for all the custom queries executed!
     # cursors return the query result in the form of a tuple
     # needs to be converted to dictionary-like notation
     # that is what the loop does
     faculty_id = prof_id
-    prof_query = "SELECT DISTINCT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',F.teaching_quality,F.faculty_id,D.dept_name,P.image FROM Faculty AS F INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s"
+    prof_query = '''
+                SELECT DISTINCT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',
+                F.teaching_quality,F.faculty_id,D.dept_name,P.image FROM Faculty AS F 
+                INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D 
+                ON F.dept_code=D.dept_code WHERE P.faculty_id = %s
+                '''
     cursors.execute(prof_query, [faculty_id])
     prof_row = cursors.fetchall()
     tmp = cursors.description
     prof_count = 0
     (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
 
-    second_faculty_rev_query = "SELECT COUNT(R.review_id) AS 'rev_count' FROM Faculty AS F INNER JOIN user_faculty_rev AS R ON F.faculty_id=R.faculty_id WHERE F.faculty_id=%s"
+    second_faculty_rev_query = '''
+                            SELECT COUNT(R.review_id) AS 'rev_count' FROM Faculty AS F 
+                            INNER JOIN user_faculty_rev AS R ON F.faculty_id=R.faculty_id 
+                            WHERE F.faculty_id=%s
+                            '''
     cursors.execute(second_faculty_rev_query, [faculty_id])
     prof_row = cursors.fetchall()
     tmp = cursors.description
     (rev_prof, rev_count) = convert_to_dictionary(tmp, prof_row)
     prof[0].update(rev_prof[0])
 
-    similar_query = "SELECT F.fname,F.lname, F2.fname,F2.lname, ROUND(F2.overall_rating, 2) AS 'overall_rating' from Faculty F inner join similar_faculty S1 on S1.fid=F.faculty_id inner join Faculty F2 on S1.similar_faculty=F2.faculty_id WHERE F.faculty_id=%s"
+    similar_query = '''
+                SELECT F.fname,F.lname, F2.fname,F2.lname, ROUND(F2.overall_rating, 2) AS 'overall_rating' 
+                from Faculty F inner join similar_faculty S1 on S1.fid=F.faculty_id 
+                INNER JOIN Faculty F2 on S1.similar_faculty=F2.faculty_id WHERE F.faculty_id=%s
+                '''
     cursors.execute(similar_query, [faculty_id])
     sim_row = cursors.fetchall()
     tmp = cursors.description
@@ -222,7 +263,7 @@ def professor(request, prof_id):
 
     total_count = sim_count + prof_count + rev_count
 
-    print(faculty_id)
+    # print(faculty_id)
     # get all revs
     reviews = UserFacultyRev.objects.filter(faculty=faculty_id)
 
@@ -312,23 +353,13 @@ def search(request):
 @login_required(login_url='sign_in')
 def queue(request, prof_id=None):
     # we need professor id and user id
-    print(prof_id)
+    # print(prof_id)
     faculty_id = prof_id
     uname = request.user.username
-    print(uname)
+    # print(uname)
     user = User.objects.get(username=uname)
     user_id = user.id
-    print(f'{user_id} and {faculty_id}')
-
-    if prof_id is not None:
-        print('Before inserting')
-        # UserQueue.objects.create(uid=user_id, fid=faculty_id)
-        query = 'INSERT INTO user_queue VALUES (%s, %s)'
-        data = (user_id, faculty_id)
-        cursors.execute(query, data)
-        print('Made it here')
-        # query_entry.save()
-        print('Confirmed entry')
+    # print(f'{user_id} and {faculty_id}')
 
     fetch = '''
             SELECT F.fname, F.lname, F.faculty_id, P.image, ROUND(F.overall_rating, 2) AS 'overall_rating' 
@@ -347,6 +378,39 @@ def queue(request, prof_id=None):
     return render(request, './queue.html', result)
 
 
+@csrf_exempt
+@login_required(login_url='sign_in')
+def add_to_queue(request, prof_id):
+    print('I am being called')
+    if request.method == "POST":
+        val = request.post.get['prof_id']
+        print(val)
+    # we need professor id and user id
+    print('Adding a professor to queue')
+    print(f' this is the id: {prof_id}')
+    faculty_id = prof_id
+    uname = request.user.username
+    print(f'current logged it user: {uname}')
+    user = User.objects.get(username=uname)
+    user_id = user.id
+    print(f'{user_id} and {faculty_id}')
+
+    if prof_id:
+        print('Before inserting')
+        # UserQueue.objects.create(uid=user_id, fid=faculty_id)
+        query = 'INSERT INTO user_queue VALUES (%s, %s)'
+        data = (user_id, faculty_id)
+        cursors.execute(query, data)
+        print('Made it here')
+        # query_entry.save()
+        print('Confirmed entry')
+    else:
+        print('Failed to insert')
+
+    return HttpResponse(status=200)
+
+
+@csrf_exempt
 @login_required(login_url='sign_in')
 def remove_from_queue(request, prof_id):
     print('Removing a professor from queue')
@@ -366,7 +430,11 @@ def remove_from_queue(request, prof_id):
     except:
         print('Error')
 
-    fetch = "SELECT F.fname, F.lname, F.faculty_id, P.image, ROUND(F.overall_rating, 2) AS 'overall_rating' FROM Faculty AS F INNER JOIN user_queue AS U ON F.faculty_id=U.fid INNER JOIN Professor AS P ON P.faculty_id=F.faculty_id WHERE U.uid=%s"
+    fetch = '''
+         SELECT F.fname, F.lname, F.faculty_id, P.image, ROUND(F.overall_rating, 2) AS 'overall_rating' FROM Faculty AS F
+         INNER JOIN user_queue AS U ON F.faculty_id=U.fid INNER JOIN Professor AS P ON P.faculty_id=F.faculty_id 
+         WHERE U.uid=%s
+         '''
     cursors.execute(fetch, [user_id])
     prof_row = cursors.fetchall()
     tmp = cursors.description
@@ -395,7 +463,8 @@ def sign_in(request):
             return redirect('dashboard')
         else:
             return render(request, './signin.html')
-    return render(request, './signin.html')
+
+    return HttpResponse(status=200)
 
 
 @unauthenticated_user
