@@ -1,19 +1,14 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
 
 class Course(models.Model):
     course_code = models.IntegerField(primary_key=True)
     course_name = models.CharField(max_length=50)
+    overall_rating = models.FloatField(blank=True, null=True)
+    effort_required = models.FloatField(blank=True, null=True)
+    enjoyment_rating = models.FloatField(blank=True, null=True)
 
     objects = models.Manager()
-
 
     class Meta:
         managed = False
@@ -23,7 +18,8 @@ class Course(models.Model):
 class Department(models.Model):
     dept_code = models.IntegerField(primary_key=True)
     dept_name = models.CharField(max_length=50)
-    overall_rating = models.IntegerField()
+    overall_rating = models.FloatField(blank=True, null=True)
+    adminstrative_support = models.FloatField(blank=True, null=True)
 
     objects = models.Manager()
 
@@ -37,23 +33,34 @@ class Faculty(models.Model):
     dept_code = models.ForeignKey(Department, models.DO_NOTHING, db_column='dept_code')
     fname = models.CharField(max_length=50)
     lname = models.CharField(max_length=50)
+    overall_rating = models.FloatField(blank=True, null=True)
+    teaching_quality = models.FloatField(blank=True, null=True)
+    exams_difficulty = models.FloatField(blank=True, null=True)
 
     objects = models.Manager()
-
-    def __str__(self):
-        return self.fname + ' ' + self.lname
 
     class Meta:
         managed = False
         db_table = 'Faculty'
 
 
+class LanguageInstructor(models.Model):
+    faculty = models.OneToOneField(Faculty, models.DO_NOTHING, primary_key=True)
+    image = models.CharField(max_length=500, blank=True, null=True)
+
+    objects = models.Manager()
+
+    class Meta:
+        managed = False
+        db_table = 'Language_Instructor'
+
+
 class Professor(models.Model):
-    faculty_id = models.ForeignKey(Faculty, models.DO_NOTHING)
-    phd_from = models.CharField(max_length=50)
+    faculty = models.ForeignKey(Faculty, models.DO_NOTHING)
+    phd_from = models.CharField(max_length=255, blank=True, null=True)
     prof_rank = models.CharField(max_length=50)
-    research_area = models.CharField(max_length=50)
-    image = models.CharField(max_length=255, blank=True, null=True)
+    research_area = models.CharField(max_length=255, blank=True, null=True)
+    image = models.CharField(max_length=500, blank=True, null=True)
 
     objects = models.Manager()
 
@@ -63,8 +70,9 @@ class Professor(models.Model):
 
 
 class TeachingAssistant(models.Model):
-    faculty = models.ForeignKey(Faculty, models.DO_NOTHING)
-    masters_from = models.CharField(max_length=50)
+    faculty = models.OneToOneField(Faculty, models.DO_NOTHING)
+    masters_from = models.CharField(max_length=50, blank=True, null=True)
+    image = models.CharField(max_length=500, blank=True, null=True)
 
     objects = models.Manager()
 
@@ -73,8 +81,52 @@ class TeachingAssistant(models.Model):
         db_table = 'Teaching_Assistant'
 
 
+class User(models.Model):
+    user_id = models.AutoField(primary_key=True)
+    email = models.CharField(unique=True, max_length=50)
+    passw = models.CharField(max_length=50)
+    fname = models.CharField(max_length=50)
+    lname = models.CharField(max_length=50)
+    user_level = models.IntegerField()
+    discarded_rev_count = models.IntegerField()
+
+    objects = models.Manager()
+
+    class Meta:
+        managed = False
+        db_table = 'User'
+
+
+class AccountEmailaddress(models.Model):
+    email = models.CharField(unique=True, max_length=254)
+    verified = models.IntegerField()
+    primary = models.IntegerField()
+    user = models.ForeignKey('AuthUser', models.DO_NOTHING)
+
+    objects = models.Manager()
+
+    class Meta:
+        managed = False
+        db_table = 'account_emailaddress'
+
+
+class AccountEmailconfirmation(models.Model):
+    created = models.DateTimeField()
+    sent = models.DateTimeField(blank=True, null=True)
+    key = models.CharField(unique=True, max_length=64)
+    email_address = models.ForeignKey(AccountEmailaddress, models.DO_NOTHING)
+
+    objects = models.Manager()
+
+    class Meta:
+        managed = False
+        db_table = 'account_emailconfirmation'
+
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -85,6 +137,8 @@ class AuthGroupPermissions(models.Model):
     id = models.BigAutoField(primary_key=True)
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
     permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -97,6 +151,8 @@ class AuthPermission(models.Model):
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
     codename = models.CharField(max_length=100)
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'auth_permission'
@@ -106,16 +162,16 @@ class AuthPermission(models.Model):
 class AuthUser(models.Model):
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
-    is_superuser = models.IntegerField(blank=True)
+    is_superuser = models.IntegerField()
     username = models.CharField(unique=True, max_length=150)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.CharField(max_length=254)
-    is_staff = models.IntegerField(blank=True)
-    is_active = models.IntegerField(blank=True)
-    date_joined = models.DateTimeField(blank=True)
-    user_level = models.IntegerField(blank=True)
-    discarded_rev_count = models.IntegerField(blank=True)
+    is_staff = models.IntegerField()
+    is_active = models.IntegerField()
+    date_joined = models.DateTimeField()
+    user_level = models.IntegerField()
+    discarded_rev_count = models.IntegerField()
     major = models.CharField(max_length=150, blank=True, null=True)
 
     objects = models.Manager()
@@ -130,6 +186,8 @@ class AuthUserGroups(models.Model):
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'auth_user_groups'
@@ -141,6 +199,8 @@ class AuthUserUserPermissions(models.Model):
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
     permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'auth_user_user_permissions'
@@ -150,6 +210,8 @@ class AuthUserUserPermissions(models.Model):
 class DeptGeneralcomments(models.Model):
     dept_code = models.ForeignKey(Department, models.DO_NOTHING, db_column='dept_code')
     general_comment = models.CharField(primary_key=True, max_length=255)
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -165,6 +227,8 @@ class DjangoAdminLog(models.Model):
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'django_admin_log'
@@ -173,6 +237,8 @@ class DjangoAdminLog(models.Model):
 class DjangoContentType(models.Model):
     app_label = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -186,6 +252,8 @@ class DjangoMigrations(models.Model):
     name = models.CharField(max_length=255)
     applied = models.DateTimeField()
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'django_migrations'
@@ -196,6 +264,7 @@ class DjangoSession(models.Model):
     session_data = models.TextField()
     expire_date = models.DateTimeField()
 
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -206,6 +275,8 @@ class DjangoSite(models.Model):
     domain = models.CharField(unique=True, max_length=100)
     name = models.CharField(max_length=50)
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'django_site'
@@ -213,15 +284,14 @@ class DjangoSite(models.Model):
 
 class FacultyCourse(models.Model):
     faculty = models.ForeignKey(Faculty, models.DO_NOTHING)
-    c_code = models.ForeignKey(Course, models.DO_NOTHING, db_column='c_code')
+    dept_code = models.ForeignKey(Department, models.DO_NOTHING, db_column='dept_code')
 
     objects = models.Manager()
 
     class Meta:
         managed = False
         db_table = 'faculty_course'
-        unique_together = (('faculty', 'c_code'),)
-
+        unique_together = (('faculty', 'dept_code'),)
 
 
 class FacultyMiscellaneous(models.Model):
@@ -295,6 +365,8 @@ class SocialaccountSocialaccount(models.Model):
     extra_data = models.TextField()
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'socialaccount_socialaccount'
@@ -308,6 +380,8 @@ class SocialaccountSocialapp(models.Model):
     secret = models.CharField(max_length=191)
     key = models.CharField(max_length=191)
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'socialaccount_socialapp'
@@ -317,6 +391,8 @@ class SocialaccountSocialappSites(models.Model):
     id = models.BigAutoField(primary_key=True)
     socialapp = models.ForeignKey(SocialaccountSocialapp, models.DO_NOTHING)
     site = models.ForeignKey(DjangoSite, models.DO_NOTHING)
+
+    objects = models.Manager()
 
     class Meta:
         managed = False
@@ -331,26 +407,28 @@ class SocialaccountSocialtoken(models.Model):
     account = models.ForeignKey(SocialaccountSocialaccount, models.DO_NOTHING)
     app = models.ForeignKey(SocialaccountSocialapp, models.DO_NOTHING)
 
+    objects = models.Manager()
+
     class Meta:
         managed = False
         db_table = 'socialaccount_socialtoken'
         unique_together = (('app', 'account'),)
 
 
-
 class UserCourseRev(models.Model):
     faculty = models.ForeignKey(Faculty, models.DO_NOTHING)
     review_id = models.AutoField(primary_key=True)
     uid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='uid')
-    c_code = models.ForeignKey(Course, models.DO_NOTHING, db_column='c_code')
+    c_code = models.ForeignKey(Course, models.DO_NOTHING, db_column='c_code', blank=True, null=True)
     overall_rating = models.IntegerField()
     upvotes = models.IntegerField()
     downvotes = models.IntegerField()
     report_count = models.IntegerField()
-    semester_period = models.CharField(max_length=50)
-    student_thoughts = models.CharField(max_length=255)
+    semester_period = models.CharField(max_length=50, blank=True, null=True)
+    student_thoughts = models.CharField(max_length=500, blank=True, null=True)
     course_tag = models.CharField(max_length=50)
     enjoyment_rating = models.IntegerField()
+    effort_required = models.IntegerField()
 
     objects = models.Manager()
 
@@ -375,14 +453,14 @@ class UserFacultyRev(models.Model):
     faculty = models.ForeignKey(Faculty, models.DO_NOTHING)
     review_id = models.AutoField(primary_key=True)
     uid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='uid')
-    c_code = models.ForeignKey(Course, models.DO_NOTHING, null=True, db_column='c_code')
+    c_code = models.ForeignKey(Course, models.DO_NOTHING, db_column='c_code', blank=True, null=True)
     overall_rating = models.IntegerField()
     difficulty_rating = models.IntegerField()
-    upvotes = models.IntegerField(null=True)
-    downvotes = models.IntegerField(null=True)
-    report_count = models.IntegerField(null=True)
-    semester_period = models.CharField(max_length=50, null=True)
-    student_thoughts = models.CharField(max_length=255, null=True)
+    upvotes = models.IntegerField()
+    downvotes = models.IntegerField()
+    report_count = models.IntegerField()
+    semester_period = models.CharField(max_length=50)
+    student_thoughts = models.CharField(max_length=255)
     teaching_quality = models.IntegerField()
 
     objects = models.Manager()

@@ -27,7 +27,6 @@
             CEdept_vals.style.display = "none";
             ISdept_vals.style.display = "none";
             MATHdept_vals.style.display = "none";
-
         }
 
         function loadCourses() {
@@ -47,8 +46,6 @@
             CEdept_vals.style.display = "none";
             ISdept_vals.style.display = "none";
             MATHdept_vals.style.display = "none";
-
-
         }
 
         function loadProfessors() {
@@ -69,7 +66,6 @@
             CEdept_vals.style.display = "none";
             ISdept_vals.style.display = "none";
             MATHdept_vals.style.display = "none";
-
         }
 
         function loadTAs() {
@@ -90,7 +86,6 @@
             CEdept_vals.style.display = "none";
             ISdept_vals.style.display = "none";
             MATHdept_vals.style.display = "none";
-
         }
 
         function load_CS() {
@@ -112,6 +107,7 @@
             ISdept_vals.style.display = "none";
             MATHdept_vals.style.display = "none";
         }
+
         function load_CE() {
             var ptmp = document.getElementById("Professors");
             var ctmp = document.getElementById("Courses");
@@ -131,6 +127,7 @@
             ISdept_vals.style.display = "none";
             MATHdept_vals.style.display = "none";
         }
+
         function load_IS() {
             var ptmp = document.getElementById("Professors");
             var ctmp = document.getElementById("Courses");
@@ -212,7 +209,7 @@ text-xs sm:text-base lg:text-lg">
             </a>
 	    {% endfor %}
         </div>
-        <div id="TAs">
+	   <div id="TAs">
             {% for ta in TAs %}
             <a href=" url 'professor' prof_id=ta.faculty_id %}">
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
@@ -233,7 +230,7 @@ text-xs sm:text-base lg:text-lg">
                     </div>
                 </div>
             </a>
-            {% endfor %}
+	    {% endfor %} 
         </div>
 
         <div id="Courses">
