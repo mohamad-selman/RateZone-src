@@ -395,11 +395,11 @@ def add_to_queue(request):
         try:
             if prof_id is not None:
                 print('Before inserting')
-                UserQueue.objects.create(uid=user_id, fid=faculty_id)
-                # query = 'INSERT INTO user_queue VALUES (%s, %s)'
-                # data = (user_id, faculty_id)
-                # cursors.execute(query, data)
-                # print('Made it here')
+                # UserQueue.objects.create(uid=user_id, fid=faculty_id)
+                query = 'INSERT INTO user_queue VALUES (%s, %s)'
+                data = (user_id, faculty_id)
+                cursors.execute(query, data)
+                print('Made it here')
                 # query_entry.save()
                 print('Confirmed entry')
                 msg = f'Successfully Returning from adding prof to queue: {prof_id}'
