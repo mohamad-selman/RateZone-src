@@ -18,7 +18,6 @@ cursors = mydb.cursor()
 
 # Create your views here.
 def home(request):
-
     return render(request, './index.html')
 
 
@@ -34,6 +33,7 @@ def test(request):
         'professor': prof
     }
     return render(request, './index_old.html', result)
+
 
 # the function takes the query result and the cursor description of an executed query
 # converts from a tuple-like notation to dictionary-like notation
@@ -209,8 +209,6 @@ def searchResults(request):
     return render(request, './searchResults.html', result)
 
 
-
-
 def professorTwo(request, prof_name):
     print(prof_name)
     name = prof_name.split(' ')
@@ -351,10 +349,10 @@ def search(request):
 
 
 @login_required(login_url='sign_in')
-def queue(request, prof_id=None):
+def queue(request):
     # we need professor id and user id
     # print(prof_id)
-    faculty_id = prof_id
+    # faculty_id = prof_id
     uname = request.user.username
     # print(uname)
     user = User.objects.get(username=uname)
@@ -380,35 +378,38 @@ def queue(request, prof_id=None):
 
 @csrf_exempt
 @login_required(login_url='sign_in')
-def add_to_queue(request, prof_id):
+def add_to_queue(request):
     print('I am being called')
     if request.method == "POST":
-        val = request.post.get['prof_id']
-        print(val)
-    # we need professor id and user id
-    print('Adding a professor to queue')
-    print(f' this is the id: {prof_id}')
-    faculty_id = prof_id
-    uname = request.user.username
-    print(f'current logged it user: {uname}')
-    user = User.objects.get(username=uname)
-    user_id = user.id
-    print(f'{user_id} and {faculty_id}')
-
-    if prof_id:
-        print('Before inserting')
-        # UserQueue.objects.create(uid=user_id, fid=faculty_id)
-        query = 'INSERT INTO user_queue VALUES (%s, %s)'
-        data = (user_id, faculty_id)
-        cursors.execute(query, data)
-        print('Made it here')
-        # query_entry.save()
-        print('Confirmed entry')
-    else:
-        print('Failed to insert')
-
-    return HttpResponse(status=200)
-
+        print('Executing here: post method')
+        prof_id = request.POST.get('prof_id', None)
+        # we need professor id and user id
+        print('Adding a professor to queue')
+        print(f'This is the id: {prof_id}')
+        faculty_id = prof_id
+        uname = request.user.username
+        print(f'current logged it user: {uname}')
+        user = User.objects.get(username=uname)
+        user_id = user.id
+        print(f'{user_id} and {faculty_id}')
+        try:
+            if prof_id is not None:
+                print('Before inserting')
+                UserQueue.objects.create(uid=user_id, fid=faculty_id)
+                # query = 'INSERT INTO user_queue VALUES (%s, %s)'
+                # data = (user_id, faculty_id)
+                # cursors.execute(query, data)
+                # print('Made it here')
+                # query_entry.save()
+                print('Confirmed entry')
+                msg = f'Successfully Returning from adding prof to queue: {prof_id}'
+            else:
+                msg = "prof_id is none"
+        except:
+            print('Failed to insert')
+            msg = f'Failed from adding prof to queue: {prof_id}'
+        return HttpResponse(msg)
+    return HttpResponse('Failed')
 
 @csrf_exempt
 @login_required(login_url='sign_in')
@@ -444,8 +445,7 @@ def remove_from_queue(request, prof_id):
     result = {
         'professors': prof
     }
-    return render(request, './queue.html', result)
-
+    return HttpResponse(status=200)
 
 @unauthenticated_user
 def sign_in(request):
@@ -464,7 +464,7 @@ def sign_in(request):
         else:
             return render(request, './signin.html')
 
-    return HttpResponse(status=200)
+    return render(request, './signin.html')
 
 
 @unauthenticated_user
