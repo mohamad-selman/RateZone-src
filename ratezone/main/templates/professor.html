@@ -60,7 +60,6 @@ text-xs sm:text-base lg:text-lg">
                 bg-[#154854] text-white text-center py-2 px-4 rounded-lg">
                     Recommended by 89% of students
                 </div> -->
-<!--onclick="location.href = `{% url 'queue' prof_id=p.faculty_id %}`;"                -->
     {% if user.is_authenticated %}
                 <div class="mt-3 md:mt-0">
                     <button id="addP-to-queue" value="{{ p.faculty_id }}" class="mb-3 py-2 px-4 w-full
@@ -71,6 +70,8 @@ text-xs sm:text-base lg:text-lg">
                         </svg>
                         Add Professor {{ p.lname }} to My Queue
                     </button>
+                    <input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
+
                     {% csrf_token %}
                     <button class="mb-3 py-2 px-4 w-full
                     flex gap-x-2 items-center text-left
