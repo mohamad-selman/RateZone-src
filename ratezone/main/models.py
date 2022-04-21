@@ -353,6 +353,45 @@ class SimilarFaculty(models.Model):
         db_table = 'similar_faculty'
         unique_together = (('fid', 'similar_faculty'),)
 
+class UserReactCourserev(models.Model):
+    uid = models.ForeignKey(AuthUser, on_delete=models.CASCADE, db_column='uid')
+    rid = models.ForeignKey(UserCourseRev, on_delete=models.CASCADE, db_column='rid')
+    # upvote and downvote are discrete values
+    # if user likes a review - set upvote value to 1
+    # if user dislikes a review - set downvote value to 1
+    # Disliking the review will omit the liked review
+    # so if the downvoting is set to be 1 by design change
+    # the upvote value to 0 and vice versa
+    upvote = models.IntegerField(blank=True, null=True)
+    downvote = models.IntegerField(blank=True, null=True)
+
+    objects = models.Manager()
+
+    class Meta:
+        managed = False
+        db_table = 'user_react_courseRev'
+        unique_together = (('uid', 'rid'),)
+
+
+class UserReactFacultyrev(models.Model):
+    uid = models.ForeignKey(AuthUser, on_delete=models.CASCADE, db_column='uid')
+    rid = models.ForeignKey(UserFacultyRev, on_delete=models.CASCADE, db_column='rid')
+    # upvote and downvote are discrete values
+    # if user likes a review - set upvote value to 1
+    # if user dislikes a review - set downvote value to 1
+    # Disliking the review will omit the liked review
+    # so if the downvoting is set to be 1 by design change
+    # the upvote value to 0 and vice versa
+    upvote = models.IntegerField(blank=True, null=True)
+    downvote = models.IntegerField(blank=True, null=True)
+
+    objects = models.Manager()
+
+    class Meta:
+        managed = False
+        db_table = 'user_react_facultyRev'
+        unique_together = (('uid', 'rid'),)
+
 
 class AccountEmailaddress(models.Model):
     email = models.CharField(unique=True, max_length=254)
