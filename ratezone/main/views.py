@@ -379,29 +379,24 @@ def queue(request):
 @csrf_exempt
 @login_required(login_url='sign_in')
 def add_to_queue(request):
-    print('I am being called')
+    # print('I am being called')
     if request.method == "POST":
-        print('Executing here: post method')
+        # print('Executing here: post method')
         prof_id = request.POST.get('prof_id', None)
         # we need professor id and user id
-        print('Adding a professor to queue')
-        print(f'This is the id: {prof_id}')
+        # print('Adding a professor to queue')
+        # print(f'This is the id: {prof_id}')
         faculty_id = prof_id
         uname = request.user.username
-        print(f'current logged it user: {uname}')
+        # print(f'current logged it user: {uname}')
         user = User.objects.get(username=uname)
         user_id = user.id
         print(f'{user_id} and {faculty_id}')
         try:
             if prof_id is not None:
-                print('Before inserting')
-                # UserQueue.objects.create(uid=user_id, fid=faculty_id)
-                query = 'INSERT INTO user_queue VALUES (%s, %s)'
-                data = (user_id, faculty_id)
-                cursors.execute(query, data)
-                print('Made it here')
-                # query_entry.save()
-                print('Confirmed entry')
+                user = User.objects.get(id=user_id)
+                faculty = Faculty.objects.get(faculty=faculty_id)
+                UserQueue.objects.create(user=user, faculty=faculty)
                 msg = f'Successfully Returning from adding prof to queue: {prof_id}'
             else:
                 msg = "prof_id is none"
