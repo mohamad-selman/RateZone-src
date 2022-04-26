@@ -253,7 +253,8 @@ window.autoComplete = function () {
         this.suggestions[this.cursorIndex].active = true;
         this.inputValue = this.suggestions[this.cursorIndex].item.name;
       }
-    }
+    },
+    
   };
 };
 
