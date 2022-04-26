@@ -3,29 +3,24 @@ $(document).ready(function() {
     $('#addP-to-queue').click(function(event) {
         alert('You are here')
         event.preventDefault();
-        var tmp = $(this).val();
-        alert('ID is ' + tmp);
+        var prof_id = $(this).val();
+        alert('ID is ' + prof_id);
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-//        const object = document.getElementById('#addP-to-queue')
         $.ajax({
-//            object.setRequestHeader('X-CSRFToken', csrftoken);
             method: "POST",
-            url: '/add_to_queue/' + tmp,
+            url: '/add_to_queue/',
             headers: {'X-CSRFToken': csrftoken},
             data: {
-                prof_id: tmp,
+                'prof_id': prof_id,
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
             },
-            dataType:"html",
-            contentType: false,
-            processData: false,
-            success: function(data) {
-                alert('Professor added to queue: status: ' + data);
+
+            success: function(res, status) {
+                alert(res);
             },
-            error: function(data) {
-                alert('Error! Professor already exists in queue' + data);
+            error: function(res, status) {
+                alert('Error!' + res + status);
             }
         })
     })
-
 })

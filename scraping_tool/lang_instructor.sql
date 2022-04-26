@@ -12,3 +12,7 @@ CREATE TABLE Language_Instructor
 
 ALTER TABLE Teaching_Assistant
 ADD COLUMN image VARCHAR(500);
+
+ALTER TABLE Teaching_Assistant
+MODIFY masters_from VARCHAR(50);
+
