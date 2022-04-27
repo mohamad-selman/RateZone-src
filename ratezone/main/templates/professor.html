@@ -60,7 +60,7 @@ text-xs sm:text-base lg:text-lg">
                 </div> -->
     {% if user.is_authenticated %}
                 <div class="mt-3 md:mt-0">
-                    <button id="addP-to-queue" value="{{ p.faculty_id }}" class="mb-3 py-2 px-4 w-full
+                    <button id="addP-to-queue" value="{{ p.employee }}" class="mb-3 py-2 px-4 w-full
                     flex gap-x-2 items-center text-left
                     hover:bg-neutral-300 border border-neutral-300 rounded-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -74,7 +74,7 @@ text-xs sm:text-base lg:text-lg">
                     <button class="mb-3 py-2 px-4 w-full
                     flex gap-x-2 items-center text-left
                     hover:bg-neutral-300 border border-neutral-300 rounded-lg"
-                    onclick="location.href = `{% url 'rate' prof_id=p.faculty_id %}`;" >
+                    onclick="location.href = `{% url 'rate' prof_id=p.employee %}`;" >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
