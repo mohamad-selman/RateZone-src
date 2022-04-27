@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from .decorators import *
 import mysql.connector
 
-mydb = mysql.connector.connect(database='ratezone_DB',
+mydb = mysql.connector.connect(database='ratezoneDB',
                                user='ratezone_userAdmin', password='ratezone@123')
 cursors = mydb.cursor()
 
@@ -22,17 +22,9 @@ def home(request):
 
 
 def test(request):
-    query = "SELECT F.faculty_id FROM Faculty AS F"
-    cursors.execute(query)
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    prof_count = 0
-    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
-
-    result = {
-        'professor': prof
-    }
-    return render(request, './index_old.html', result)
+    profs = Faculty.objects.all()
+    return render(request, './index_old.html',
+        {"Profs": profs})
 
 
 # the function takes the query result and the cursor description of an executed query
@@ -67,20 +59,18 @@ def searchResults(request):
         print(len(l))
         if len(l) == 1:
             query = '''
-                    SELECT F.fname, F.lname, D.dept_name, ROUND(F.overall_rating, 2) AS 'overall_rating', 
-                    F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON 
-                    F.faculty_id = P.faculty_id 
-                    INNER JOIN Department AS D ON D.dept_code=F.dept_code WHERE F.fname LIKE %s OR F.lname LIKE %s
+                    SELECT E.fname, E.lname, D.dept_name, ROUND(E.overall_rating, 2) AS 'overall_rating', 
+                    E.teaching_quality, E.employee FROM Employee AS E
+                    INNER JOIN Department AS D ON D.department=E.department_id WHERE E.fname LIKE %s OR E.lname LIKE %s
                     '''
             data = (get_name, get_name)
             print(f'data is {data}')
             cursors.execute(query, data)
         else:
             query = '''
-                    SELECT F.fname, F.lname, D.dept_name, ROUND(F.overall_rating, 2) AS 'overall_rating', 
-                    F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P ON 
-                    F.faculty_id = P.faculty_id 
-                    INNER JOIN Department AS D ON D.dept_code=F.dept_code WHERE CONCAT(F.fname, ' ', F.lname) LIKE %s
+                    SELECT E.fname, E.lname, D.dept_name, ROUND(E.overall_rating, 2) AS 'overall_rating', 
+                    E.teaching_quality, E.employee FROM Employee AS E
+                    INNER JOIN Department AS D ON D.department=E.department_id WHERE CONCAT(E.fname, ' ', E.lname) LIKE %s
                     '''
             print('executing here')
             cursors.execute(query, [name])
@@ -100,12 +90,14 @@ def searchResults(request):
 
     # the following is a query that returns all professors
     # with their desired attributes
+    ###########################################################################33
+    # prof = Employee.objects.all()
     prof_query = '''
-                    SELECT DISTINCT F.fname, F.lname, D.dept_name, 
-                    ROUND(F.overall_rating, 2) AS 'overall_rating',
-                    F.teaching_quality, F.faculty_id FROM Faculty AS F INNER JOIN Professor AS P 
-                    ON F.faculty_id = P.faculty_id INNER JOIN Department AS D ON 
-                    D.dept_code=F.dept_code ORDER BY overall_rating DESC
+                    SELECT DISTINCT E.fname, E.lname, D.dept_name,
+                    ROUND(E.overall_rating, 2) AS 'overall_rating',
+                    E.teaching_quality, E.employee FROM Employee AS E 
+                    INNER JOIN Department AS D ON
+                    D.department=E.department_id ORDER BY overall_rating DESC
                   '''
 
     # executing the query through connection cursor
@@ -115,24 +107,12 @@ def searchResults(request):
     prof_count = 0
     (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
 
-    ta_query = '''
-                SELECT DISTINCT F.faculty_id, fname, lname, ROUND(F.overall_rating,2) AS 'overall_rating', dept_name FROM Faculty as F 
-                INNER JOIN Teaching_Assistant as T ON F.faculty_id = T.faculty_id 
-                INNER JOIN Department AS D ON D.dept_code=F.dept_code
-                ORDER BY overall_rating DESC
-               '''
-    cursors.execute(ta_query)
-    ta_row = cursors.fetchall()
-    tmp = cursors.description
-    ta_count = 0
-    (ta, ta_count) = convert_to_dictionary(tmp, ta_row)
-
     # CS query
 
     CS_dept_query = '''
-                SELECT DISTINCT F.faculty_id, F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating', 
-                dept_name FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code 
-                WHERE D.dept_code=418 ORDER BY overall_rating DESC
+                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating',
+                D.dept_name FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
+                WHERE D.department=418 ORDER BY overall_rating DESC
                 '''
     cursors.execute(CS_dept_query)
     dept_row = cursors.fetchall()
@@ -140,25 +120,27 @@ def searchResults(request):
     cs_count = 0
     (CS_dept, cs_count) = convert_to_dictionary(tmp, dept_row)
 
+
     # CE query
 
     CE_dept_query = '''
-                SELECT DISTINCT F.faculty_id, fname, lname,ROUND(F.overall_rating,2) AS 'overall_rating', dept_name 
-                FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code 
-                WHERE D.dept_code=1612 ORDER BY overall_rating DESC
+                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating', D.dept_name
+                FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
+                WHERE D.department=1612 ORDER BY overall_rating DESC
                 '''
     cursors.execute(CE_dept_query)
     dept_row = cursors.fetchall()
     tmp = cursors.description
     ce_count = 0
     (CE_dept, ce_count) = convert_to_dictionary(tmp, dept_row)
+    # print(CE_dept)
 
     # IS query
 
     IS_dept_query = '''
-                SELECT DISTINCT F.faculty_id, fname, lname, ROUND(F.overall_rating, 2) AS 'overall_rating', dept_name 
-                FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code 
-                WHERE D.dept_code=1830 ORDER BY overall_rating DESC
+                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating', D.dept_name
+                FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
+                WHERE D.department=1830 ORDER BY overall_rating DESC
                 '''
     cursors.execute(IS_dept_query)
     dept_row = cursors.fetchall()
@@ -167,9 +149,9 @@ def searchResults(request):
     (IS_dept, is_count) = convert_to_dictionary(tmp, dept_row)
 
     Math_dept_query = '''
-                SELECT DISTINCT F.faculty_id, fname, lname, ROUND(F.overall_rating, 2) AS 'overall_rating',dept_name 
-                FROM Department AS D INNER JOIN Faculty AS F ON D.dept_code=F.dept_code 
-                WHERE D.dept_code=410 ORDER BY overall_rating DESC
+                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating', D.dept_name
+                FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
+                WHERE D.department=410 ORDER BY overall_rating DESC
                 '''
     cursors.execute(Math_dept_query)
     dept_row = cursors.fetchall()
@@ -180,8 +162,8 @@ def searchResults(request):
     # courses = Course.objects.all()
 
     course_query = '''
-                SELECT * FROM Course AS C INNER JOIN Department AS D ON C.course_code 
-                LIKE CONCAT('%', D.dept_code, '%')
+                SELECT * FROM Course AS C INNER JOIN Department AS D ON C.course
+                LIKE CONCAT('%', D.department, '%')
                 '''
     cursors.execute(course_query)
     course_row = cursors.fetchall()
@@ -197,7 +179,6 @@ def searchResults(request):
 
     result = {
         'professors': prof,
-        'TAs': ta,
         'CS_dept': CS_dept,
         'CE_dept': CE_dept,
         'IS_dept': IS_dept,
@@ -214,22 +195,22 @@ def professorTwo(request, prof_name):
     name = prof_name.split(' ')
     first_name = name[0]
     second_name = name[1]
-    query = Faculty.objects.filter(fname=first_name, lname=second_name).get()
+    query = Employee.objects.filter(fname=first_name, lname=second_name).get()
     print(query)
     return HttpResponse(status=200)
 
 
-def professor(request, prof_id):
+def professor(request, prof_id=None):
     # for all the custom queries executed!
     # cursors return the query result in the form of a tuple
     # needs to be converted to dictionary-like notation
     # that is what the loop does
     faculty_id = prof_id
     prof_query = '''
-                SELECT DISTINCT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',
-                F.teaching_quality,F.faculty_id,D.dept_name,P.image FROM Faculty AS F 
-                INNER JOIN Professor AS P ON F.faculty_id=P.faculty_id INNER JOIN Department AS D 
-                ON F.dept_code=D.dept_code WHERE P.faculty_id = %s
+                SELECT DISTINCT E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating',
+                E.teaching_quality,E.employee,D.dept_name,E.image FROM Employee AS E 
+                INNER JOIN Department AS D 
+                ON E.department_id=D.department WHERE E.employee = %s
                 '''
     cursors.execute(prof_query, [faculty_id])
     prof_row = cursors.fetchall()
@@ -238,9 +219,9 @@ def professor(request, prof_id):
     (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
 
     second_faculty_rev_query = '''
-                            SELECT COUNT(R.review_id) AS 'rev_count' FROM Faculty AS F 
-                            INNER JOIN user_faculty_rev AS R ON F.faculty_id=R.faculty_id 
-                            WHERE F.faculty_id=%s
+                            SELECT COUNT(R.review) AS 'rev_count' FROM Employee AS E 
+                            INNER JOIN user_faculty_rev AS R ON E.employee=R.employee_id 
+                            WHERE E.employee=%s
                             '''
     cursors.execute(second_faculty_rev_query, [faculty_id])
     prof_row = cursors.fetchall()
@@ -249,9 +230,9 @@ def professor(request, prof_id):
     prof[0].update(rev_prof[0])
 
     similar_query = '''
-                SELECT F.fname,F.lname, F2.fname,F2.lname, ROUND(F2.overall_rating, 2) AS 'overall_rating' 
-                from Faculty F inner join similar_faculty S1 on S1.fid=F.faculty_id 
-                INNER JOIN Faculty F2 on S1.similar_faculty=F2.faculty_id WHERE F.faculty_id=%s
+                SELECT E.fname,E.lname, E2.fname,E2.lname, ROUND(E2.overall_rating, 2) AS 'overall_rating' 
+                from Employee E inner join similar_faculty S1 on S1.employee_id=E.employee 
+                INNER JOIN Employee E2 on S1.similar_faculty=E2.employee WHERE E.employee=%s
                 '''
     cursors.execute(similar_query, [faculty_id])
     sim_row = cursors.fetchall()
@@ -263,7 +244,7 @@ def professor(request, prof_id):
 
     # print(faculty_id)
     # get all revs
-    reviews = UserFacultyRev.objects.filter(faculty=faculty_id)
+    reviews = UserFacultyRev.objects.filter(employee_id=faculty_id)
 
     result = {
         'prof': prof,
@@ -276,10 +257,9 @@ def professor(request, prof_id):
 @login_required(login_url='sign_in')
 def rate(request, prof_id):
     prof_query = '''
-                    SELECT F.fname, F.lname, ROUND(F.overall_rating,2) AS 'overall_rating',F.teaching_quality,
-                    F.faculty_id,D.dept_name,P.image FROM Faculty AS F INNER JOIN Professor AS P ON 
-                    F.faculty_id=P.faculty_id 
-                    INNER JOIN Department AS D ON F.dept_code=D.dept_code WHERE P.faculty_id = %s
+                    SELECT E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating',E.teaching_quality,
+                    E.employee,D.dept_name,E.image FROM Employee AS E
+                    INNER JOIN Department AS D ON F.department_id=D.department WHERE E.employee = %s
                  '''
     cursors.execute(prof_query, [prof_id])
     prof_row = cursors.fetchall()
@@ -325,14 +305,22 @@ def rate(request, prof_id):
             #     teaching_quality)
             #     VALUES (%s, %s, %s, %s, %s, %s)
             #     ''', [prof_id, user_id, overall_rate, difficulty, comment, quality])
-            insertion_query = '''
-                INSERT INTO user_faculty_rev (faculty_id, uid, overall_rating, difficulty_rating, student_thoughts,
-                 teaching_quality)
-                 VALUES (%s, %s, %s, %s, %s, %s)
-            
-            '''
-            data = (faculty_id, user_id, overall_rate, difficulty, comment, quality)
-            cursors.execute(insertion_query, data)
+            # insertion_query = '''
+            #     INSERT INTO user_faculty_rev (faculty_id, uid, overall_rating, difficulty_rating, student_thoughts,
+            #      teaching_quality)
+            #      VALUES (%s, %s, %s, %s, %s, %s)
+            #
+            # '''
+            # data = (faculty_id, user_id, overall_rate, difficulty, comment, quality)
+            # cursors.execute(insertion_query, data)
+            #
+            #
+            user = User.objects.get(id=user_id)
+            faculty = Employee.objects.get(employee=faculty_id)
+            UserFacultyRev.objects.create(overall_rating=overall_rate,
+                                          difficulty_rating=difficulty, student_thoughts=comment,
+                                          teaching_quality=quality,employee_id=faculty, user=user)
+
             print('Success')
         except:
             print('Could not review')
@@ -358,16 +346,17 @@ def queue(request):
     # print(f'{user_id} and {faculty_id}')
 
     fetch = '''
-            SELECT F.fname, F.lname, F.faculty_id, P.image, ROUND(F.overall_rating, 2) AS 'overall_rating' 
-            FROM Faculty AS F INNER JOIN user_queue AS U 
-            ON F.faculty_id=U.fid INNER JOIN Professor AS P ON P.faculty_id=F.faculty_id WHERE U.uid=%s
+            SELECT E.fname, E.lname, E.employee, E.image, ROUND(E.overall_rating, 2) AS 'overall_rating' 
+            FROM Employee AS E 
+            INNER JOIN Employee_users AS U 
+            ON E.employee=U.employee_id WHERE U.user_id=%s
             '''
     cursors.execute(fetch, [user_id])
     prof_row = cursors.fetchall()
     tmp = cursors.description
     prof_count = 0
     (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
-
+    print(prof)
     result = {
         'professors': prof
     }
@@ -393,8 +382,8 @@ def add_to_queue(request):
         try:
             if prof_id is not None:
                 user = User.objects.get(id=user_id)
-                faculty = Faculty.objects.get(faculty=faculty_id)
-                UserQueue.objects.create(user=user, faculty=faculty)
+                faculty = Employee.objects.get(employee=faculty_id)
+                faculty.users.add(user)
                 msg = f'Successfully Returning from adding prof to queue: {prof_id}'
             else:
                 msg = "prof_id is none"
@@ -417,7 +406,7 @@ def remove_from_queue(request, prof_id):
     print(f'{user_id} and {faculty_id}')
 
     try:
-        deletion_query = "DELETE FROM user_queue WHERE uid=%s AND fid=%s"
+        deletion_query = "DELETE FROM Employee_users WHERE user_id=%s AND employee_id=%s"
         data = (user_id, faculty_id)
         cursors.execute(deletion_query, data)
         print('executed successfully')
@@ -425,9 +414,8 @@ def remove_from_queue(request, prof_id):
         print('Error')
 
     fetch = '''
-         SELECT F.fname, F.lname, F.faculty_id, P.image, ROUND(F.overall_rating, 2) AS 'overall_rating' FROM Faculty AS F
-         INNER JOIN user_queue AS U ON F.faculty_id=U.fid INNER JOIN Professor AS P ON P.faculty_id=F.faculty_id 
-         WHERE U.uid=%s
+         SELECT E.fname, E.lname, E.employee, E.image, ROUND(E.overall_rating, 2) AS 'overall_rating' FROM employee AS E
+         INNER JOIN Employee_users AS U ON F.employee=U.employee_id WHERE U.user_id=%s
          '''
     cursors.execute(fetch, [user_id])
     prof_row = cursors.fetchall()

@@ -184,7 +184,7 @@ text-xs sm:text-base lg:text-lg">
 
         <div id="Professors">
 	    {% for prof in professors %}
-            <a href="{% url 'professor' prof_id=prof.faculty_id %}">
+            <a href="{% url 'professor' prof_id=prof.employee %}">
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-between px-12
                 hover:bg-neutral-300">
@@ -211,7 +211,7 @@ text-xs sm:text-base lg:text-lg">
         </div>
 	   <div id="TAs">
             {% for ta in TAs %}
-            <a href=" url 'professor' prof_id=ta.faculty_id %}">
+            <a href=" url 'professor' prof_id=ta.employee %}">
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-between px-12
                 hover:bg-neutral-300">
@@ -240,7 +240,7 @@ text-xs sm:text-base lg:text-lg">
                 flex gap-x-4 justify-between px-12
                 hover:bg-neutral-300">
                     <span>
-                        <span class="font-medium">{{ course.course_code }}: {{ course.course_name}}</span><br>
+                        <span class="font-medium">{{ course.course }}: {{ course.course_name}}</span><br>
                         {{ course.dept_name }} department<br>
                         Kuwait University
                     </span>
@@ -259,7 +259,7 @@ text-xs sm:text-base lg:text-lg">
 
         <div id="CSDept">
 	    {% for dep in CS_dept %}
-            <a href="{% url 'professor' prof_id=dep.faculty_id %}">
+            <a href="{% url 'professor' prof_id=dep.employee %}">
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-between px-12
                 hover:bg-neutral-300">
@@ -288,7 +288,7 @@ text-xs sm:text-base lg:text-lg">
 
         <div id="CEDept">
             {% for dep in CE_dept %}
-            <a href="{% url 'professor' prof_id=dep.faculty_id %}">
+            <a href="{% url 'professor' prof_id=dep.employee %}">
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-between px-12
                 hover:bg-neutral-300">
@@ -319,7 +319,7 @@ text-xs sm:text-base lg:text-lg">
 
         <div id="ISDept">
             {% for dep in IS_dept %}
-            <a href="{% url 'professor' prof_id=dep.faculty_id %}">
+            <a href="{% url 'professor' prof_id=dep.employee %}">
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-between px-12
                 hover:bg-neutral-300">
@@ -347,7 +347,7 @@ text-xs sm:text-base lg:text-lg">
 	
         <div id="MATHDept">
 	    {% for dep in MATH_dept %}
-            <a href="{% url 'professor' prof_id=dep.faculty_id %}">
+            <a href="{% url 'professor' prof_id=dep.employee %}">
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
                 flex gap-x-4 justify-between px-12
                 hover:bg-neutral-300">

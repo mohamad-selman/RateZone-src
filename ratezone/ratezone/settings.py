@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'ratezone.wsgi.application'
 
 DATABASES = {
     'default': {
-        'NAME': 'ratezone_DB',
+        'NAME': 'ratezoneDB',
         'ENGINE': 'django.db.backends.mysql',
         'USER': 'ratezone_userAdmin',
         'PASSWORD': 'ratezone@123'

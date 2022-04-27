@@ -21,12 +21,12 @@ from django.contrib.auth.models import User
 #         managed = False
 #         db_table = 'User'
 #
-
-class Student(models.Model):
-    user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
-    user_level = models.IntegerField()
-    discarded_rev_count = models.IntegerField()
-    major = models.CharField(max_length=150, blank=True, null=True)
+#
+# class Student(models.Model):
+#     user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
+#     user_level = models.IntegerField()
+#     discarded_rev_count = models.IntegerField()
+#     major = models.CharField(max_length=150, blank=True, null=True)
 
 
 class AuthUser(models.Model):
@@ -53,11 +53,10 @@ class AuthUser(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'auth_user'
 
 
 class Department(models.Model):
-    dept_code = models.IntegerField(primary_key=True)
+    department = models.IntegerField(primary_key=True)
     dept_name = models.CharField(max_length=50)
     overall_rating = models.FloatField(blank=True, null=True)
     admin_support = models.FloatField(blank=True, null=True)
@@ -65,24 +64,26 @@ class Department(models.Model):
 
     objects = models.Manager()
 
+    def __str__(self):
+        return self.dept_name
+
     class Meta:
-        managed = False
         db_table = 'Department'
 
 
-class Faculty(models.Model):
-    faculty = models.BigAutoField(primary_key=True, db_column='faculty_id')
-    dept_code = models.ForeignKey(Department, db_column='dept_code', on_delete=models.CASCADE)
+class Employee(models.Model):
+    employee = models.BigAutoField(primary_key=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
     fname = models.CharField(max_length=50)
     lname = models.CharField(max_length=50)
+    image = models.CharField(max_length=500, blank=True, null=True)
+    main_rank = models.CharField(max_length=150)
+    sub_rank = models.CharField(max_length=150, blank=True, null=True)
     overall_rating = models.FloatField(blank=True, null=True)
     teaching_quality = models.FloatField(blank=True, null=True)
     exams_difficulty = models.FloatField(blank=True, null=True)
-
-    # for the mapping of faculty and course
-    # each faculty member can teach many courses
-    # and many courses can be taught by many faculty members
-    # course = models.ManyToManyField(Course)
+    users = models.ManyToManyField(User)
+    user_watch = models.ManyToManyField(User, related_name='user_watch_faculty')
 
     objects = models.Manager()
 
@@ -91,12 +92,36 @@ class Faculty(models.Model):
         return retval
 
     class Meta:
-        managed = False
-        db_table = 'Faculty'
+        db_table = 'Employee'
 
+
+# class Faculty(models.Model):
+#     faculty = models.BigAutoField(primary_key=True)
+#     department = models.ForeignKey(Department, on_delete=models.CASCADE)
+#     fname = models.CharField(max_length=50)
+#     lname = models.CharField(max_length=50)
+#     overall_rating = models.FloatField(blank=True, null=True)
+#     teaching_quality = models.FloatField(blank=True, null=True)
+#     exams_difficulty = models.FloatField(blank=True, null=True)
+#
+#     # for the mapping of faculty and course
+#     # each faculty member can teach many courses
+#     # and many courses can be taught by many faculty members
+#     # course = models.ManyToManyField(Course)
+#
+#     objects = models.Manager()
+#
+#     def __str__(self):
+#         retval = f"{self.fname},{self.lname}"
+#         return retval
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'Faculty'
+#
 
 class Course(models.Model):
-    course = models.IntegerField(primary_key=True, db_column='course_codw')
+    course = models.IntegerField(primary_key=True)
     course_name = models.CharField(max_length=50, null=True)
     overall_rating = models.FloatField(blank=True, null=True)
     effort_required = models.FloatField(blank=True, null=True)
@@ -104,7 +129,10 @@ class Course(models.Model):
     # There exists a many-to-many relationship between Faculty and Course
     # many faculties can teach many courses
     # and many courses can be taught by many faculty
-    faculties = models.ManyToManyField(Faculty)
+    # faculties = models.ManyToManyField(Faculty)
+    employees = models.ManyToManyField(Employee)
+    users = models.ManyToManyField(User)
+    users_watch = models.ManyToManyField(User, related_name='user_watch_course')
 
     objects = models.Manager()
 
@@ -112,71 +140,69 @@ class Course(models.Model):
         return self.course_name
 
     class Meta:
-        managed = False
         db_table = 'Course'
 
 
-class LanguageInstructor(models.Model):
-    faculty = models.OneToOneField(Faculty, primary_key=True, on_delete=models.CASCADE, db_column='faculty_id')
-    image = models.CharField(max_length=500, blank=True, null=True)
-
-    objects = models.Manager()
-
-    class Meta:
-        managed = False
-        db_table = 'Language_Instructor'
-
-
-class Professor(models.Model):
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, db_column='faculty_id')
-    phd_from = models.CharField(max_length=255, blank=True, null=True)
-    prof_rank = models.CharField(max_length=50, blank=True, null=True)
-    research_area = models.CharField(max_length=255, blank=True, null=True)
-    image = models.CharField(max_length=500, blank=True, null=True)
-
-    objects = models.Manager()
-
-    def __str__(self):
-        retval = f"faculty is {self.faculty}"
-        return retval
-
-    class Meta:
-        managed = False
-        db_table = 'Professor'
+# class LanguageInstructor(models.Model):
+#     faculty = models.OneToOneField(Faculty, primary_key=True, on_delete=models.CASCADE)
+#     image = models.CharField(max_length=500, blank=True, null=True)
+#
+#     objects = models.Manager()
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'Language_Instructor'
 
 
-class TeachingAssistant(models.Model):
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, db_column='faculty_id')
-    masters_from = models.CharField(max_length=50, blank=True, null=True)
-    image = models.CharField(max_length=500, blank=True, null=True)
-
-    objects = models.Manager()
-
-    def __str__(self):
-        retval = F"TA is {self.faculty}"
-        return retval
-
-    class Meta:
-        managed = False
-        db_table = 'Teaching_Assistant'
-
+# class Professor(models.Model):
+#     faculty = models.ForeignKey(Faculty, primary_key=True, on_delete=models.CASCADE)
+#     phd_from = models.CharField(max_length=255, blank=True, null=True)
+#     prof_rank = models.CharField(max_length=50, blank=True, null=True)
+#     research_area = models.CharField(max_length=255, blank=True, null=True)
+#     image = models.CharField(max_length=500, blank=True, null=True)
+#
+#     objects = models.Manager()
+#
+#     def __str__(self):
+#         retval = f"faculty is {self.faculty}"
+#         return retval
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'Professor'
+#
+#
+# class TeachingAssistant(models.Model):
+#     faculty = models.ForeignKey(Faculty, primary_key=True, on_delete=models.CASCADE)
+#     masters_from = models.CharField(max_length=50, blank=True, null=True)
+#     image = models.CharField(max_length=500, blank=True, null=True)
+#
+#     objects = models.Manager()
+#
+#     def __str__(self):
+#         retval = F"TA is {self.faculty}"
+#         return retval
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'Teaching_Assistant'
+#
 
 class DeptGeneralcomments(models.Model):
-    dept_code = models.ForeignKey(Department, db_column='dept_code', on_delete=models.CASCADE)
-    general_comment = models.CharField(primary_key=True, max_length=255)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    general_comment = models.CharField(max_length=255)
 
     objects = models.Manager()
 
     class Meta:
-        managed = False
-        db_table = 'dept_generalComments'
+        db_table = 'dept_gen_com'
 
 
 class UserCourseRev(models.Model):
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, db_column='faculty_id')
-    review = models.AutoField(primary_key=True, db_column='review_id')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='uid')
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, db_column='c_code', blank=True, null=True)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    review = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
     overall_rating = models.IntegerField()
     upvotes = models.IntegerField(blank=True, null=True)
     downvotes = models.IntegerField(blank=True, null=True)
@@ -186,31 +212,31 @@ class UserCourseRev(models.Model):
     course_tag = models.CharField(max_length=50, blank=True, null=True)
     enjoyment_rating = models.IntegerField()
     effort_required = models.IntegerField()
+    # users = models.ManyToManyField(User, through='UserReactCourse')
 
     objects = models.Manager()
 
     class Meta:
-        managed = False
         db_table = 'user_course_rev'
+        unique_together = (('user', 'course', 'review'),)
 
 
-class UserDept(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='uid')
-    dept = models.ForeignKey(Department, on_delete=models.CASCADE, db_column='dept_code')
-
-    objects = models.Manager()
-
-    class Meta:
-        managed = False
-        db_table = 'user_dept'
-        unique_together = (('user', 'dept'),)
+# class UserDept(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     department = models.ForeignKey(Department, on_delete=models.CASCADE)
+#
+#     objects = models.Manager()
+#
+#     class Meta:
+#         db_table = 'user_dept'
+#         unique_together = (('user', 'department'),)
 
 
 class UserFacultyRev(models.Model):
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, db_column='faculty_id')
-    review = models.AutoField(primary_key=True, db_column='review_id')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='uid')
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, db_column='c_code', blank=True, null=True)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    review = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
     overall_rating = models.IntegerField()
     difficulty_rating = models.IntegerField()
     upvotes = models.IntegerField(blank=True, null=True)
@@ -223,140 +249,134 @@ class UserFacultyRev(models.Model):
     objects = models.Manager()
 
     class Meta:
-        managed = False
         db_table = 'user_faculty_rev'
+        unique_together = (('user', 'employee', 'review'),)
 
 
-class UserQueue(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='uid')
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, db_column='fid')
-
-    objects = models.Manager()
-
-    class Meta:
-        managed = False
-        db_table = 'user_queue'
-        unique_together = (('user', 'faculty'),)
-
-
-class UserWatchCourse(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='uid')
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, db_column='course_code')
-
-    objects = models.Manager()
-
-    class Meta:
-        managed = False
-        db_table = 'user_watch_course'
-        unique_together = (('user', 'course'),)
+# class UserQueue(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+#
+#     objects = models.Manager()
+#
+#     class Meta:
+#         db_table = 'user_queue'
+#         unique_together = (('user', 'employee'),)
 
 
-class UserWatchFaculty(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='uid')
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, db_column='fid')
+# class UserWatchCourse(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+#
+#     objects = models.Manager()
+#
+#     class Meta:
+#         db_table = 'user_watch_course'
+#         unique_together = (('user', 'course'),)
+#
+#
+# class UserWatchFaculty(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+#
+#     objects = models.Manager()
+#
+#     class Meta:
+#         db_table = 'user_watch_faculty'
+#         unique_together = (('user', 'employee'),)
+#
 
-    objects = models.Manager()
-
-    class Meta:
-        managed = False
-        db_table = 'user_watch_faculty'
-        unique_together = (('user', 'faculty'),)
-
-
-class FacultyCourse(models.Model):
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, db_column='faculty_id')
-    course = models.ForeignKey(Course, db_column='c_code', on_delete=models.CASCADE)
-
-    objects = models.Manager()
-
-    def __str__(self):
-        returning_string = f"faculty {self.faculty} and course {self.course}"
-        return returning_string
-
-    class Meta:
-        managed = False
-        db_table = 'faculty_course'
-        unique_together = (('faculty', 'course'),)
-
+# class FacultyCourse(models.Model):
+#     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+#     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+#
+#     objects = models.Manager()
+#
+#     def __str__(self):
+#         returning_string = f"faculty {self.employee} and course {self.course}"
+#         return returning_string
+#
+#     class Meta:
+#         db_table = 'faculty_course'
+#         unique_together = (('employee', 'course'),)
+#
 
 class FacultyMiscellaneous(models.Model):
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, db_column='faculty_id')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     miscellaneous = models.CharField(primary_key=True, max_length=50)
-    user = models.ForeignKey(User, db_column='id', on_delete=models.CASCADE)
-    review = models.ForeignKey('UserFacultyRev', db_column='review_id', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review = models.ForeignKey(UserFacultyRev, on_delete=models.CASCADE)
 
     objects = models.Manager()
 
     def __str__(self):
-        retval = f"Faculty {self.faculty} has {self.miscellaneous}"
+        retval = f"Faculty {self.employee} has {self.miscellaneous}"
         return retval
 
     class Meta:
-        managed = False
-        db_table = 'faculty_miscellaneous'
+        db_table = 'faculty_misc'
+        unique_together = (('user', 'employee', 'review'),)
 
 
 class FacultyPersonality(models.Model):
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, db_column='faculty_id')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     personality = models.CharField(primary_key=True, max_length=50)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='id')
-    review = models.ForeignKey('UserFacultyRev', on_delete=models.CASCADE, db_column='review_id')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review = models.ForeignKey(UserFacultyRev, on_delete=models.CASCADE)
 
     objects = models.Manager()
 
     def __str__(self):
-        retval = f"faculty {self.faculty} has {self.personality}"
+        retval = f"faculty {self.employee} has {self.personality}"
         return retval
 
     class Meta:
-        managed = False
         db_table = 'faculty_personality'
+        unique_together = (('user', 'employee', 'review'),)
 
 
 class FacultyWorkload(models.Model):
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, db_column='faculty_id')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     workload = models.CharField(primary_key=True, max_length=50)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='id')
-    review = models.ForeignKey('UserFacultyRev', on_delete=models.CASCADE, db_column='review_id')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review = models.ForeignKey(UserFacultyRev, on_delete=models.CASCADE)
 
     objects = models.Manager()
 
     def __str__(self):
-        retval = f"faculty {self.faculty} has {self.workload}"
+        retval = f"faculty {self.employee} has {self.workload}"
         return retval
 
     class Meta:
-        managed = False
         db_table = 'faculty_workload'
+        unique_together = (('user', 'employee', 'review'),)
 
 
 class SimilarCourses(models.Model):
-    course = models.ForeignKey(Course, db_column='course_code', on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     similar_course = models.IntegerField()
 
     objects = models.Manager()
 
     class Meta:
-        managed = False
         db_table = 'similar_courses'
         unique_together = (('course', 'similar_course'),)
 
 
 class SimilarFaculty(models.Model):
-    faculty = models.ForeignKey(Faculty, db_column='faculty_id', on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     similar_faculty = models.IntegerField()
 
     objects = models.Manager()
 
     class Meta:
-        managed = False
         db_table = 'similar_faculty'
-        unique_together = (('faculty', 'similar_faculty'),)
+        unique_together = (('employee', 'similar_faculty'),)
 
 
-class UserReactCourserev(models.Model):
+class UserReactCourse(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    review = models.ForeignKey(UserCourseRev, on_delete=models.CASCADE, db_column='review_id')
+    review = models.ForeignKey(UserCourseRev, on_delete=models.CASCADE)
     # upvote and downvote are discrete values
     # if user likes a review - set upvote value to 1
     # if user dislikes a review - set downvote value to 1
@@ -369,14 +389,13 @@ class UserReactCourserev(models.Model):
     objects = models.Manager()
 
     class Meta:
-        managed = False
-        db_table = 'user_react_courseRev'
+        db_table = 'user_react_course'
         unique_together = (('user', 'review'),)
 
 
-class UserReactFacultyrev(models.Model):
+class UserReactFaculty(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    review = models.ForeignKey(UserFacultyRev, on_delete=models.CASCADE, db_column='review_id')
+    review = models.ForeignKey(UserFacultyRev, on_delete=models.CASCADE)
     # upvote and downvote are discrete values
     # if user likes a review - set upvote value to 1
     # if user dislikes a review - set downvote value to 1
@@ -389,8 +408,7 @@ class UserReactFacultyrev(models.Model):
     objects = models.Manager()
 
     class Meta:
-        managed = False
-        db_table = 'user_react_facultyRev'
+        db_table = 'user_react_faculty'
         unique_together = (('user', 'review'),)
 
 

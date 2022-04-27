@@ -1,5 +1,5 @@
 INSERT INTO Professor(faculty_id, prof_rank,research_area,phd_from,image) VALUES (34,'Assistant Professor','','Texas A&M University','http://kuwebcont.ku.edu.kw/cs/groups/coep/documents/ku_content/kuw170396.jpg');
-INSERT INTO Professor(faculty_id, prof_rank,research_area,phd_from,image) VALUES (35,'Associate Professor','','University of Miami','http://kuwebcont.ku.edu.kw/cs/groups/coep/documents/ku_content/kuw147692.jpg');
+INSERT INTO Professor(faculty_id, prof_rank,research_area,phd_from,image) VALUES (35,'Assistant Professor','','University of Miami','http://kuwebcont.ku.edu.kw/cs/groups/coep/documents/ku_content/kuw147692.jpg');
 INSERT INTO Professor(faculty_id, prof_rank,research_area,phd_from,image) VALUES (36,'Associate Professor','','Syracuse University',NULL);
 INSERT INTO Professor(faculty_id, prof_rank,research_area,phd_from,image) VALUES (37,'Assistant Professor','','Purdue University','http://kuwebcont.ku.edu.kw/cs/groups/coep/documents/ku_content/kuw233288.jpg');
 INSERT INTO Professor(faculty_id, prof_rank,research_area,phd_from,image) VALUES (38,'Assistant Professor','Computer Security','University of Virginia','http://kuwebcont.ku.edu.kw/cs/groups/coep/documents/ku_content/kuw147701.jpg');

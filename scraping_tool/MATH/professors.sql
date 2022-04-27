@@ -1,8 +1,3 @@
-ALTER TABLE Professor MODIFY phd_from VARCHAR(255);
-ALTER TABLE Professor MODIFY research_area VARCHAR(255);
-ALTER TABLE Professor MODIFY image VARCHAR(500);
-
-
 INSERT INTO Professor(faculty_id, phd_from, prof_rank, research_area, image) VALUES (109,'University of Southampton','Professor','Differential Geometry & Topology','https://lh5.googleusercontent.com/67g7-rzNIyh6XEL6agb68wiPnMhbhNJhla8LgvBKLbjGKn-_4LVOYmnFVQxdk8iPWQ9x3hyiGgQPOGy2S0RLA5gEpMLEx6d5bnamWBWQlrQZpM9y=w1280');
 INSERT INTO Professor(faculty_id, phd_from, prof_rank, research_area, image) VALUES (110,'University of North Texas','Professor','Partial Differential Equations','https://lh5.googleusercontent.com/mInLPsSJrkRo8mjvH2YFx7-BU82lH5mPtO54bNKeAQt_Z984BQ3p-mTMtPyiQFC_pwWITOV9oq2dvMq_hLj6fneN3lEgnJ3Et9dm6KMcIQUw4Fjp=w1280');
 INSERT INTO Professor(faculty_id, phd_from, prof_rank, research_area, image) VALUES (111,'Bucharest University','Professor','Algebra & Group Theory','https://lh3.googleusercontent.com/9lHLlLhpQOO0bLXx6igaa5zrEXHeNGzhjlfudJHsQnTbQOHwrIP0PHa2Dqts2Fu95WWejBgpU-btxhiUxoLKc1gaynoWSpYP_Vr-EPeSBiCp7VLq=w1280');
