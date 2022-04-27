@@ -2,32 +2,34 @@
 {% load static %}
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{% static '/admin/css/main.css' %}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="{% static '/admin/css/main.css' %}">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
+	<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3"></script>
+	
+	
+	<script src=
+	"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+	</script>
 
+	<script src=
+	"https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+	</script>
 
-   <script src=
-"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
-    </script>
+	<link href=
+	"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+	rel="stylesheet" type="text/css" />
+	<script type="module" src="{% static '/admin/js/search_old.js' %}"></script>
 
-    <script src=
-"https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
-    </script>
-
-    <link href=
-"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
-        rel="stylesheet" type="text/css" />
-    <script type="module" src="{% static '/admin/js/search_old.js' %}"></script>
-
-    <title>RateZone</title>
+	<title>RateZone</title>
 </head>
+
 <body class="px-5 pt-2 pb-6
 text-xs sm:text-base lg:text-lg">
+<<<<<<< HEAD
     {% include 'header.html' %}
 
     <div class="container border-b border-neutral-300 pb-4
@@ -110,5 +112,149 @@ text-xs sm:text-base lg:text-lg">
                 </div>
         </div>
     </div>
+=======
+{% include 'header.html' %}
+
+	<div class="container border-b border-neutral-300 pb-4
+	md:grid md:grid-cols-2 md:gap-x-4 md:items-center md:justify-around
+	">
+	<div class="sm:w-3/4 md:w-full lg:w-3/4 xl:w-3/5 overflow-hidden">
+		<lottie-player src="https://assets8.lottiefiles.com/packages/lf20_MeTWrj.json"  background="transparent"  speed="1" loop autoplay></lottie-player>
+	</div>
+	<p class="text-2xl md:text-3xl lg:text-4xl xl:text-3xl
+	text-justify mx-auto">
+	At RateZone, we have hundreds of professors, TAs, and courses ratings
+	</p>
+	</div>
+
+	<!-- <div class="mt-10">
+		<div class="px-10 mb-10 mt-4">
+			<h1 class="text-3xl md:text-5xl font-medium text-center">
+				Find what you're looking for
+			</h1>
+			
+			<form class="grid grid-cols-2 gap-2 mx-auto max-w-xl mt-6">
+				<div>
+					<input class="hidden" id="radio_1" type="radio" name="radio" checked>
+					<label class="flex flex-col bg-white
+					p-3 border-2 border-neutral-300 rounded-md
+					cursor-pointer" for="radio_1">
+					<span class="text-center text-lg sm:text-xl font-medium">
+						Find
+					</span>
+				</label>
+			</div>
+			<div>
+				<input class="hidden" id="radio_2" type="radio" name="radio">
+				<label class="flex flex-col bg-white
+				p-3 border-2 border-neutral-300 rounded-md
+				cursor-pointer" for="radio_2">
+				<span class="text-center text-lg sm:text-xl font-medium">
+					Rate
+				</span>
+			</label>
+		</div>
+	</form><br><br>
+	<div class="grid grid-cols-4 sm:grid-cols-10 gap-x-2
+	mx-auto max-w-xl mt-8" x-data="autoComplete()">
+
+	<div class="flex flex-col col-span-3 sm:col-span-9"
+	@click.away="active=false; cursorIndex=-1" @keydown.escape="active=false; cursorIndex=-1"
+	@keydown.arrow-down="moveDownList()" @keydown.arrow-up="moveUpList()" @keydown.enter="">
+	<input type="text" class="bg-gray-100 rounded focus:bg-white border w-full p-3 text-base sm:text-xl" placeholder="Keywords"
+	x-model="inputValue" @focus="active=true" @input.debounce.250="$dispatch('input-change', inputValue)"/>
+	<div class="relative" x-show="suggestions.length > 1 && active" x-cloak @input-change.window="active=true;cursorIndex=-1;updateSuggestions($event.detail)"
+		x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform scale-y-90"
+		x-transition:enter-end="opacity-100 transform scale-y-100" x-transition:leave="transition ease-in duration-100"
+		x-transition:leave-start="opacity-100 transform scale-y-100" x-transition:leave-end="opacity-0 transform scale-y-90">
+		<div class="absolute top-100 mt-1 w-full border bg-white shadow-xl rounded">
+			<div class="p-3">
+				<div class="divide-y" x-ref="list">
+					<template x-for="suggestion in suggestions">
+						<a x-bind:active="false" name="inputVal" id="inputVal"
+						x-bind:href="suggestion.item.directLink ? {% url 'professor' prof_id=suggestion.item.fid %}:{% url 'searchResults' %}"
+						x-bind:class="{'p-2 flex block w-full rounded hover:bg-neutral-300': true, 'bg-[#F9C041] hover:bg-[#F9C041]--replace-with-icon-class!':suggestion.active}">
+						<span x-text="suggestion.item.name"></span>
+						<svg x-show="suggestion.item.directLink" xmlns="http://www.w3.org/2000/svg" class="ml-2 w-5" viewBox="0 0 20 20" fill="currentColor">
+							<path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+							<path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+						</svg>
+					</a>
+					
+				</template>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+	<div class="flex flex-col col-span-1
+	p-3 text-base sm:text-xl border rounded">
+	<button type="submit" @click="location.href = {% url 'searchResults' %};" >Go</button>
+	</div>
+	</div>
+	</div>
+	</div> -->
+
+
+
+
+	<!-- Testing jQuery search -->
+	<!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
+	<!-- <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script> -->
+	<!-- <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3"></script> -->
+	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js" integrity="sha256-6XMVI0zB8cRzfZjqKcD01PBsAy3FlDASrlC8SxCpInY=" crossorigin="anonymous"></script>
+
+	<script src="/../static/libs/Fuse-6.5.3/dist/fuse.min.js"></script>
+
+	<br>
+	<form action="#" id="search" method="post">
+		{% csrf_token %}
+		<label for="bar">Search: </label>
+		<input type="text" name="bar" id="bar" style="border-color: black; border: solid;">
+	</form>
+
+	<script>
+		let profs = [];
+		let fac = [];
+		let fac2 = {};
+		{% for p in Profs %}
+		profs = [...profs, "{{p.fname}} {{p.lname}}"];
+		fac = [...fac, { "name": "{{p.fname}} {{p.lname}}", "id": "{{p.faculty_id}}" }];
+		fac2 = {...fac2, "{{p.fname}} {{p.lname}}":"{{p.faculty_id}}"}
+		{% endfor %}
+		
+		$('#bar').autocomplete({
+			source: function(request, response) {
+				const fuse = new Fuse(profs, {keys:['name']});
+				const result = fuse.search(request.term);
+
+				console.log(result);
+
+				let newRes = result.map(function(element){
+					return element.item;
+				});
+
+				console.log(newRes);
+
+				response(newRes);
+				newRes = [];
+			},
+
+			minLength: 2,
+
+			select: function (event, ui) {
+				$(this).val(ui.item.value);
+				let term = ui.item.value;
+				let checkFac2 = (name) => term in fac2;
+				let prof_id = fac2[term];
+				
+				let urlT = checkFac2(term) ? '{% url "professor" 0 %}'.replace('0', prof_id) : '{% url "searchResults" %}'
+				console.log(urlT)
+				$('#search').attr('action', urlT)
+			}
+		});
+	</script>
+>>>>>>> 01706b74678ed6994032176a3197837675d4b4c1
 </body>
 </html>

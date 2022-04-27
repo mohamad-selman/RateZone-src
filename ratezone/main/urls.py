@@ -4,10 +4,14 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('test', views.test, name='test'),
+    path('test/', views.test, name='test'),
     path('course/', views.course, name='course'),
     path('dashboard/', views.dashboard, name='dashboard'),
+<<<<<<< HEAD
     path('professor/', views.professor, name='professor',  kwargs={'prof_id': ''}),
+=======
+    path('professor/', views.professor, name='professor', kwargs={'prof_id':''}),
+>>>>>>> 01706b74678ed6994032176a3197837675d4b4c1
     path('professorTwo/<str:prof_name>', views.professorTwo, name='professorTwo'),
     path('professor/<int:prof_id>/', views.professor, name='professor'),
     path('add_to_queue/', views.add_to_queue, name='queue'),

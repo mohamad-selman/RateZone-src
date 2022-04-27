@@ -22,17 +22,9 @@ def home(request):
 
 
 def test(request):
-    query = "SELECT F.faculty_id FROM Faculty AS F"
-    cursors.execute(query)
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    prof_count = 0
-    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
-
-    result = {
-        'professor': prof
-    }
-    return render(request, './index_old.html', result)
+    profs = Faculty.objects.all()
+    return render(request, './index_old.html',
+        {"Profs": profs})
 
 
 # the function takes the query result and the cursor description of an executed query
