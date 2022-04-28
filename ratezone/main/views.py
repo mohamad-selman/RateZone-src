@@ -341,10 +341,8 @@ def queue(request):
     # we need professor id and user id
     # print(prof_id)
     # faculty_id = prof_id
-    uname = request.user.username
     # print(uname)
-    user = User.objects.get(username=uname)
-    user_id = user.id
+    user_id = request.user.id
     # print(f'{user_id} and {faculty_id}')
 
     fetch = '''
