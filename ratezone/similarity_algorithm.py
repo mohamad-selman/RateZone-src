@@ -94,9 +94,9 @@ for i in range(len(similar)):
         if i != j:
             print(map[j])
             try:
-                em = Employee.objects.get(employee=map[i]['employee'])
-                similar_employee = Employee.objects.get(employee=map[j]['employee'])
-                similar_faculty = SimilarFaculty.objects.create(employee=em, similar_faculty=similar_employee.employee)
+#               em = Employee.objects.get(employee=map[i]['employee'])
+#               similar_employee = Employee.objects.get(employee=map[j]['employee'])
+#               similar_faculty = SimilarFaculty.objects.create(employee=em, similar_faculty=similar_employee.employee)
             except:
                 print('Error inserting')
     print("\n")
