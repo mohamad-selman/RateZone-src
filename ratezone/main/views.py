@@ -22,9 +22,9 @@ def home(request):
 
 
 def test(request):
-    profs = Faculty.objects.all()
+    profs = Employee.objects.all()
     return render(request, './index_old.html',
-        {"Profs": profs})
+                  {"Profs": profs})
 
 
 # the function takes the query result and the cursor description of an executed query
@@ -119,7 +119,6 @@ def searchResults(request):
     tmp = cursors.description
     cs_count = 0
     (CS_dept, cs_count) = convert_to_dictionary(tmp, dept_row)
-
 
     # CE query
 
@@ -255,21 +254,10 @@ def professor(request, prof_id=None):
 
 
 @login_required(login_url='sign_in')
-def rate(request, prof_id):
-    prof_query = '''
-                    SELECT E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating',E.teaching_quality,
-                    E.employee,D.dept_name,E.image FROM Employee AS E
-                    INNER JOIN Department AS D ON F.department_id=D.department WHERE E.employee = %s
-                 '''
-    cursors.execute(prof_query, [prof_id])
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
-    # print(prof)
+def rate(request, prof_id=None):
     uname = request.user.username
-    print(uname)
     user = User.objects.get(username=uname)
-    user_id = user.id
+    faculty_id = prof_id
 
     if request.method == 'POST':
         # D=request.POST['D']
@@ -280,57 +268,51 @@ def rate(request, prof_id):
         personality = request.POST.getlist('personality')
         misc = request.POST.getlist('misc')
         comment = request.POST['comment']
-        print('id = ', prof_id)
-        # print(D)
-        print("quality = ", quality)
-        print("difficulty = ", difficulty)
-        print("rate = ", rate)
+        # print('id = ', prof_id)
+        # print("quality = ", quality)
+        # print("difficulty = ", difficulty)
+        # print("rate = ", rate)
         print("workload = ", workload)
         print("personality = ", personality)
         print("misc = ", misc)
-        print("comment = ", comment)
+        # print("comment = ", comment)
 
         try:
-            faculty_id = prof_id
-            # u = UserFacultyRev(faculty_id=prof_id, uid=user_id, overall_rating=overall_rate,
-            #                               difficulty_rating=difficulty, upvotes=0, downvotes=0, report_count=0,
-            #                               semester_period='', student_thoughts=comment,
-            #                               teaching_quality=quality)
-            # u.save()
-            print('Here')
-            # data = (prof_id, user_id, 5, difficulty, comment, quality)
-
-            # UserFacultyRev.objects.raw('''
-            #     INSERT INTO user_faculty_rev (faculty_id, uid, overall_rating, difficulty_rating, student_thoughts,
-            #     teaching_quality)
-            #     VALUES (%s, %s, %s, %s, %s, %s)
-            #     ''', [prof_id, user_id, overall_rate, difficulty, comment, quality])
-            # insertion_query = '''
-            #     INSERT INTO user_faculty_rev (faculty_id, uid, overall_rating, difficulty_rating, student_thoughts,
-            #      teaching_quality)
-            #      VALUES (%s, %s, %s, %s, %s, %s)
-            #
-            # '''
-            # data = (faculty_id, user_id, overall_rate, difficulty, comment, quality)
-            # cursors.execute(insertion_query, data)
-            #
-            #
-            user = User.objects.get(id=user_id)
-            faculty = Employee.objects.get(employee=faculty_id)
-            UserFacultyRev.objects.create(overall_rating=overall_rate,
-                                          difficulty_rating=difficulty, student_thoughts=comment,
-                                          teaching_quality=quality,employee_id=faculty, user=user)
+            em = Employee.objects.get(employee=faculty_id)
+            u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
+                                                   student_thoughts=comment,
+                                                   teaching_quality=quality, employee_id=em.employee, user_id=user.id)
+            if u_rate:
+                print('A record has been created')
 
             print('Success')
         except:
             print('Could not review')
 
-    # print(request.POST)
+    return render(request, './reviewSubmitted.html', {'prof': faculty_id})
+
+
+@login_required(login_url='sign_in')
+def rate_page(request, prof_id):
+    prof_query = '''
+                    SELECT E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating',E.teaching_quality,
+                    E.employee,D.dept_name,E.image FROM Employee AS E
+                    INNER JOIN Department AS D ON E.department_id=D.department WHERE E.employee = %s
+                 '''
+    cursors.execute(prof_query, [prof_id])
+    prof_row = cursors.fetchall()
+    tmp = cursors.description
+    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
+
     result = {
         'prof': prof
     }
     return render(request, './rate.html', result)
 
+
+# @login_required(login_url='sign_in')
+# def review_submitted(request):
+#     return render(request, './reviewSubmitted.html')
 
 def search(request):
     return render(request, './search.html')
@@ -393,6 +375,7 @@ def add_to_queue(request):
         return HttpResponse(msg)
     return HttpResponse('Failed')
 
+
 @csrf_exempt
 @login_required(login_url='sign_in')
 def remove_from_queue(request, prof_id):
@@ -427,6 +410,7 @@ def remove_from_queue(request, prof_id):
         'professors': prof
     }
     return HttpResponse(status=200)
+
 
 @unauthenticated_user
 def sign_in(request):
