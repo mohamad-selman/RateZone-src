@@ -58,7 +58,7 @@ text-xs sm:text-base lg:text-lg">
             <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_drbe9mf2.json"  background="transparent" style="width: 300px;" speed="1" loop autoplay></lottie-player>
         </div>
 
-        <form action="#" method="post" class="mt-5">
+        <form action="{% url 'rate' prof_id=p.employee %}" method="post" class="mt-5">
             {% csrf_token %}
             <p class="font-semibold
             text-base sm:text-lg lg:text-xl">
@@ -361,10 +361,9 @@ text-xs sm:text-base lg:text-lg">
             </div>
 
             <div class="flex justify-center m-3">
-                <button class="px-2 py-2 sm:px-4
+                <button type="submit" class="px-2 py-2 sm:px-4
                 font-normal text-white
-                rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]"
-                onclick="location.href = {% url 'professor' prof_id=p.faculty_id  %};">
+                rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]">
                     Submit my Review
                 </button>
             </div>

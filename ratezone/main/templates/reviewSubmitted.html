@@ -30,13 +30,13 @@ text-xs sm:text-base lg:text-lg">
     </div>
     
     <div class="mt-4 flex justify-center gap-x-6">
-        <a href="./professor.html"
+        <a href="{% url 'professor' prof_id=prof %}"
         class="px-4 py-2 sm:px-6
         font-normal text-white text-center
         rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]">
             Return to Professor Page
         </a>
-        <a href="./index.html"
+        <a href="{% url 'home' %}"
         class="px-4 py-2 sm:px-6
         font-normal text-white text-center
         rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]">
