@@ -52,13 +52,12 @@ text-xs sm:text-base lg:text-lg">
 
     <div class="mt-6">
         <div class="flex gap-x-4 items-center">
-            {% for p in prof %}
-            <p class="pl-2 font-normal text-2xl">You are rating Professor {{ p.fname }} {{ p.lname }}  </p>
+            <p class="pl-2 font-normal text-2xl">You are rating Professor {{ fname }} {{ lname }}  </p>
 
             <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_drbe9mf2.json"  background="transparent" style="width: 300px;" speed="1" loop autoplay></lottie-player>
         </div>
 
-        <form action="{% url 'rate' prof_id=p.employee %}" method="post" class="mt-5">
+        <form action="{% url 'rate' prof_id=pid %}" method="post" class="mt-5">
             {% csrf_token %}
             <p class="font-semibold
             text-base sm:text-lg lg:text-xl">
@@ -374,7 +373,6 @@ text-xs sm:text-base lg:text-lg">
                 Success Rate.
               </div>
         </form>
-        {% endfor %}
     </div>
 </body>
 </html>

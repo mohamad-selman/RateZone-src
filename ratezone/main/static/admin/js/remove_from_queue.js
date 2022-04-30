@@ -10,8 +10,8 @@ $(document).ready(function() {
             success: function() {
                 alert('Professor removed from queue');
             },
-            error: function() {
-                alert('Error! Could not remove professor from queue');
+            error: function(retval, status) {
+                alert(retval + ' : ' + status);
             }
         })
     })
