@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db import connection
+import math
 from .models import *
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.models import User
@@ -44,6 +45,18 @@ def convert_to_dictionary(cursor_description, query_result):
         returning_value.append(d)
     return returning_value, total_count
 
+
+def Round(object, decimal):
+    for element in object:
+        tmp = element.overall_rating
+        element.overall_rating = round(tmp, decimal)
+    return object
+
+
+def Round_get(obj, dec):
+    tmp = obj.overall_rating
+    obj.overall_rating = round(tmp, dec)
+    return obj
 
 def searchResults(request):
     total_count = 0
@@ -294,18 +307,12 @@ def rate(request, prof_id=None):
 
 @login_required(login_url='sign_in')
 def rate_page(request, prof_id):
-    prof_query = '''
-                    SELECT E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating',E.teaching_quality,
-                    E.employee,D.dept_name,E.image FROM Employee AS E
-                    INNER JOIN Department AS D ON E.department_id=D.department WHERE E.employee = %s
-                 '''
-    cursors.execute(prof_query, [prof_id])
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
-
+    p = Employee.objects.get(employee=prof_id)
+    prof = Round_get(p, 2)
     result = {
-        'prof': prof
+        'fname': prof.fname,
+        'lname': prof.lname,
+        'pid': prof.employee
     }
     return render(request, './rate.html', result)
 
@@ -321,24 +328,11 @@ def search(request):
 @login_required(login_url='sign_in')
 def queue(request):
     # we need professor id and user id
-    # print(prof_id)
-    # faculty_id = prof_id
-    # print(uname)
     user_id = request.user.id
-    # print(f'{user_id} and {faculty_id}')
+    user = User.objects.get(id=user_id)
+    p = Employee.objects.filter(users=user)
+    prof = Round(p, 2)
 
-    fetch = '''
-            SELECT E.fname, E.lname, E.employee, E.image, ROUND(E.overall_rating, 2) AS 'overall_rating' 
-            FROM Employee AS E 
-            INNER JOIN Employee_users AS U 
-            ON E.employee=U.employee_id WHERE U.user_id=%s
-            '''
-    cursors.execute(fetch, [user_id])
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    prof_count = 0
-    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
-    print(prof)
     result = {
         'professors': prof
     }
@@ -348,19 +342,12 @@ def queue(request):
 @csrf_exempt
 @login_required(login_url='sign_in')
 def add_to_queue(request):
-    # print('I am being called')
     if request.method == "POST":
-        # print('Executing here: post method')
         prof_id = request.POST.get('prof_id', None)
-        # we need professor id and user id
-        # print('Adding a professor to queue')
-        # print(f'This is the id: {prof_id}')
         faculty_id = prof_id
         uname = request.user.username
-        # print(f'current logged it user: {uname}')
         user = User.objects.get(username=uname)
         user_id = user.id
-        print(f'{user_id} and {faculty_id}')
         try:
             if prof_id is not None:
                 user = User.objects.get(id=user_id)
@@ -378,7 +365,10 @@ def add_to_queue(request):
 
 @csrf_exempt
 @login_required(login_url='sign_in')
-def remove_from_queue(request, prof_id):
+def remove_from_queue(request, prof_id=None):
+    if prof_id is None:
+        msg = 'Professor id is None: Fix the error'
+        return HttpResponse(msg)
     print('Removing a professor from queue')
     print(prof_id)
     faculty_id = prof_id
@@ -387,28 +377,14 @@ def remove_from_queue(request, prof_id):
     user = User.objects.get(username=uname)
     user_id = user.id
     print(f'{user_id} and {faculty_id}')
-
     try:
+
         deletion_query = "DELETE FROM Employee_users WHERE user_id=%s AND employee_id=%s"
         data = (user_id, faculty_id)
         cursors.execute(deletion_query, data)
         print('executed successfully')
     except:
         print('Error')
-
-    fetch = '''
-         SELECT E.fname, E.lname, E.employee, E.image, ROUND(E.overall_rating, 2) AS 'overall_rating' FROM employee AS E
-         INNER JOIN Employee_users AS U ON F.employee=U.employee_id WHERE U.user_id=%s
-         '''
-    cursors.execute(fetch, [user_id])
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    prof_count = 0
-    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
-
-    result = {
-        'professors': prof
-    }
     return HttpResponse(status=200)
 
 
