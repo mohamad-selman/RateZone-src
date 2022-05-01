@@ -284,7 +284,7 @@ def rate(request, prof_id=None):
             print('Success')
 
             try:
-                update_scores()
+                update_scores(faculty_id)
             except:
                 print('Could not update scores')
         except:
