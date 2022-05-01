@@ -47,17 +47,18 @@ def convert_to_dictionary(cursor_description, query_result):
     return returning_value, total_count
 
 
-def Round(object, decimal):
-    for element in object:
+def Round(obj, decimal):
+    for element in obj:
         tmp = element.overall_rating
         element.overall_rating = round(tmp, decimal)
-    return object
+    return obj
 
 
 def Round_get(obj, dec):
     tmp = obj.overall_rating
     obj.overall_rating = round(tmp, dec)
     return obj
+
 
 def searchResults(request):
     total_count = 0
@@ -104,7 +105,6 @@ def searchResults(request):
 
     # the following is a query that returns all professors
     # with their desired attributes
-    ###########################################################################33
     # prof = Employee.objects.all()
     prof_query = '''
                     SELECT DISTINCT E.fname, E.lname, D.dept_name,
@@ -322,10 +322,6 @@ def rate_page(request, prof_id):
     }
     return render(request, './rate.html', result)
 
-
-# @login_required(login_url='sign_in')
-# def review_submitted(request):
-#     return render(request, './reviewSubmitted.html')
 
 def search(request):
     return render(request, './search.html')
