@@ -233,7 +233,7 @@ def professor(request, prof_id=None):
     em = Employee.objects.get(employee=faculty_id)
     avg = em.overall_rating
     avg = (avg * 100) / 5
-
+    avg = round(avg, 2)
     second_faculty_rev_query = '''
                             SELECT COUNT(R.review) AS 'rev_count' FROM Employee AS E 
                             INNER JOIN user_faculty_rev AS R ON E.employee=R.employee_id 
