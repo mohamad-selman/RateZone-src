@@ -7,6 +7,7 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
+from django.db.models import Avg, Count, Sum
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .decorators import *
@@ -229,6 +230,9 @@ def professor(request, prof_id=None):
     tmp = cursors.description
     prof_count = 0
     (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
+    em = Employee.objects.get(employee=faculty_id)
+    avg = em.overall_rating
+    avg = (avg * 100) / 5
 
     second_faculty_rev_query = '''
                             SELECT COUNT(R.review) AS 'rev_count' FROM Employee AS E 
@@ -261,7 +265,8 @@ def professor(request, prof_id=None):
     result = {
         'prof': prof,
         'similar_professors': sim_prof,
-        'revs': reviews
+        'revs': reviews,
+        'avg': avg
     }
     return render(request, './professor.html', result)
 
