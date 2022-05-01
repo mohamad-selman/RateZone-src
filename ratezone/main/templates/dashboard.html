@@ -42,7 +42,6 @@ text-xs sm:text-base lg:text-lg">
 
     <div class="mt-6
     w-full sm:w-9/12 lg:w-7/12 xl:w-6/12">
-        {% for element in user_object %}
         <div>
             <p class="px-1 py-0.5 border-b-2 border-black
             font-extrabold antialiased w-fit
@@ -55,7 +54,7 @@ text-xs sm:text-base lg:text-lg">
             gap-x-4 sm:gap-x-10">
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden" >
-                    <strong>First Name:</strong><p id="Fname">{{ element.username }}</p>
+                    <strong>First Name:</strong><p id="Fname">{{ user.username }}</p>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="modifyText('Fname')">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -64,8 +63,8 @@ text-xs sm:text-base lg:text-lg">
 
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden">
-                    {% if element.last_name %}
-                        <strong>Last Name:</strong><p  id="Lname">Aly</p>
+                    {% if user.last_name %}
+                        <strong>Last Name:</strong><p  id="Lname">{{ user.last_name }}</p>
                     {% else %}
                         <strong>Last Name:</strong><p  id="">--------</p>
                     {% endif %}
@@ -104,7 +103,7 @@ text-xs sm:text-base lg:text-lg">
             <div class="grid grid-cols-1 gap-4 gap-x-10">
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden">
-                    <strong>Email:</strong><p id= "email">{{ element.email }}</p>
+                    <strong>Email:</strong><p id= "email">{{ user.email }}</p>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="modifyText('email')">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -113,7 +112,7 @@ text-xs sm:text-base lg:text-lg">
 
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex shrink overflow-hidden  md:shrink-0 gap-x-4 justify-around">
-                    <strong>Password:</strong><input type="password" value="{{ element.password }}" id="myInput">
+                    <strong>Password:</strong><input type="password" value="{{ user.password }}" id="myInput">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="myFunction()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -129,41 +128,22 @@ text-xs sm:text-base lg:text-lg">
         text-[#154854] items-center">
             Ratings
         </p>
-
+        {% for rev in revs %}
         <div class="text-base">
-            <a href="#">
+            <a href="{% url 'professor' prof_id=rev.employee %}">
                 <div class="my-4 p-3 bg-neutral-300 rounded-lg
                  flex gap-x-4 justify-around overflow-hidden" id="prof">
                     <span>
-                        <span class="font-medium">Hussain Almohri</span><br>
-                        Computer Science department<br>
+                        <span class="font-medium">{{ rev.fname }}, {{ rev.lname }}</span><br>
+                        {{ rev.department}} department<br>
                         Kuwait University
                     </span>
                     <div>
                         <p>Overall Rating</p>
-                        <p class="ml-2"><span class="text-2xl">4.5</span>/5</p>
+                        <p class="ml-2"><span class="text-2xl">{{ rev.overall_rating }}</span>/5</p>
                     </div>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="deleteProfessor0()">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                </div>
-            </a>
-
-            <a href="#">
-                <div class="my-4 p-3 rounded-lg bg-neutral-300
-                flex gap-x-4 justify-around overflow-hidden" id="prof1">
-                    <span>
-                        <span class="font-medium">Hussain Ibrahim</span><br>
-                        Computer Science department<br>
-                        Kuwait University
-                    </span>
-                    <div>
-                        <p>Overall Rating</p>
-                        <p class="ml-2"><span class="text-2xl">4.5</span>/5</p>
-                    </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                    onclick="deleteProfessor1()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                 </div>

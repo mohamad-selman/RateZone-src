@@ -234,6 +234,7 @@ def professor(request, prof_id=None):
     avg = em.overall_rating
     avg = (avg * 100) / 5
     avg = round(avg, 2)
+
     second_faculty_rev_query = '''
                             SELECT COUNT(R.review) AS 'rev_count' FROM Employee AS E 
                             INNER JOIN user_faculty_rev AS R ON E.employee=R.employee_id 
@@ -450,8 +451,17 @@ def rate_course(request):
 @login_required(login_url='sign_in')
 def dashboard(request):
     uname = request.user.username
-    user = User.objects.filter(username=uname)
+    user = User.objects.get(username=uname)
+    user_obj = User.objects.get(id=user.id)
+    revs = UserFacultyRev.objects.filter(user_id=user_obj)
+    rev_result = []
+    for i in range(len(revs)):
+        rev_result.append(Employee.objects.get(employee=revs[i].employee.employee))
+
+    print(user_obj)
+
     content = {
-        'user_object': user
+        'user': user_obj,
+        'revs': rev_result
     }
     return render(request, './dashboard.html', content)
