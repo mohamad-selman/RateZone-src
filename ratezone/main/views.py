@@ -459,7 +459,7 @@ def dashboard(request):
         rev_result.append(Employee.objects.get(employee=revs[i].employee.employee))
 
     print(user_obj)
-
+    rev_result = Round(rev_result, 2)
     content = {
         'user': user_obj,
         'revs': rev_result
