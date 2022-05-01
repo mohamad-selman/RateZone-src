@@ -1,13 +1,9 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.db import connection
-import math
+from django.shortcuts import render
 from .models import *
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.models import User
-from django.contrib import messages
-from django.http import JsonResponse
-from django.db.models import Avg, Count, Sum
+from main.updating_scores import update_scores
+from django.db.models import Avg, Sum, Count
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .decorators import *
@@ -219,33 +215,15 @@ def professor(request, prof_id=None):
     # needs to be converted to dictionary-like notation
     # that is what the loop does
     faculty_id = prof_id
-    prof_query = '''
-                SELECT DISTINCT E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating',
-                E.teaching_quality,E.employee,D.dept_name,E.image FROM Employee AS E 
-                INNER JOIN Department AS D 
-                ON E.department_id=D.department WHERE E.employee = %s
-                '''
-    cursors.execute(prof_query, [faculty_id])
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    prof_count = 0
-    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
+    prof = Employee.objects.get(employee=faculty_id)
+    prof = Round_get(prof, 2)
     em = Employee.objects.get(employee=faculty_id)
     avg = em.overall_rating
     avg = (avg * 100) / 5
     avg = round(avg, 2)
 
-    second_faculty_rev_query = '''
-                            SELECT COUNT(R.review) AS 'rev_count' FROM Employee AS E 
-                            INNER JOIN user_faculty_rev AS R ON E.employee=R.employee_id 
-                            WHERE E.employee=%s
-                            '''
-    cursors.execute(second_faculty_rev_query, [faculty_id])
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    (rev_prof, rev_count) = convert_to_dictionary(tmp, prof_row)
-    prof[0].update(rev_prof[0])
-
+    rev_count = UserFacultyRev.objects.filter(employee_id=prof).aggregate(Count('review'))
+    rev_count = rev_count['review__count']
     similar_query = '''
                 SELECT E.fname,E.lname, E2.fname,E2.lname, ROUND(E2.overall_rating, 2) AS 'overall_rating' 
                 from Employee E inner join similar_faculty S1 on S1.employee_id=E.employee 
@@ -257,8 +235,6 @@ def professor(request, prof_id=None):
     sim_count = 0
     (sim_prof, sim_count) = convert_to_dictionary(tmp, sim_row)
 
-    total_count = sim_count + prof_count + rev_count
-
     # print(faculty_id)
     # get all revs
     reviews = UserFacultyRev.objects.filter(employee_id=faculty_id)
@@ -267,6 +243,7 @@ def professor(request, prof_id=None):
         'prof': prof,
         'similar_professors': sim_prof,
         'revs': reviews,
+        'rev_count': rev_count,
         'avg': avg
     }
     return render(request, './professor.html', result)
@@ -305,6 +282,11 @@ def rate(request, prof_id=None):
                 print('A record has been created')
 
             print('Success')
+
+            try:
+                update_scores()
+            except:
+                print('Could not update scores')
         except:
             print('Could not review')
 
