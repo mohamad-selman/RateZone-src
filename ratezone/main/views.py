@@ -272,6 +272,17 @@ def rate(request, prof_id=None):
                                                    teaching_quality=quality, employee_id=em.employee, user_id=user.id)
             # Create records for workload, personality, and misc
 
+            try:
+                # insert each element
+                for element in workload:
+                    FacultyWorkload.objects.create(employee=em, workload=element, user=user, review=u_rate)
+                for element in personality:
+                    FacultyPersonality.objects.create(employee=em, personality=element, user=user, review=u_rate)
+                for element in misc:
+                    FacultyMiscellaneous.objects.create(employee=em, miscellaneous=element, user=user, review=u_rate)
+            except:
+                print('Failed to insert tags')
+
             if u_rate:
                 print('A record has been created')
 
