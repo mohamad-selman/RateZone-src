@@ -2,33 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# class User(models.Model):
-#     user_id = models.BigAutoField(primary_key=True)
-#     email = models.CharField(unique=True, max_length=50)
-#     username = models.CharField(unique=True, max_length=50)
-#     passw = models.CharField(max_length=50)
-#     fname = models.CharField(max_length=50)
-#     lname = models.CharField(max_length=50)
-#     user_level = models.IntegerField()
-#     discarded_rev_count = models.IntegerField()
-#
-#     objects = models.Manager()
-#
-#     def __str__(self):
-#         return self.username
-#
-#     class Meta:
-#         managed = False
-#         db_table = 'User'
-#
-#
-# class Student(models.Model):
-#     user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
-#     user_level = models.IntegerField()
-#     discarded_rev_count = models.IntegerField()
-#     major = models.CharField(max_length=150, blank=True, null=True)
-
-
 class AuthUser(models.Model):
     id = models.BigAutoField(primary_key=True)
     password = models.CharField(max_length=128)
@@ -95,31 +68,6 @@ class Employee(models.Model):
         db_table = 'Employee'
 
 
-# class Faculty(models.Model):
-#     faculty = models.BigAutoField(primary_key=True)
-#     department = models.ForeignKey(Department, on_delete=models.CASCADE)
-#     fname = models.CharField(max_length=50)
-#     lname = models.CharField(max_length=50)
-#     overall_rating = models.FloatField(blank=True, null=True)
-#     teaching_quality = models.FloatField(blank=True, null=True)
-#     exams_difficulty = models.FloatField(blank=True, null=True)
-#
-#     # for the mapping of faculty and course
-#     # each faculty member can teach many courses
-#     # and many courses can be taught by many faculty members
-#     # course = models.ManyToManyField(Course)
-#
-#     objects = models.Manager()
-#
-#     def __str__(self):
-#         retval = f"{self.fname},{self.lname}"
-#         return retval
-#
-#     class Meta:
-#         managed = False
-#         db_table = 'Faculty'
-#
-
 class Course(models.Model):
     course = models.IntegerField(primary_key=True)
     course_name = models.CharField(max_length=50, null=True)
@@ -142,51 +90,6 @@ class Course(models.Model):
     class Meta:
         db_table = 'Course'
 
-
-# class LanguageInstructor(models.Model):
-#     faculty = models.OneToOneField(Faculty, primary_key=True, on_delete=models.CASCADE)
-#     image = models.CharField(max_length=500, blank=True, null=True)
-#
-#     objects = models.Manager()
-#
-#     class Meta:
-#         managed = False
-#         db_table = 'Language_Instructor'
-
-
-# class Professor(models.Model):
-#     faculty = models.ForeignKey(Faculty, primary_key=True, on_delete=models.CASCADE)
-#     phd_from = models.CharField(max_length=255, blank=True, null=True)
-#     prof_rank = models.CharField(max_length=50, blank=True, null=True)
-#     research_area = models.CharField(max_length=255, blank=True, null=True)
-#     image = models.CharField(max_length=500, blank=True, null=True)
-#
-#     objects = models.Manager()
-#
-#     def __str__(self):
-#         retval = f"faculty is {self.faculty}"
-#         return retval
-#
-#     class Meta:
-#         managed = False
-#         db_table = 'Professor'
-#
-#
-# class TeachingAssistant(models.Model):
-#     faculty = models.ForeignKey(Faculty, primary_key=True, on_delete=models.CASCADE)
-#     masters_from = models.CharField(max_length=50, blank=True, null=True)
-#     image = models.CharField(max_length=500, blank=True, null=True)
-#
-#     objects = models.Manager()
-#
-#     def __str__(self):
-#         retval = F"TA is {self.faculty}"
-#         return retval
-#
-#     class Meta:
-#         managed = False
-#         db_table = 'Teaching_Assistant'
-#
 
 class DeptGeneralcomments(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
@@ -221,17 +124,6 @@ class UserCourseRev(models.Model):
         unique_together = (('user', 'course', 'review'),)
 
 
-# class UserDept(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     department = models.ForeignKey(Department, on_delete=models.CASCADE)
-#
-#     objects = models.Manager()
-#
-#     class Meta:
-#         db_table = 'user_dept'
-#         unique_together = (('user', 'department'),)
-
-
 class UserFacultyRev(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     review = models.AutoField(primary_key=True)
@@ -253,57 +145,9 @@ class UserFacultyRev(models.Model):
         unique_together = (('user', 'employee', 'review'),)
 
 
-# class UserQueue(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-#
-#     objects = models.Manager()
-#
-#     class Meta:
-#         db_table = 'user_queue'
-#         unique_together = (('user', 'employee'),)
-
-
-# class UserWatchCourse(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-#
-#     objects = models.Manager()
-#
-#     class Meta:
-#         db_table = 'user_watch_course'
-#         unique_together = (('user', 'course'),)
-#
-#
-# class UserWatchFaculty(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-#
-#     objects = models.Manager()
-#
-#     class Meta:
-#         db_table = 'user_watch_faculty'
-#         unique_together = (('user', 'employee'),)
-#
-
-# class FacultyCourse(models.Model):
-#     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-#     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-#
-#     objects = models.Manager()
-#
-#     def __str__(self):
-#         returning_string = f"faculty {self.employee} and course {self.course}"
-#         return returning_string
-#
-#     class Meta:
-#         db_table = 'faculty_course'
-#         unique_together = (('employee', 'course'),)
-#
-
 class FacultyMiscellaneous(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    miscellaneous = models.CharField(primary_key=True, max_length=50)
+    miscellaneous = models.CharField(max_length=50, null=True, blank=False, default="", editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.ForeignKey(UserFacultyRev, on_delete=models.CASCADE)
 
@@ -315,12 +159,12 @@ class FacultyMiscellaneous(models.Model):
 
     class Meta:
         db_table = 'faculty_misc'
-        unique_together = (('user', 'employee', 'review'),)
+        unique_together = (('employee', 'miscellaneous', 'user', 'review'),)
 
 
 class FacultyPersonality(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    personality = models.CharField(primary_key=True, max_length=50)
+    personality = models.CharField(max_length=50, null=True, blank=False, default="", editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.ForeignKey(UserFacultyRev, on_delete=models.CASCADE)
 
@@ -332,12 +176,12 @@ class FacultyPersonality(models.Model):
 
     class Meta:
         db_table = 'faculty_personality'
-        unique_together = (('user', 'employee', 'review'),)
+        unique_together = (('employee', 'personality', 'user', 'review'),)
 
 
 class FacultyWorkload(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    workload = models.CharField(primary_key=True, max_length=50)
+    workload = models.CharField(max_length=50, null=True, blank=False, default="", editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.ForeignKey(UserFacultyRev, on_delete=models.CASCADE)
 
@@ -349,7 +193,7 @@ class FacultyWorkload(models.Model):
 
     class Meta:
         db_table = 'faculty_workload'
-        unique_together = (('user', 'employee', 'review'),)
+        unique_together = (('employee', 'workload', 'user', 'review'),)
 
 
 class SimilarCourses(models.Model):

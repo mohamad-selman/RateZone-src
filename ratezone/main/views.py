@@ -264,26 +264,22 @@ def rate(request, prof_id=None):
         personality = request.POST.getlist('personality')
         misc = request.POST.getlist('misc')
         comment = request.POST['comment']
-        # print('id = ', prof_id)
-        # print("quality = ", quality)
-        # print("difficulty = ", difficulty)
-        # print("rate = ", rate)
-        print("workload = ", workload)
-        print("personality = ", personality)
-        print("misc = ", misc)
-        # print("comment = ", comment)
 
         try:
             em = Employee.objects.get(employee=faculty_id)
             u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
                                                    student_thoughts=comment,
                                                    teaching_quality=quality, employee_id=em.employee, user_id=user.id)
+            # Create records for workload, personality, and misc
+
             if u_rate:
                 print('A record has been created')
 
             print('Success')
 
             try:
+                # after each rate
+                # Updates the teaching quality, exams difficulty, and overall rating scores
                 update_scores(faculty_id)
             except:
                 print('Could not update scores')
@@ -354,13 +350,13 @@ def remove_from_queue(request, prof_id=None):
         msg = 'Professor id is None: Fix the error'
         return HttpResponse(msg)
     print('Removing a professor from queue')
-    print(prof_id)
+    # print(prof_id)
     faculty_id = prof_id
     uname = request.user.username
-    print(uname)
+    # print(uname)
     user = User.objects.get(username=uname)
     user_id = user.id
-    print(f'{user_id} and {faculty_id}')
+    # print(f'{user_id} and {faculty_id}')
     try:
 
         deletion_query = "DELETE FROM Employee_users WHERE user_id=%s AND employee_id=%s"
@@ -378,13 +374,13 @@ def sign_in(request):
         username = request.POST['username']
         passw = request.POST['password']
 
-        print(f'user email is {username} and the password is {passw}')
+        # print(f'user email is {username} and the password is {passw}')
         user = authenticate(request, username=username, password=passw)
 
         if user is not None:
-            print('HEy HO')
+            # print('HEy HO')
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            print('Yo YO')
+            # print('Yo YO')
             return redirect('dashboard')
         else:
             return render(request, './signin.html')
@@ -436,7 +432,7 @@ def dashboard(request):
     for i in range(len(revs)):
         rev_result.append(Employee.objects.get(employee=revs[i].employee.employee))
 
-    print(user_obj)
+    # print(user_obj)
     rev_result = Round(rev_result, 2)
     content = {
         'user': user_obj,
