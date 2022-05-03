@@ -8,6 +8,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .decorators import *
 import mysql.connector
+from django.conf import settings
+import requests
+from django.contrib import messages
 
 mydb = mysql.connector.connect(database='ratezoneDB',
                                user='ratezone_userAdmin', password='ratezone@123')
@@ -59,7 +62,7 @@ def Round_get(obj, dec):
 def searchResults(request):
     total_count = 0
     print('Here')
-    if request.method == "POST":
+    if request.method == 'POST':
         print('Here again')
         get_name = request.POST.get('tags')
         print(get_name)
@@ -280,46 +283,59 @@ def rate(request, prof_id=None):
     faculty_id = prof_id
 
     if request.method == 'POST':
-        # D=request.POST['D']
-        quality = request.POST['quality']
-        difficulty = request.POST['difficulty']
-        overall_rate = request.POST['rate']
-        workload = request.POST.getlist('workload')
-        personality = request.POST.getlist('personality')
-        misc = request.POST.getlist('misc')
-        comment = request.POST['comment']
+        recaptcha_response = request.POST['g-recaptcha-response']
+        data = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        }
+        verify = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        status = verify.json()
 
-        try:
-            em = Employee.objects.get(employee=faculty_id)
-            u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
-                                                   student_thoughts=comment,
-                                                   teaching_quality=quality, employee_id=em.employee, user_id=user.id)
-            # Create records for workload, personality, and misc
+        print(status)
 
-            try:
-                # insert each element
-                for element in workload:
-                    FacultyWorkload.objects.create(employee=em, workload=element, user=user, review=u_rate)
-                for element in personality:
-                    FacultyPersonality.objects.create(employee=em, personality=element, user=user, review=u_rate)
-                for element in misc:
-                    FacultyMiscellaneous.objects.create(employee=em, miscellaneous=element, user=user, review=u_rate)
-            except:
-                print('Failed to insert tags')
-
-            if u_rate:
-                print('A record has been created')
-
-            print('Success')
+        if status['success']:
+            # D=request.POST['D']
+            quality = request.POST['quality']
+            difficulty = request.POST['difficulty']
+            overall_rate = request.POST['rate']
+            workload = request.POST.getlist('workload')
+            personality = request.POST.getlist('personality')
+            misc = request.POST.getlist('misc')
+            comment = request.POST['comment']
 
             try:
-                # after each rate
-                # Updates the teaching quality, exams difficulty, and overall rating scores
-                update_scores(faculty_id)
+                em = Employee.objects.get(employee=faculty_id)
+                u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
+                                                    student_thoughts=comment,
+                                                    teaching_quality=quality, employee_id=em.employee, user_id=user.id)
+                # Create records for workload, personality, and misc
+
+                try:
+                    # insert each element
+                    for element in workload:
+                        FacultyWorkload.objects.create(employee=em, workload=element, user=user, review=u_rate)
+                    for element in personality:
+                        FacultyPersonality.objects.create(employee=em, personality=element, user=user, review=u_rate)
+                    for element in misc:
+                        FacultyMiscellaneous.objects.create(employee=em, miscellaneous=element, user=user, review=u_rate)
+                except:
+                    print('Failed to insert tags')
+
+                if u_rate:
+                    print('A record has been created')
+
+                print('Success')
+
+                try:
+                    # after each rate
+                    # Updates the teaching quality, exams difficulty, and overall rating scores
+                    update_scores(faculty_id)
+                except:
+                    print('Could not update scores')
             except:
-                print('Could not update scores')
-        except:
-            print('Could not review')
+                print('Could not review')
+        else:
+            messages.error(request, 'Invalid reCAPTCHA. Please try again.')
 
     return render(request, './reviewSubmitted.html', {'prof': faculty_id})
 
@@ -357,7 +373,7 @@ def queue(request):
 @csrf_exempt
 @login_required(login_url='sign_in')
 def add_to_queue(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         prof_id = request.POST.get('prof_id', None)
         faculty_id = prof_id
         uname = request.user.username
@@ -406,19 +422,32 @@ def remove_from_queue(request, prof_id=None):
 @unauthenticated_user
 def sign_in(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        passw = request.POST['password']
+        recaptcha_response = request.POST['g-recaptcha-response']
+        data = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        }
+        verify = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        status = verify.json()
 
-        # print(f'user email is {username} and the password is {passw}')
-        user = authenticate(request, username=username, password=passw)
+        print(status)
 
-        if user is not None:
-            # print('HEy HO')
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            # print('Yo YO')
-            return redirect('dashboard')
+        if status['success']:
+            username = request.POST['username']
+            passw = request.POST['password']
+
+            # print(f'user email is {username} and the password is {passw}')
+            user = authenticate(request, username=username, password=passw)
+
+            if user is not None:
+                # print('HEy HO')
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                # print('Yo YO')
+                return redirect('dashboard')
+            else:
+                return render(request, './signin.html')
         else:
-            return render(request, './signin.html')
+            messages.error(request, 'Invalid reCAPTCHA. Please try again.')
 
     return render(request, './signin.html')
 
@@ -426,20 +455,33 @@ def sign_in(request):
 @unauthenticated_user
 def sign_up(request):
     if request.method == 'POST':
-        fname = request.POST['name']
-        username = request.POST['username']
-        user_email = request.POST['email']
-        passw = request.POST['password']
+        recaptcha_response = request.POST['g-recaptcha-response']
+        data = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        }
+        verify = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        status = verify.json()
 
-        print(f'Record: {fname}, {username}, {user_email}, {passw}')
+        print(status)
 
-        try:
-            User.objects.create_user(password=passw, username=username, first_name=fname, email=user_email)
-            print('HI')
-            print('Got here')
-            return redirect('sign_in')
-        except:
-            return render(request, './error.html')
+        if status['success']:
+            fname = request.POST['name']
+            username = request.POST['username']
+            user_email = request.POST['email']
+            passw = request.POST['password']
+
+            print(f'Record: {fname}, {username}, {user_email}, {passw}')
+
+            try:
+                User.objects.create_user(password=passw, username=username, first_name=fname, email=user_email)
+                print('HI')
+                print('Got here')
+                return redirect('sign_in')
+            except:
+                return render(request, './error.html')
+        else:
+            messages.error(request, 'Invalid reCAPTCHA. Please try again.')
     return render(request, './signup.html')
 
 

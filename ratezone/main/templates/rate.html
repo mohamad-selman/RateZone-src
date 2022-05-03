@@ -6,8 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <link rel="stylesheet" href=" {% static '/admin/css/main.css' %}">
-    <!-- <title>RMP</title> -->
+    <link rel="stylesheet" href=" {% static '/admin/css/main.css' %}">    
+
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+
+    <script>
+        function onSubmit(token) {
+          document.getElementById("form-rate").submit();
+        }
+    </script>
+
+    <title>RateZone</title>
 </head>
 <body class="px-5 pt-2 pb-6
 text-xs sm:text-base lg:text-lg">
@@ -57,7 +66,7 @@ text-xs sm:text-base lg:text-lg">
             <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_drbe9mf2.json"  background="transparent" style="width: 300px;" speed="1" loop autoplay></lottie-player>
         </div>
 
-        <form action="{% url 'rate' prof_id=pid %}" method="post" class="mt-5">
+        <form id="form-rate" action="{% url 'rate' prof_id=pid %}" method="post" class="mt-5">
             {% csrf_token %}
             <p class="font-semibold
             text-base sm:text-lg lg:text-xl">
@@ -360,7 +369,12 @@ text-xs sm:text-base lg:text-lg">
             </div>
 
             <div class="flex justify-center m-3">
-                <button type="submit" class="px-2 py-2 sm:px-4
+                <button
+                data-sitekey="6Lc_jHwfAAAAAHNreeb-tHPkBDAmSrdCXqH57Wz8" 
+                data-callback='onSubmit' 
+                data-action='submit'
+                class="
+                g-recaptcha
                 font-normal text-white
                 rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]">
                     Submit my Review

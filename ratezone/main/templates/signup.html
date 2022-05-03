@@ -6,7 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static '/admin/css/main.css' %}">
-    <!-- <title>RMP</title> -->
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+
+    <script>
+        function onSubmit(token) {
+          document.getElementById("form-registration").submit();
+        }
+    </script>
+     
+    <title>RateZone - Create Account</title>
 </head>
 <body class="px-5 pt-2 pb-6
 text-xs sm:text-base lg:text-lg">
@@ -35,7 +43,7 @@ text-xs sm:text-base lg:text-lg">
                 </div>
 
                 <div class="mt-10">
-                    <form action="{% url 'sign_up' %}" method="POST">
+                    <form id="form-registration" action="{% url 'sign_up' %}" method="POST">
                         {% csrf_token %}
                         <div class="flex flex-col mb-5">
                             <label
@@ -203,8 +211,11 @@ text-xs sm:text-base lg:text-lg">
 
                         <div class="flex w-full">
                             <button
-                            type="submit"
+                            data-sitekey="6Lc_jHwfAAAAAHNreeb-tHPkBDAmSrdCXqH57Wz8" 
+                            data-callback='onSubmit' 
+                            data-action='submit'
                             class="
+                                g-recaptcha
                                 flex
                                 mt-2
                                 items-center
