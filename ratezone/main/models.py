@@ -131,8 +131,8 @@ class UserFacultyRev(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
     overall_rating = models.IntegerField()
     difficulty_rating = models.IntegerField()
-    upvotes = models.IntegerField(blank=True, null=True)
-    downvotes = models.IntegerField(blank=True, null=True)
+    upvotes = models.IntegerField(blank=True, null=True, default=0)
+    downvotes = models.IntegerField(blank=True, null=True, default=0)
     report_count = models.IntegerField(blank=True, null=True)
     semester_period = models.CharField(max_length=50, blank=True, null=True)
     student_thoughts = models.CharField(max_length=255, blank=True, null=True)
@@ -146,7 +146,7 @@ class UserFacultyRev(models.Model):
 
     class Meta:
         db_table = 'user_faculty_rev'
-        unique_together = (('user', 'employee', 'review'),)
+        unique_together = (('user', 'employee', 'review',),)
 
 
 class FacultyMiscellaneous(models.Model):
