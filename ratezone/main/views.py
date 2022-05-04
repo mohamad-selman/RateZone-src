@@ -244,9 +244,9 @@ def professor(request, prof_id=None):
     # get all revs
     reviews = UserFacultyRev.objects.filter(employee_id=faculty_id)
 
-    workload = FacultyWorkload.objects.filter(employee_id=prof).distinct()
-    misc = FacultyMiscellaneous.objects.filter(employee_id=prof).distinct()
-    personality = FacultyPersonality.objects.filter(employee_id=prof).distinct()
+    workload = FacultyWorkload.objects.filter(employee_id=prof).values('workload').distinct()
+    misc = FacultyMiscellaneous.objects.filter(employee_id=prof).values('miscellaneous').distinct()
+    personality = FacultyPersonality.objects.filter(employee_id=prof).values('personality').distinct()
 
     result = {
         'prof': prof,
