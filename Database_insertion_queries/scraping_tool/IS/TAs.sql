@@ -1,9 +1,0 @@
-INSERT INTO Teaching_Assistant(faculty_id, masters_from) VALUES (100, 'NULL');
-INSERT INTO Teaching_Assistant(faculty_id, masters_from) VALUES (101, 'NULL');
-INSERT INTO Teaching_Assistant(faculty_id, masters_from) VALUES (102, 'NULL');
-INSERT INTO Teaching_Assistant(faculty_id, masters_from) VALUES (103, 'NULL');
-INSERT INTO Teaching_Assistant(faculty_id, masters_from) VALUES (104, 'NULL');
-INSERT INTO Teaching_Assistant(faculty_id, masters_from) VALUES (105, 'NULL');
-INSERT INTO Teaching_Assistant(faculty_id, masters_from) VALUES (106, 'NULL');
-INSERT INTO Teaching_Assistant(faculty_id, masters_from) VALUES (107, 'NULL');
-INSERT INTO Teaching_Assistant(faculty_id, masters_from) VALUES (108, 'NULL');
