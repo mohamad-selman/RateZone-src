@@ -1,0 +1,23 @@
+INSERT INTO Professor VALUES (1, 'Bristol University', 'Assistant Professor', 'Computer networks', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/default-profile.png');
+INSERT INTO Professor VALUES (2, 'Boston University', 'Assistant Professor', 'Computer networks', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/Ayman-copy.jpg');
+INSERT INTO Professor VALUES (3, 'Oregon State University', 'Assistant Professor', 'Parallel Computing', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/07/Bader_Al-Bader.jpg');
+INSERT INTO Professor VALUES (4, 'NULL', 'Professor', 'Parallel Computing', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/bader-copy.jpeg');
+INSERT INTO Professor VALUES (5, 'Oregon State University', 'Assistant Professor', 'Computer Architecture', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/fawaz.jpg');
+INSERT INTO Professor VALUES (6, 'Laval University', 'Associate Professor', 'Service Oriented Computing', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/Hamdi.jpg');
+INSERT INTO Professor VALUES (7, 'Virginia Tech', 'Associate Professor', 'Computer Networks', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/hamid.png');
+INSERT INTO Professor VALUES (8, 'University of Waterloo', 'Professor', 'Machine Learning', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/hazem-copy.jpeg');
+INSERT INTO Professor VALUES (9, 'University of Waterloo', 'Associate Professor', 'Computer Networks', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/07/Hossam.jpg');
+INSERT INTO Professor VALUES (10, 'Kansas State University', 'Assistant Professor', 'Programming Languages', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/husain-copy.jpg');
+INSERT INTO Professor VALUES (11, 'Virginia Tech', 'Associate Professor', 'Security', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/almohri-copy.png');
+INSERT INTO Professor VALUES (12, 'Case Western Reserve University', 'Assistant Professor', 'Software Engineering', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/07/Khalil.jpg');
+INSERT INTO Professor VALUES (13, 'University of California', 'Assistant Professor', 'High-Performance Computing', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/maha.jpeg');
+INSERT INTO Professor VALUES (14, 'George Mason University', 'Assistant Professor', 'Computer Networks', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/m1.jpg');
+INSERT INTO Professor VALUES (15, 'University of Colorado', 'Assistant Professor', 'Pervasive Computing', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/almutawa.jpg');
+INSERT INTO Professor VALUES (16, 'Essex University', 'Assistant Professor', 'Pervasive Computing', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/Almulla-R-1.jpg');
+INSERT INTO Professor VALUES (17, 'McGill University', 'Assistant Professor', 'Bioinformatics', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/samaoui-copy.jpg');
+INSERT INTO Professor VALUES (18, 'McGill University', 'Professor', 'Artificial Intelligence', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/almulla.jpg');
+INSERT INTO Professor VALUES (19, 'Columbia University', 'Assistant Professor', 'Operating Systems', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/08/NaserAlDuaij.jpg');
+INSERT INTO Professor VALUES (20, 'University of Kent', 'Assistant Professor', 'Computer Networks', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/default-profile.png');
+INSERT INTO Professor VALUES (21, 'The University of York', 'Assistant Professor', 'Databases', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/10/Saud-1.jpg');
+INSERT INTO Professor VALUES (22, 'Oregon State University', 'Associate Professor', 'Parallel Computing', 'https://www.cs.ku.edu.kw/wp-content/uploads/2020/04/zaid.jpg');
+

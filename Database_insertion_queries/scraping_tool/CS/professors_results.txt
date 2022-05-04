@@ -1,0 +1,44 @@
+
+['Adel', 'Aljomah', 'Assistant Professor', 'Computer Networks', 'aljomah@cs.ku.edu.kw', 'Office: S01A1-120,', 'Phone:', '249-85363']
+
+['Ayman', 'Alawadhi', 'rank', 'Assistant Professor', 'Computer Networks', 'alawadi@cs.ku.edu.kw', 'Office: S01A1-95,', 'Phone:', '249-85347']
+
+['Bader', 'Albader', 'rank', 'Assistant Professor', 'Research Area:', 'Parallel Computing', 'albader@cs.ku.edu.kw', 'Office: S01A1-101,', 'Phone:', '249-85378']
+
+['Bader', 'Albdaiwi', 'rank', 'Professor', 'Research Area:', 'Parallel Computing', 'bdaiwi@cs.ku.edu.kw', 'Office: S01A1-93,', 'Phone:', '249-85341']
+
+['Fawaz', 'Alazemi', 'rank', 'Assistant Professor', 'Research Area:', 'Computer Architecture', 'fawaz@cs.ku.edu.kw', 'Office: S01A1-122,', 'Phone:', '249-85321']
+
+['Hamdi', 'Yahyaoui', 'rank', 'Associate Professor', 'Research Area:', 'Service Oriented Computing', 'hamdi@cs.ku.edu.kw', 'Office: S01A1-106,', 'Phone:', '249-85325']
+
+['Hamid', 'Alhamadi', 'rank', 'Associate Professor', 'Research Area:', 'Computer Networks', 'hamid@cs.ku.edu.kw', 'Office: S01A1-100,', 'Phone:', '249-83249']
+
+['Hazem', 'Raafat', 'rank', 'Professor', 'Research Area:', 'Machine Learning', 'hazem@cs.ku.edu.kw', 'Office: S01A1-123,', 'Phone:', '249-85375']
+
+['Hosam', 'AboElfotoh', 'rank', 'Associate Professor', 'Research Area:', 'Computer Networks', 'hosam@cs.ku.edu.kw', 'Office: S01A1-116,', 'Phone:', '249-85354']
+
+['Husain', 'Ibraheem', 'rank', 'Assistant Professor', 'Research Area:', 'Programming Languages', 'husaini@cs.ku.edu.kw', 'Office: S01A1-98,', 'Phone:', '249-85304']
+
+['Hussain', 'Almohri', 'rank', 'Associate Professor', 'Research Area:', 'Security', 'h.almohri@ku.edu.kw', 'Office: S01A1-104,', 'Phone:', '249-85332']
+
+['Khalil', 'Abdullah', 'rank', 'Assistant Professor', 'Research Area:', 'Software Engineering', 'khalil@cs.ku.edu.kw', 'Office: S01A1-121,', 'Phone:', '249-']
+
+['Maha', 'Alabduljaleel', 'rank', 'Assistant Professor', 'Research Area:', 'High-Performance Computing', 'maha@cs.ku.edu.kw', 'Office: S01A1-113,', 'Phone:', '249-83685']
+
+['Mansour', 'Abdulaziz', 'rank', 'Assistant Professor', 'Research Area:', 'Computer Networks', 'mansour@cs.ku.edu.kw', 'Office: S01A1-99,', 'Phone:', '249-83659']
+
+['Mohammad', 'Almutawa', 'rank', 'Assistant Professor', 'Research Area:', 'Pervasive Computing', 'almutawa@cs.ku.edu.kw', 'Office: S01A1-117,', 'Phone:', '249-85353']
+
+['Mohammad', 'Rashed Almulla', 'rank', 'Assistant Professor', 'Research Area:', 'Pervasive Computing', 'mrhalm@cs.ku.edu.kw', 'Office: S01A1-112,', 'Phone:', '249-85352']
+
+['Mohammad', 'Smaoui', 'rank', 'Assistant Professor', 'Research Area:', 'Bioinformatics', 'msmaoui@cs.ku.edu.kw', 'Office: S01A1-97,', 'Phone:', '249-']
+
+['Mohammed', 'Ali Almulla', 'rank', 'Professor', 'Research Area:', 'Artificial Intelligence', 'almulla@cs.ku.edu.kw', 'Office: S01A1-111,', 'Phone:', '249-85335']
+
+['Naser', 'AlDuaij', 'rank', 'Assistant Professor', 'Research Area:', 'Operating Systems', 'alduaij@cs.ku.edu.kw', 'Office: S01A1-94,', 'Phone:', '249-']
+
+['Salman', 'Aladwani', 'rank', 'Assistant Professor', 'Research Area:', 'Computer Networks', 'aladwani@cs.ku.edu.kw', 'Office: S01A1-92,', 'Phone:', '249-85358']
+
+['Saud', 'Aldarmi', 'rank', 'Assistant Professor', 'Research Area:', 'Databases', 'saud.aldarmi@cs.ku.edu.kw', 'Office:', 'S01A1-105,', 'Phone:', '249-85364']
+
+['Zaid', 'Hussain', 'rank', 'Associate Professor', 'Research Area:', 'Parallel Computing', 'zhussain@cs.ku.edu.kw', 'Office: S01A1-102,', 'Phone:', '249-85366']

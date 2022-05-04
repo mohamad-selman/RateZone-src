@@ -236,15 +236,15 @@ def professor(request, prof_id=None):
     prof = Employee.objects.get(employee=faculty_id)
     prof = Round_get(prof, 2)
     em = Employee.objects.get(employee=faculty_id)
-    avg = em.overall_rating
-    avg = (avg * 100) / 5
-    avg = round(avg, 2)
+    overall_rating = em.overall_rating
+    recommended_percentage = (overall_rating * 100) / 5
+    recommended_percentage = round(recommended_percentage, 2)
 
     rev_count = UserFacultyRev.objects.filter(employee_id=prof).aggregate(Count('review'))
     rev_count = rev_count['review__count']
     similar_query = '''
-                SELECT E.fname,E.lname, E2.fname,E2.lname, ROUND(E2.overall_rating, 2) AS 'overall_rating' 
-                from Employee E inner join similar_faculty S1 on S1.employee_id=E.employee 
+                SELECT E.fname,E.lname, E2.fname,E2.lname, E2.employee, ROUND(E2.overall_rating, 2) AS 'overall_rating'
+                from Employee E inner join similar_faculty S1 on S1.employee_id=E.employee
                 INNER JOIN Employee E2 on S1.similar_faculty=E2.employee WHERE E.employee=%s
                 '''
     cursors.execute(similar_query, [faculty_id])
@@ -253,37 +253,22 @@ def professor(request, prof_id=None):
     sim_count = 0
     (sim_prof, sim_count) = convert_to_dictionary(tmp, sim_row)
 
+    # sim_prof = SimilarFaculty.objects.filter(employee=em)
+    # sim_prof = Round(sim_prof, 2)
     # print(faculty_id)
     # get all revs
     reviews = UserFacultyRev.objects.filter(employee_id=faculty_id)
 
-    workload_query = "SELECT DISTINCT workload FROM faculty_workload WHERE employee_id=%s"
-    misc_query = "SELECT DISTINCT miscellaneous FROM faculty_misc WHERE employee_id=%s"
-    personality_query = "SELECT DISTINCT personality FROM faculty_personality WHERE employee_id=%s"
-    cursors.execute(workload_query, [faculty_id])
-    workload_row = cursors.fetchall()
-    tmp = cursors.description
-    workload_count = 0
-    (workload, workload_count) = convert_to_dictionary(tmp, workload_row)
-
-    cursors.execute(misc_query, [faculty_id])
-    misc_row = cursors.fetchall()
-    tmp = cursors.description
-    misc_count = 0
-    (misc, misc_count) = convert_to_dictionary(tmp, misc_row)
-
-    cursors.execute(personality_query, [faculty_id])
-    personality_row = cursors.fetchall()
-    tmp = cursors.description
-    personality_count = 0
-    (personality, personality_count) = convert_to_dictionary(tmp, personality_row)
+    workload = FacultyWorkload.objects.filter(employee_id=prof).values('workload').distinct()
+    misc = FacultyMiscellaneous.objects.filter(employee_id=prof).values('miscellaneous').distinct()
+    personality = FacultyPersonality.objects.filter(employee_id=prof).values('personality').distinct()
 
     result = {
         'prof': prof,
         'similar_professors': sim_prof,
         'revs': reviews,
         'rev_count': rev_count,
-        'avg': avg,
+        'avg': recommended_percentage,
         'workload': workload,
         'misc': misc,
         'personality': personality
@@ -519,7 +504,7 @@ def dashboard(request):
     uname = request.user.username
     user = User.objects.get(username=uname)
     user_obj = User.objects.get(id=user.id)
-    revs = UserFacultyRev.objects.filter(user_id=user_obj)
+    revs = UserFacultyRev.objects.filter(user_id=user_obj).distinct()
     rev_result = []
     for i in range(len(revs)):
         rev_result.append(Employee.objects.get(employee=revs[i].employee.employee))
