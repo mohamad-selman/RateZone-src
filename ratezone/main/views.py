@@ -11,10 +11,25 @@ import mysql.connector
 from django.conf import settings
 import requests
 from django.contrib import messages
+from json import loads
 
 mydb = mysql.connector.connect(database='ratezoneDB',
                                user='ratezone_userAdmin', password='ratezone@123')
 cursors = mydb.cursor()
+
+def test_comments(request):
+    f = open('data.json', 'r')
+    print(f)
+    data = loads(f.read())
+    f.close()
+
+    print(data[6]['comment'])
+
+    result = {
+        'comm': data,
+    }
+
+    return render(request, './comm.html', result)
 
 
 # Create your views here.

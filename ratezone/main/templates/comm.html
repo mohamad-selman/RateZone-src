@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        div{
+            text-align: start;
+            unicode-bidi: plaintext;
+        }
+    </style>
+</head>
+<body class="p-3">
+    {% for c in comm %}
+        <div class="p-2 border rounded-lg">{{c.comment}}</div>
+        <br>
+    {% endfor %}
+</body>
