@@ -140,6 +140,10 @@ class UserFacultyRev(models.Model):
 
     objects = models.Manager()
 
+    def __str__(self):
+        retval = f"user: {self.user}, employee: {self.employee}: overall rating: {self.overall_rating}"
+        return retval
+
     class Meta:
         db_table = 'user_faculty_rev'
         unique_together = (('user', 'employee', 'review'),)
