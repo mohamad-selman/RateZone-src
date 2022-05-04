@@ -242,26 +242,9 @@ def professor(request, prof_id=None):
     # get all revs
     reviews = UserFacultyRev.objects.filter(employee_id=faculty_id)
 
-    workload_query = "SELECT DISTINCT workload FROM faculty_workload WHERE employee_id=%s"
-    misc_query = "SELECT DISTINCT miscellaneous FROM faculty_misc WHERE employee_id=%s"
-    personality_query = "SELECT DISTINCT personality FROM faculty_personality WHERE employee_id=%s"
-    cursors.execute(workload_query, [faculty_id])
-    workload_row = cursors.fetchall()
-    tmp = cursors.description
-    workload_count = 0
-    (workload, workload_count) = convert_to_dictionary(tmp, workload_row)
-
-    cursors.execute(misc_query, [faculty_id])
-    misc_row = cursors.fetchall()
-    tmp = cursors.description
-    misc_count = 0
-    (misc, misc_count) = convert_to_dictionary(tmp, misc_row)
-
-    cursors.execute(personality_query, [faculty_id])
-    personality_row = cursors.fetchall()
-    tmp = cursors.description
-    personality_count = 0
-    (personality, personality_count) = convert_to_dictionary(tmp, personality_row)
+    workload = FacultyWorkload.objects.filter(employee_id=prof)
+    misc = FacultyMiscellaneous.objects.filter(employee_id=prof)
+    personality = FacultyPersonality.objects.filter(employee_id=prof)
 
     result = {
         'prof': prof,
