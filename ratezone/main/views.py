@@ -23,8 +23,6 @@ def test_comments(request):
     data = loads(f.read())
     f.close()
 
-    print(data[6]['comment'])
-
     result = {
         'comm': data,
     }
