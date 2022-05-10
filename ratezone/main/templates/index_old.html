@@ -136,13 +136,13 @@ text-xs sm:text-base lg:text-lg">
 		let fac2 = {};
 		{% for p in Profs %}
 		profs = [...profs, "{{p.fname}} {{p.lname}}"];
-		fac = [...fac, { "name": "{{p.fname}} {{p.lname}}", "id": "{{p.faculty_id}}" }];
-		fac2 = {...fac2, "{{p.fname}} {{p.lname}}":"{{p.faculty_id}}"}
+		fac = [...fac, { "name": "{{p.fname}} {{p.lname}}", "id": "{{p.employee}}" }];
+		fac2 = {...fac2, "{{p.fname}} {{p.lname}}":"{{p.employee}}"}
 		{% endfor %}
 		
 		$('#bar').autocomplete({
 			source: function(request, response) {
-				const fuse = new Fuse(profs, {keys:['name']});
+				const fuse = new Fuse(profs);
 				const result = fuse.search(request.term);
 
 				console.log(result);
