@@ -12,10 +12,12 @@ from django.conf import settings
 import requests
 from django.contrib import messages
 from json import loads
+from django.http import JsonResponse
 
 mydb = mysql.connector.connect(database='ratezoneDB',
                                user='ratezone_userAdmin', password='ratezone@123')
 cursors = mydb.cursor()
+
 
 def test_comments(request):
     f = open('data.json', 'r')
@@ -112,80 +114,26 @@ def searchResults(request):
             'professors': prof
         }
         return render(request, './searchResults.html', result)
-    # for all the custom queries executed!
-    # cursors return the query result in the form of a tuple
-    # needs to be converted to dictionary-like notation
-    # that is what the loop does
 
-    # the following is a query that returns all professors
-    # with their desired attributes
-    # prof = Employee.objects.all()
-    prof_query = '''
-                    SELECT DISTINCT E.fname, E.lname, D.dept_name,
-                    ROUND(E.overall_rating, 2) AS 'overall_rating',
-                    E.teaching_quality, E.employee FROM Employee AS E 
-                    INNER JOIN Department AS D ON
-                    D.department=E.department_id ORDER BY overall_rating DESC
-                  '''
+    prof = Employee.objects.all().order_by('-overall_rating')
+    prof = Round(prof, 2)
+    prof_count = len(prof)
 
-    # executing the query through connection cursor
-    cursors.execute(prof_query)
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    prof_count = 0
-    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
+    CS_dept = Employee.objects.filter(department_id=418).order_by('-overall_rating')
+    CS_dept = Round(CS_dept, 2)
+    cs_count = len(CS_dept)
 
-    # CS query
+    CE_dept = Employee.objects.filter(department_id=1612).order_by('-overall_rating')
+    CE_dept = Round(CE_dept, 2)
+    ce_count = len(CE_dept)
 
-    CS_dept_query = '''
-                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating',
-                D.dept_name FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
-                WHERE D.department=418 ORDER BY overall_rating DESC
-                '''
-    cursors.execute(CS_dept_query)
-    dept_row = cursors.fetchall()
-    tmp = cursors.description
-    cs_count = 0
-    (CS_dept, cs_count) = convert_to_dictionary(tmp, dept_row)
+    IS_dept = Employee.objects.filter(department_id=1830).order_by('-overall_rating')
+    IS_dept = Round(IS_dept, 2)
+    is_count = len(IS_dept)
 
-    # CE query
-
-    CE_dept_query = '''
-                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating', D.dept_name
-                FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
-                WHERE D.department=1612 ORDER BY overall_rating DESC
-                '''
-    cursors.execute(CE_dept_query)
-    dept_row = cursors.fetchall()
-    tmp = cursors.description
-    ce_count = 0
-    (CE_dept, ce_count) = convert_to_dictionary(tmp, dept_row)
-    # print(CE_dept)
-
-    # IS query
-
-    IS_dept_query = '''
-                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating', D.dept_name
-                FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
-                WHERE D.department=1830 ORDER BY overall_rating DESC
-                '''
-    cursors.execute(IS_dept_query)
-    dept_row = cursors.fetchall()
-    tmp = cursors.description
-    is_count = 0
-    (IS_dept, is_count) = convert_to_dictionary(tmp, dept_row)
-
-    Math_dept_query = '''
-                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating', D.dept_name
-                FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
-                WHERE D.department=410 ORDER BY overall_rating DESC
-                '''
-    cursors.execute(Math_dept_query)
-    dept_row = cursors.fetchall()
-    tmp = cursors.description
-    math_count = 0
-    (MATH_dept, math_count) = convert_to_dictionary(tmp, dept_row)
-
+    MATH_dept = Employee.objects.filter(department_id=410).order_by('-overall_rating')
+    MATH_dept = Round(MATH_dept, 2)
+    math_count = len(MATH_dept)
     # courses = Course.objects.all()
 
     course_query = '''
@@ -203,7 +151,6 @@ def searchResults(request):
     tmp1 = Department.objects.all().count()
     tmp2 = Course.objects.all().count()
     total_count = tmp1 + tmp2 + prof_count + ce_count + cs_count + math_count
-
     result = {
         'professors': prof,
         'CS_dept': CS_dept,
@@ -306,8 +253,9 @@ def rate(request, prof_id=None):
             try:
                 em = Employee.objects.get(employee=faculty_id)
                 u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
-                                                    student_thoughts=comment,
-                                                    teaching_quality=quality, employee_id=em.employee, user_id=user.id)
+                                                       student_thoughts=comment,
+                                                       teaching_quality=quality, employee_id=em.employee,
+                                                       user_id=user.id)
                 # Create records for workload, personality, and misc
 
                 try:
@@ -317,7 +265,8 @@ def rate(request, prof_id=None):
                     for element in personality:
                         FacultyPersonality.objects.create(employee=em, personality=element, user=user, review=u_rate)
                     for element in misc:
-                        FacultyMiscellaneous.objects.create(employee=em, miscellaneous=element, user=user, review=u_rate)
+                        FacultyMiscellaneous.objects.create(employee=em, miscellaneous=element, user=user,
+                                                            review=u_rate)
                 except:
                     print('Failed to insert tags')
 
@@ -330,6 +279,7 @@ def rate(request, prof_id=None):
                     # after each rate
                     # Updates the teaching quality, exams difficulty, and overall rating scores
                     update_scores(faculty_id)
+                    # similar_professors()
                 except:
                     print('Could not update scores')
             except:
@@ -516,3 +466,102 @@ def dashboard(request):
         'revs': rev_result
     }
     return render(request, './dashboard.html', content)
+
+
+@login_required(login_url='sign_in')
+def like(request):
+    if request.method == "POST":
+        uname = request.user.username
+        user = User.objects.get(username=uname)
+        user_id = user.id
+        print(f'UserID is {user_id}')
+        rev_id = request.POST.get('rev_id', None)
+        print(f'Rev id is {rev_id}')
+        try:
+            try:
+                print('Here 1')
+                get_rev = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
+                if get_rev.upvote == 1:
+                    # like already exists, return
+                    print('User Already Liked this review')
+                    msg = "User Already Liked this review"
+                    return HttpResponse(msg)
+
+                if get_rev.downvote == 1:
+                    print('Here 2')
+                    UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(downvote=0)
+                    UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(upvote=1)
+                    rev = UserFacultyRev.objects.get(review=rev_id)
+                    dislikes = rev.downvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes - 1)
+
+            except:
+                # Means the user has not liked that review
+                print('First time interacting with the button')
+                UserReactFaculty.objects.create(upvote=1, review_id=rev_id, user_id=user_id)
+
+            rev = UserFacultyRev.objects.get(review=rev_id)
+            likes = rev.upvotes
+            UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes + 1)
+        except:
+            print('Could not execute')
+        rev = UserFacultyRev.objects.get(review=rev_id)
+        likes = rev.upvotes
+        dislikes = rev.downvotes
+        json_response = {
+            'likes': likes,
+            'dislikes': dislikes
+        }
+        return JsonResponse(json_response)
+
+    msg = "Could not like the review"
+    return HttpResponse(msg)
+
+
+def dislike(request):
+    if request.method == "POST":
+        rev_id = request.POST.get('rev_id', None)
+        uname = request.user.username
+        user = User.objects.get(username=uname)
+        user_id = user.id
+        print(f'UserID is {user_id}')
+        print(f'Rev id is {rev_id}')
+        # First, check if the user has liked that review
+        try:
+            try:
+                print('Here 1')
+                get_rev = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
+                if get_rev.downvote == 1:
+                    print('User Already disliked this review')
+                    msg = "User Already disliked this review"
+                    return HttpResponse(msg)
+
+                if get_rev.upvote == 1:
+                    print('Here 2')
+                    UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(upvote=0)
+                    UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(downvote=1)
+                    rev = UserFacultyRev.objects.get(review=rev_id)
+                    likes = rev.upvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes - 1)
+
+            except:
+                # Means the user has not liked that review
+                print('First time interacting with the button')
+                UserReactFaculty.objects.create(downvote=1, review_id=rev_id, user_id=user_id)
+
+            rev = UserFacultyRev.objects.get(review=rev_id)
+            dislikes = rev.downvotes
+            UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes + 1)
+        except:
+            print('Could not execute')
+        rev = UserFacultyRev.objects.get(review=rev_id)
+        likes = rev.upvotes
+        dislikes = rev.downvotes
+        json_response = {
+            'likes': likes,
+            'dislikes': dislikes
+        }
+        return JsonResponse(json_response)
+
+    msg = "Could not dislike the review"
+    return HttpResponse(msg)
