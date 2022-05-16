@@ -18,6 +18,7 @@ urlpatterns = [
     path('dislike/', views.dislike, name='dislike'),
     path('rate/', views.rate, name='rate'),
     path('rate/<int:prof_id>/', views.rate, name='rate'),
+    path('report/', views.report, name='report'),
     # path('follow/', views.follow_updates, name='follow_updates'),
     path('rate_page/<int:prof_id>/', views.rate_page, name='rate_page'),
     path('rateCourse', views.rate_course, name='rate_course'),

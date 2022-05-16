@@ -28,6 +28,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{% static '/admin/js/queue.js' %}"></script>
     <script src="{% static '/admin/js/like_dislike.js' %}"></script>
+    <script src="{% static '/admin/js/report.js' %}"></script>
 
     <!-- <title>RMP</title> -->
 </head>
@@ -296,9 +297,11 @@ text-xs sm:text-base lg:text-lg">
                         </div>
                     </div>
                     <div class="flex justify-between gap-x-14 items-center mt-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
-                        </svg>
+                        <button id="report{{rev.review}}" value="{{ rev.review }}" onclick="report({{rev.review}})">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                            </svg>
+                        </button>
                         <div class="flex gap-x-7 justify-end items-center">
                             <div class="flex items-center">
                                 <button id="like{{rev.review}}" value="{{ rev.review }}" onclick="like({{rev.review}})">

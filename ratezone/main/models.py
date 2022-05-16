@@ -133,7 +133,7 @@ class UserFacultyRev(models.Model):
     difficulty_rating = models.IntegerField()
     upvotes = models.IntegerField(blank=True, null=True, default=0)
     downvotes = models.IntegerField(blank=True, null=True, default=0)
-    report_count = models.IntegerField(blank=True, null=True)
+    report_count = models.IntegerField(blank=True, null=True, default=0)
     semester_period = models.CharField(max_length=50, blank=True, null=True)
     student_thoughts = models.CharField(max_length=255, blank=True, null=True)
     teaching_quality = models.IntegerField()

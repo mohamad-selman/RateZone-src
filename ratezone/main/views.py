@@ -518,6 +518,7 @@ def like(request):
     return HttpResponse(msg)
 
 
+@login_required(login_url='sign_in')
 def dislike(request):
     if request.method == "POST":
         rev_id = request.POST.get('rev_id', None)
@@ -564,4 +565,19 @@ def dislike(request):
         return JsonResponse(json_response)
 
     msg = "Could not dislike the review"
+    return HttpResponse(msg)
+
+
+@login_required(login_url='sign_in')
+def report(request):
+    if request.method == 'POST':
+        rev_id = request.POST.get('rev_id', None)
+        try:
+            rev = UserFacultyRev.objects.get(review=rev_id)
+            rev.report_count = rev.report_count + 1
+            msg = 'Thank you for reporting the view'
+            return HttpResponse(msg)
+        except:
+            print('Could not report review')
+    msg = "Could not report review"
     return HttpResponse(msg)
