@@ -52,9 +52,9 @@ class Employee(models.Model):
     image = models.CharField(max_length=500, blank=True, null=True)
     main_rank = models.CharField(max_length=150)
     sub_rank = models.CharField(max_length=150, blank=True, null=True)
-    overall_rating = models.FloatField(blank=True, null=True)
-    teaching_quality = models.FloatField(blank=True, null=True)
-    exams_difficulty = models.FloatField(blank=True, null=True)
+    overall_rating = models.FloatField(blank=True, null=True, default=0)
+    teaching_quality = models.FloatField(blank=True, null=True, default=0)
+    exams_difficulty = models.FloatField(blank=True, null=True, default=0)
     users = models.ManyToManyField(User)
     user_watch = models.ManyToManyField(User, related_name='user_watch_faculty')
 
