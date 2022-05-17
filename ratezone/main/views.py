@@ -189,20 +189,18 @@ def professor(request, prof_id=None):
 
     rev_count = UserFacultyRev.objects.filter(employee_id=prof).aggregate(Count('review'))
     rev_count = rev_count['review__count']
-    similar_query = '''
-                SELECT E.fname,E.lname, E2.fname,E2.lname, E2.employee, ROUND(E2.overall_rating, 2) AS 'overall_rating'
-                from Employee E inner join similar_faculty S1 on S1.employee_id=E.employee
-                INNER JOIN Employee E2 on S1.similar_faculty=E2.employee WHERE E.employee=%s
-                '''
-    cursors.execute(similar_query, [faculty_id])
-    sim_row = cursors.fetchall()
-    tmp = cursors.description
-    sim_count = 0
-    (sim_prof, sim_count) = convert_to_dictionary(tmp, sim_row)
 
-    # sim_prof = SimilarFaculty.objects.filter(employee=em)
-    # sim_prof = Round(sim_prof, 2)
-    # print(faculty_id)
+    sim_prof = []
+    sim = em.similarfaculty_set.all()
+    get_similar = []
+    for i in range(0, len(sim)):
+        get_similar.append(sim[0].similar_faculty)
+
+    for ele in get_similar:
+        sim_prof.append(Employee.objects.get(employee=ele))
+
+    sim_prof = Round(sim_prof, 2)
+
     # get all revs
     reviews = UserFacultyRev.objects.filter(employee_id=faculty_id)
 
@@ -405,6 +403,7 @@ def sign_in(request):
 @unauthenticated_user
 def sign_up(request):
     if request.method == 'POST':
+        print('Here')
         recaptcha_response = request.POST['g-recaptcha-response']
         data = {
             'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
@@ -416,6 +415,7 @@ def sign_up(request):
         print(status)
 
         if status['success']:
+            print('Heree')
             fname = request.POST['name']
             username = request.POST['username']
             user_email = request.POST['email']
@@ -424,6 +424,7 @@ def sign_up(request):
             print(f'Record: {fname}, {username}, {user_email}, {passw}')
 
             try:
+                print('Here')
                 User.objects.create_user(password=passw, username=username, first_name=fname, email=user_email)
                 print('HI')
                 print('Got here')

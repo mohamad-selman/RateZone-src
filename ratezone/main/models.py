@@ -217,6 +217,9 @@ class SimilarFaculty(models.Model):
 
     objects = models.Manager()
 
+    def __str__(self):
+        return f'{self.similar_faculty}'
+
     class Meta:
         db_table = 'similar_faculty'
         unique_together = (('employee', 'similar_faculty'),)
