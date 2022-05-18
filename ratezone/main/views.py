@@ -90,7 +90,7 @@ def searchResults(request):
         print(len(l))
         if len(l) == 1:
             query = '''
-                    SELECT E.fname, E.lname, D.dept_name, ROUND(E.overall_rating, 2) AS 'overall_rating', 
+                    SELECT E.fname, E.lname, D.dept_name AS 'department', ROUND(E.overall_rating, 2) AS 'overall_rating', 
                     E.teaching_quality, E.employee FROM Employee AS E
                     INNER JOIN Department AS D ON D.department=E.department_id WHERE E.fname LIKE %s OR E.lname LIKE %s
                     '''
@@ -99,7 +99,7 @@ def searchResults(request):
             cursors.execute(query, data)
         else:
             query = '''
-                    SELECT E.fname, E.lname, D.dept_name, ROUND(E.overall_rating, 2) AS 'overall_rating', 
+                    SELECT E.fname, E.lname, D.dept_name AS 'department', ROUND(E.overall_rating, 2) AS 'overall_rating', 
                     E.teaching_quality, E.employee FROM Employee AS E
                     INNER JOIN Department AS D ON D.department=E.department_id WHERE CONCAT(E.fname, ' ', E.lname) LIKE %s
                     '''
