@@ -72,12 +72,14 @@ text-xs sm:text-base lg:text-lg">
             text-base sm:text-lg lg:text-xl">
                 First, your rating.
             </p>
-
-
-
+            <br>
             <div>
-                <!-- <input style="display: none;" type="checkbox" checked id="ID_ofForm" name="D" value="{{ p.faculty_id}}"> -->
-
+                <div class="mb-6">
+                    <label for="course" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Course Number or Course Name
+                    </label>
+                    <input type="text" id="course" name="course" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                </div>
                 <p class="font-normal mt-6
                 text-base sm:text-lg lg:text-xl">
                     1. What is your rating for the teaching quality?

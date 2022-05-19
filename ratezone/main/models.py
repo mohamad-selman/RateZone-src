@@ -146,7 +146,7 @@ class UserFacultyRev(models.Model):
 
     class Meta:
         db_table = 'user_faculty_rev'
-        unique_together = (('user', 'employee', 'review',),)
+        unique_together = (('user', 'employee', 'review', 'course'),)
 
 
 class FacultyMiscellaneous(models.Model):
