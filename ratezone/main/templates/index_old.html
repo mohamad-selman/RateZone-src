@@ -43,7 +43,7 @@ text-xs sm:text-base lg:text-lg">
 	</p>
 	</div>
 
-	<!-- <div class="mt-10">
+	<div class="mt-10">
 		<div class="px-10 mb-10 mt-4">
 			<h1 class="text-3xl md:text-5xl font-medium text-center">
 				Find what you're looking for
@@ -109,7 +109,7 @@ text-xs sm:text-base lg:text-lg">
 	</div>
 	</div>
 	</div>
-	</div> -->
+	</div>
 
 
 
@@ -124,11 +124,20 @@ text-xs sm:text-base lg:text-lg">
 	<script src="/../static/libs/Fuse-6.5.3/dist/fuse.min.js"></script>
 
 	<br>
-	<form action="#" id="search" method="post">
-		{% csrf_token %}
-		<label for="bar">Search: </label>
-		<input type="text" name="bar" id="bar" style="border-color: black; border: solid;">
-	</form>
+	<div class="flex">
+		<form action="#" id="search" method="post">
+			{% csrf_token %}
+			<select name="" id="" class="select border-2 border-lime-300 rounded p-3 ">
+				<option selected value="">All departments</option>
+				<option value="">Computer Science</option>
+				<option value="">Computer Eng.</option>
+				<option value="">Math</option>
+			</select>
+			<input type="text" name="bar" id="bar" style="border-color: black; border: solid;" placeholder="Search">
+
+		</form>
+	</div>
+	
 
 	<script>
 		let profs = [];
