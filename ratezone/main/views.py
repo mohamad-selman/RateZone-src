@@ -240,6 +240,21 @@ def rate(request, prof_id=None):
 
         if status['success']:
             # D=request.POST['D']
+            # Let user include course, or choose in general
+            course_val = request.POST['course']
+            if str.isdigit(course_val):
+                course_code = course_val
+                try:
+                    course_instance = Course.objects.get(course=course_code)
+                except:
+                   return render(request, './error.html')
+            else:
+                course_name = course_val
+                try:
+                    course_instance = Course.objects.get(course_name=course_name)
+                except:
+                    return render(request, './error.html')
+
             quality = request.POST['quality']
             difficulty = request.POST['difficulty']
             overall_rate = request.POST['rate']
@@ -252,8 +267,9 @@ def rate(request, prof_id=None):
                 em = Employee.objects.get(employee=faculty_id)
                 u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
                                                        student_thoughts=comment,
-                                                       teaching_quality=quality, employee_id=em.employee,
-                                                       user_id=user.id)
+                                                       teaching_quality=quality, course_id=course_instance.course,
+                                                       employee_id=em.employee, user_id=user.id)
+
                 # Create records for workload, personality, and misc
 
                 try:
