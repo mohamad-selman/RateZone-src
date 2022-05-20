@@ -13,6 +13,7 @@ import requests
 from django.contrib import messages
 from json import loads
 from django.http import JsonResponse
+from django.db.models import Q
 
 mydb = mysql.connector.connect(database='ratezoneDB',
                                user='ratezone_userAdmin', password='ratezone@123')
@@ -78,38 +79,17 @@ def Round_get(obj, dec):
 
 def searchResults(request):
     total_count = 0
-    print('Here')
     if request.method == 'POST':
-        print('Here again')
         get_name = request.POST.get('tags')
-        print(get_name)
         name = get_name.strip()
-        l = name.split(' ')
-        print(l)
-        print('length: ')
-        print(len(l))
-        if len(l) == 1:
-            query = '''
-                    SELECT E.fname, E.lname, D.dept_name AS 'department', ROUND(E.overall_rating, 2) AS 'overall_rating', 
-                    E.teaching_quality, E.employee FROM Employee AS E
-                    INNER JOIN Department AS D ON D.department=E.department_id WHERE E.fname LIKE %s OR E.lname LIKE %s
-                    '''
-            data = (get_name, get_name)
-            print(f'data is {data}')
-            cursors.execute(query, data)
-        else:
-            query = '''
-                    SELECT E.fname, E.lname, D.dept_name AS 'department', ROUND(E.overall_rating, 2) AS 'overall_rating', 
-                    E.teaching_quality, E.employee FROM Employee AS E
-                    INNER JOIN Department AS D ON D.department=E.department_id WHERE CONCAT(E.fname, ' ', E.lname) LIKE %s
-                    '''
-            print('executing here')
-            cursors.execute(query, [name])
+        get_names = name.split(' ')
 
-        prof_row = cursors.fetchall()
-        tmp = cursors.description
-        (prof, total_count) = convert_to_dictionary(tmp, prof_row)
-        print(prof)
+        if len(get_names) == 1:
+            prof = Employee.objects.filter(Q(fname__icontains=get_names[0]) | Q(lname__icontains=get_names[0]))
+        else:
+            prof = Employee.objects.filter(fname__icontains=get_names[0], lname__icontains=get_names[1])
+
+        prof = Round(prof, 2)
         result = {
             'professors': prof
         }
@@ -150,7 +130,7 @@ def searchResults(request):
 
     tmp1 = Department.objects.all().count()
     tmp2 = Course.objects.all().count()
-    total_count = tmp1 + tmp2 + prof_count + ce_count + cs_count + math_count
+    total_count = tmp1 + tmp2 + prof_count + ce_count + cs_count + math_count + is_count
     result = {
         'professors': prof,
         'CS_dept': CS_dept,
