@@ -67,6 +67,7 @@ def convert_to_dictionary(cursor_description, query_result):
 def Round(obj, decimal):
     for element in obj:
         tmp = element.overall_rating
+        print(tmp)
         element.overall_rating = round(tmp, decimal)
     return obj
 
