@@ -126,7 +126,6 @@ def searchResults(request):
     tmp = cursors.description
     course_count = 0
     (courses, course_count) = convert_to_dictionary(tmp, course_row)
-
     # print(courses)
 
     tmp1 = Department.objects.all().count()
@@ -175,7 +174,7 @@ def professor(request, prof_id=None):
     sim = em.similarfaculty_set.all()
     get_similar = []
     for i in range(0, len(sim)):
-        get_similar.append(sim[0].similar_faculty)
+        get_similar.append(sim[i].similar_faculty)
 
     for ele in get_similar:
         sim_prof.append(Employee.objects.get(employee=ele))
