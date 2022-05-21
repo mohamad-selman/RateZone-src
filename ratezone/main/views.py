@@ -276,11 +276,14 @@ def rate(request, prof_id=None):
 @login_required(login_url='sign_in')
 def rate_page(request, prof_id):
     p = Employee.objects.get(employee=prof_id)
+    dept = Department.objects.get(dept_name=p.department)
+    c = Course.objects.filter(course__contains=dept.department)
     prof = Round_get(p, 2)
     result = {
         'fname': prof.fname,
         'lname': prof.lname,
-        'pid': prof.employee
+        'pid': prof.employee,
+        'courses': c
     }
     return render(request, './rate.html', result)
 
