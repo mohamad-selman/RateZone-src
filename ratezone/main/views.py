@@ -67,7 +67,6 @@ def convert_to_dictionary(cursor_description, query_result):
 def Round(obj, decimal):
     for element in obj:
         tmp = element.overall_rating
-        print(tmp)
         element.overall_rating = round(tmp, decimal)
     return obj
 
@@ -115,18 +114,8 @@ def searchResults(request):
     MATH_dept = Employee.objects.filter(department_id=410).order_by('-overall_rating')
     MATH_dept = Round(MATH_dept, 2)
     math_count = len(MATH_dept)
-    # courses = Course.objects.all()
 
-    course_query = '''
-                SELECT * FROM Course AS C INNER JOIN Department AS D ON C.course
-                LIKE CONCAT('%', D.department, '%')
-                '''
-    cursors.execute(course_query)
-    course_row = cursors.fetchall()
-    tmp = cursors.description
-    course_count = 0
-    (courses, course_count) = convert_to_dictionary(tmp, course_row)
-    # print(courses)
+    courses = Course.objects.all()
 
     tmp1 = Department.objects.all().count()
     tmp2 = Course.objects.all().count()
@@ -227,7 +216,7 @@ def rate(request, prof_id=None):
                 try:
                     course_instance = Course.objects.get(course=course_code)
                 except:
-                   return render(request, './error.html')
+                    return render(request, './error.html')
             else:
                 course_name = course_val
                 try:
@@ -475,33 +464,43 @@ def like(request):
         rev_id = request.POST.get('rev_id', None)
         print(f'Rev id is {rev_id}')
         try:
+            print('Here 1 - Check if user has already interacted with the button')
             try:
-                print('Here 1')
                 get_rev = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
-                if get_rev.upvote == 1:
-                    # like already exists, return
-                    print('User Already Liked this review')
-                    msg = "User Already Liked this review"
-                    return HttpResponse(msg)
-
                 if get_rev.downvote == 1:
                     print('Here 2')
                     UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(downvote=0)
                     UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(upvote=1)
                     rev = UserFacultyRev.objects.get(review=rev_id)
                     dislikes = rev.downvotes
+                    likes = rev.upvotes
                     UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes - 1)
+                    UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes + 1)
 
+                if get_rev.upvote == 1:
+                    # User Already liked this review
+                    # Remove like
+                    record = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
+                    try:
+                        record.delete()
+                        print('Record Deleted')
+                    except:
+                        print('Could not delete record')
+                    print('Here')
+                    rev = UserFacultyRev.objects.get(review=rev_id)
+                    likes = rev.upvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes - 1)
             except:
-                # Means the user has not liked that review
-                print('First time interacting with the button')
+                print('First time executing this')
                 UserReactFaculty.objects.create(upvote=1, review_id=rev_id, user_id=user_id)
 
-            rev = UserFacultyRev.objects.get(review=rev_id)
-            likes = rev.upvotes
-            UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes + 1)
-        except:
+                rev = UserFacultyRev.objects.get(review=rev_id)
+                likes = rev.upvotes
+                UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes + 1)
+
+        except RuntimeError:
             print('Could not execute')
+
         rev = UserFacultyRev.objects.get(review=rev_id)
         likes = rev.upvotes
         dislikes = rev.downvotes
@@ -529,27 +528,38 @@ def dislike(request):
             try:
                 print('Here 1')
                 get_rev = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
-                if get_rev.downvote == 1:
-                    print('User Already disliked this review')
-                    msg = "User Already disliked this review"
-                    return HttpResponse(msg)
-
                 if get_rev.upvote == 1:
                     print('Here 2')
                     UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(upvote=0)
                     UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(downvote=1)
                     rev = UserFacultyRev.objects.get(review=rev_id)
+                    dislikes = rev.downvotes
                     likes = rev.upvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes + 1)
                     UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes - 1)
+
+                if get_rev.downvote == 1:
+                    # User Already disliked this review
+                    # Remove dislike
+                    record = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
+                    try:
+                        record.delete()
+                        print('Record Deleted')
+                    except:
+                        print('Could not delete record')
+                    print('Here')
+                    rev = UserFacultyRev.objects.get(review=rev_id)
+                    dislikes = rev.downvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes - 1)
 
             except:
                 # Means the user has not liked that review
                 print('First time interacting with the button')
                 UserReactFaculty.objects.create(downvote=1, review_id=rev_id, user_id=user_id)
 
-            rev = UserFacultyRev.objects.get(review=rev_id)
-            dislikes = rev.downvotes
-            UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes + 1)
+                rev = UserFacultyRev.objects.get(review=rev_id)
+                dislikes = rev.downvotes
+                UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes + 1)
         except:
             print('Could not execute')
         rev = UserFacultyRev.objects.get(review=rev_id)
