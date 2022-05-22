@@ -12,10 +12,13 @@ from django.conf import settings
 import requests
 from django.contrib import messages
 from json import loads
+from django.http import JsonResponse
+from django.db.models import Q
 
 mydb = mysql.connector.connect(database='ratezoneDB',
                                user='ratezone_userAdmin', password='ratezone@123')
 cursors = mydb.cursor()
+
 
 def test_comments(request):
     f = open('data.json', 'r')
@@ -74,134 +77,47 @@ def Round_get(obj, dec):
 
 def searchResults(request):
     total_count = 0
-    print('Here')
     if request.method == 'POST':
-        print('Here again')
         get_name = request.POST.get('tags')
-        print(get_name)
         name = get_name.strip()
-        l = name.split(' ')
-        print(l)
-        print('length: ')
-        print(len(l))
-        if len(l) == 1:
-            query = '''
-                    SELECT E.fname, E.lname, D.dept_name, ROUND(E.overall_rating, 2) AS 'overall_rating', 
-                    E.teaching_quality, E.employee FROM Employee AS E
-                    INNER JOIN Department AS D ON D.department=E.department_id WHERE E.fname LIKE %s OR E.lname LIKE %s
-                    '''
-            data = (get_name, get_name)
-            print(f'data is {data}')
-            cursors.execute(query, data)
-        else:
-            query = '''
-                    SELECT E.fname, E.lname, D.dept_name, ROUND(E.overall_rating, 2) AS 'overall_rating', 
-                    E.teaching_quality, E.employee FROM Employee AS E
-                    INNER JOIN Department AS D ON D.department=E.department_id WHERE CONCAT(E.fname, ' ', E.lname) LIKE %s
-                    '''
-            print('executing here')
-            cursors.execute(query, [name])
+        get_names = name.split(' ')
 
-        prof_row = cursors.fetchall()
-        tmp = cursors.description
-        (prof, total_count) = convert_to_dictionary(tmp, prof_row)
-        print(prof)
+        if len(get_names) == 1:
+            prof = Employee.objects.filter(Q(fname__icontains=get_names[0]) | Q(lname__icontains=get_names[0]))
+        else:
+            prof = Employee.objects.filter(fname__icontains=get_names[0], lname__icontains=get_names[1])
+
+        prof = Round(prof, 2)
         result = {
             'professors': prof
         }
         return render(request, './searchResults.html', result)
-    # for all the custom queries executed!
-    # cursors return the query result in the form of a tuple
-    # needs to be converted to dictionary-like notation
-    # that is what the loop does
 
-    # the following is a query that returns all professors
-    # with their desired attributes
-    # prof = Employee.objects.all()
-    prof_query = '''
-                    SELECT DISTINCT E.fname, E.lname, D.dept_name,
-                    ROUND(E.overall_rating, 2) AS 'overall_rating',
-                    E.teaching_quality, E.employee FROM Employee AS E 
-                    INNER JOIN Department AS D ON
-                    D.department=E.department_id ORDER BY overall_rating DESC
-                  '''
+    prof = Employee.objects.all().order_by('-overall_rating')
+    prof = Round(prof, 2)
+    prof_count = len(prof)
 
-    # executing the query through connection cursor
-    cursors.execute(prof_query)
-    prof_row = cursors.fetchall()
-    tmp = cursors.description
-    prof_count = 0
-    (prof, prof_count) = convert_to_dictionary(tmp, prof_row)
+    CS_dept = Employee.objects.filter(department_id=418).order_by('-overall_rating')
+    CS_dept = Round(CS_dept, 2)
+    cs_count = len(CS_dept)
 
-    # CS query
+    CE_dept = Employee.objects.filter(department_id=1612).order_by('-overall_rating')
+    CE_dept = Round(CE_dept, 2)
+    ce_count = len(CE_dept)
 
-    CS_dept_query = '''
-                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating',
-                D.dept_name FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
-                WHERE D.department=418 ORDER BY overall_rating DESC
-                '''
-    cursors.execute(CS_dept_query)
-    dept_row = cursors.fetchall()
-    tmp = cursors.description
-    cs_count = 0
-    (CS_dept, cs_count) = convert_to_dictionary(tmp, dept_row)
+    IS_dept = Employee.objects.filter(department_id=1830).order_by('-overall_rating')
+    IS_dept = Round(IS_dept, 2)
+    is_count = len(IS_dept)
 
-    # CE query
+    MATH_dept = Employee.objects.filter(department_id=410).order_by('-overall_rating')
+    MATH_dept = Round(MATH_dept, 2)
+    math_count = len(MATH_dept)
 
-    CE_dept_query = '''
-                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating', D.dept_name
-                FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
-                WHERE D.department=1612 ORDER BY overall_rating DESC
-                '''
-    cursors.execute(CE_dept_query)
-    dept_row = cursors.fetchall()
-    tmp = cursors.description
-    ce_count = 0
-    (CE_dept, ce_count) = convert_to_dictionary(tmp, dept_row)
-    # print(CE_dept)
-
-    # IS query
-
-    IS_dept_query = '''
-                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating', D.dept_name
-                FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
-                WHERE D.department=1830 ORDER BY overall_rating DESC
-                '''
-    cursors.execute(IS_dept_query)
-    dept_row = cursors.fetchall()
-    tmp = cursors.description
-    is_count = 0
-    (IS_dept, is_count) = convert_to_dictionary(tmp, dept_row)
-
-    Math_dept_query = '''
-                SELECT DISTINCT E.employee, E.fname, E.lname, ROUND(E.overall_rating,2) AS 'overall_rating', D.dept_name
-                FROM Department AS D INNER JOIN Employee AS E ON D.department=E.department_id
-                WHERE D.department=410 ORDER BY overall_rating DESC
-                '''
-    cursors.execute(Math_dept_query)
-    dept_row = cursors.fetchall()
-    tmp = cursors.description
-    math_count = 0
-    (MATH_dept, math_count) = convert_to_dictionary(tmp, dept_row)
-
-    # courses = Course.objects.all()
-
-    course_query = '''
-                SELECT * FROM Course AS C INNER JOIN Department AS D ON C.course
-                LIKE CONCAT('%', D.department, '%')
-                '''
-    cursors.execute(course_query)
-    course_row = cursors.fetchall()
-    tmp = cursors.description
-    course_count = 0
-    (courses, course_count) = convert_to_dictionary(tmp, course_row)
-
-    # print(courses)
+    courses = Course.objects.all()
 
     tmp1 = Department.objects.all().count()
     tmp2 = Course.objects.all().count()
-    total_count = tmp1 + tmp2 + prof_count + ce_count + cs_count + math_count
-
+    total_count = tmp1 + tmp2 + prof_count + ce_count + cs_count + math_count + is_count
     result = {
         'professors': prof,
         'CS_dept': CS_dept,
@@ -240,22 +156,20 @@ def professor(request, prof_id=None):
 
     rev_count = UserFacultyRev.objects.filter(employee_id=prof).aggregate(Count('review'))
     rev_count = rev_count['review__count']
-    similar_query = '''
-                SELECT E.fname,E.lname, E2.fname,E2.lname, E2.employee, ROUND(E2.overall_rating, 2) AS 'overall_rating'
-                from Employee E inner join similar_faculty S1 on S1.employee_id=E.employee
-                INNER JOIN Employee E2 on S1.similar_faculty=E2.employee WHERE E.employee=%s
-                '''
-    cursors.execute(similar_query, [faculty_id])
-    sim_row = cursors.fetchall()
-    tmp = cursors.description
-    sim_count = 0
-    (sim_prof, sim_count) = convert_to_dictionary(tmp, sim_row)
 
-    # sim_prof = SimilarFaculty.objects.filter(employee=em)
-    # sim_prof = Round(sim_prof, 2)
-    # print(faculty_id)
+    sim_prof = []
+    sim = em.similarfaculty_set.all()
+    get_similar = []
+    for i in range(0, len(sim)):
+        get_similar.append(sim[i].similar_faculty)
+
+    for ele in get_similar:
+        sim_prof.append(Employee.objects.get(employee=ele))
+
+    sim_prof = Round(sim_prof, 2)
+
     # get all revs
-    reviews = UserFacultyRev.objects.filter(employee_id=faculty_id)
+    reviews = UserFacultyRev.objects.filter(employee_id=faculty_id).order_by('-review')
 
     workload = FacultyWorkload.objects.filter(employee_id=prof).values('workload').distinct()
     misc = FacultyMiscellaneous.objects.filter(employee_id=prof).values('miscellaneous').distinct()
@@ -281,6 +195,7 @@ def rate(request, prof_id=None):
     faculty_id = prof_id
 
     if request.method == 'POST':
+        print('Here')
         recaptcha_response = request.POST['g-recaptcha-response']
         data = {
             'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
@@ -290,9 +205,25 @@ def rate(request, prof_id=None):
         status = verify.json()
 
         print(status)
-
+        print('Got here')
         if status['success']:
             # D=request.POST['D']
+            # Let user include course, or choose in general
+            course_val = request.POST['course']
+            print(course_val)
+            if str.isdigit(course_val):
+                course_code = course_val
+                try:
+                    course_instance = Course.objects.get(course=course_code)
+                except:
+                    return render(request, './error.html')
+            else:
+                course_name = course_val
+                try:
+                    course_instance = Course.objects.get(course_name=course_name)
+                except:
+                    return render(request, './error.html')
+
             quality = request.POST['quality']
             difficulty = request.POST['difficulty']
             overall_rate = request.POST['rate']
@@ -304,8 +235,10 @@ def rate(request, prof_id=None):
             try:
                 em = Employee.objects.get(employee=faculty_id)
                 u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
-                                                    student_thoughts=comment,
-                                                    teaching_quality=quality, employee_id=em.employee, user_id=user.id)
+                                                       student_thoughts=comment,
+                                                       teaching_quality=quality, course_id=course_instance.course,
+                                                       employee_id=em.employee, user_id=user.id)
+
                 # Create records for workload, personality, and misc
 
                 try:
@@ -315,7 +248,8 @@ def rate(request, prof_id=None):
                     for element in personality:
                         FacultyPersonality.objects.create(employee=em, personality=element, user=user, review=u_rate)
                     for element in misc:
-                        FacultyMiscellaneous.objects.create(employee=em, miscellaneous=element, user=user, review=u_rate)
+                        FacultyMiscellaneous.objects.create(employee=em, miscellaneous=element, user=user,
+                                                            review=u_rate)
                 except:
                     print('Failed to insert tags')
 
@@ -328,6 +262,7 @@ def rate(request, prof_id=None):
                     # after each rate
                     # Updates the teaching quality, exams difficulty, and overall rating scores
                     update_scores(faculty_id)
+                    # similar_professors()
                 except:
                     print('Could not update scores')
             except:
@@ -341,11 +276,14 @@ def rate(request, prof_id=None):
 @login_required(login_url='sign_in')
 def rate_page(request, prof_id):
     p = Employee.objects.get(employee=prof_id)
+    dept = Department.objects.get(dept_name=p.department)
+    c = Course.objects.filter(course__contains=dept.department)
     prof = Round_get(p, 2)
     result = {
         'fname': prof.fname,
         'lname': prof.lname,
-        'pid': prof.employee
+        'pid': prof.employee,
+        'courses': c
     }
     return render(request, './rate.html', result)
 
@@ -453,6 +391,7 @@ def sign_in(request):
 @unauthenticated_user
 def sign_up(request):
     if request.method == 'POST':
+        print('Here')
         recaptcha_response = request.POST['g-recaptcha-response']
         data = {
             'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
@@ -464,6 +403,7 @@ def sign_up(request):
         print(status)
 
         if status['success']:
+            print('Heree')
             fname = request.POST['name']
             username = request.POST['username']
             user_email = request.POST['email']
@@ -472,6 +412,7 @@ def sign_up(request):
             print(f'Record: {fname}, {username}, {user_email}, {passw}')
 
             try:
+                print('Here')
                 User.objects.create_user(password=passw, username=username, first_name=fname, email=user_email)
                 print('HI')
                 print('Got here')
@@ -514,3 +455,139 @@ def dashboard(request):
         'revs': rev_result
     }
     return render(request, './dashboard.html', content)
+
+
+@login_required(login_url='sign_in')
+def like(request):
+    if request.method == "POST":
+        uname = request.user.username
+        user = User.objects.get(username=uname)
+        user_id = user.id
+        print(f'UserID is {user_id}')
+        rev_id = request.POST.get('rev_id', None)
+        print(f'Rev id is {rev_id}')
+        try:
+            print('Here 1 - Check if user has already interacted with the button')
+            try:
+                get_rev = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
+                if get_rev.downvote == 1:
+                    print('Here 2')
+                    UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(downvote=0)
+                    UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(upvote=1)
+                    rev = UserFacultyRev.objects.get(review=rev_id)
+                    dislikes = rev.downvotes
+                    likes = rev.upvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes - 1)
+                    UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes + 1)
+
+                if get_rev.upvote == 1:
+                    # User Already liked this review
+                    # Remove like
+                    record = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
+                    try:
+                        record.delete()
+                        print('Record Deleted')
+                    except:
+                        print('Could not delete record')
+                    print('Here')
+                    rev = UserFacultyRev.objects.get(review=rev_id)
+                    likes = rev.upvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes - 1)
+            except:
+                print('First time executing this')
+                UserReactFaculty.objects.create(upvote=1, review_id=rev_id, user_id=user_id)
+
+                rev = UserFacultyRev.objects.get(review=rev_id)
+                likes = rev.upvotes
+                UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes + 1)
+
+        except RuntimeError:
+            print('Could not execute')
+
+        rev = UserFacultyRev.objects.get(review=rev_id)
+        likes = rev.upvotes
+        dislikes = rev.downvotes
+        json_response = {
+            'likes': likes,
+            'dislikes': dislikes
+        }
+        return JsonResponse(json_response)
+
+    msg = "Could not like the review"
+    return HttpResponse(msg)
+
+
+@login_required(login_url='sign_in')
+def dislike(request):
+    if request.method == "POST":
+        rev_id = request.POST.get('rev_id', None)
+        uname = request.user.username
+        user = User.objects.get(username=uname)
+        user_id = user.id
+        print(f'UserID is {user_id}')
+        print(f'Rev id is {rev_id}')
+        # First, check if the user has liked that review
+        try:
+            try:
+                print('Here 1')
+                get_rev = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
+                if get_rev.upvote == 1:
+                    print('Here 2')
+                    UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(upvote=0)
+                    UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(downvote=1)
+                    rev = UserFacultyRev.objects.get(review=rev_id)
+                    dislikes = rev.downvotes
+                    likes = rev.upvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes + 1)
+                    UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes - 1)
+
+                if get_rev.downvote == 1:
+                    # User Already disliked this review
+                    # Remove dislike
+                    record = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
+                    try:
+                        record.delete()
+                        print('Record Deleted')
+                    except:
+                        print('Could not delete record')
+                    print('Here')
+                    rev = UserFacultyRev.objects.get(review=rev_id)
+                    dislikes = rev.downvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes - 1)
+
+            except:
+                # Means the user has not liked that review
+                print('First time interacting with the button')
+                UserReactFaculty.objects.create(downvote=1, review_id=rev_id, user_id=user_id)
+
+                rev = UserFacultyRev.objects.get(review=rev_id)
+                dislikes = rev.downvotes
+                UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes + 1)
+        except:
+            print('Could not execute')
+        rev = UserFacultyRev.objects.get(review=rev_id)
+        likes = rev.upvotes
+        dislikes = rev.downvotes
+        json_response = {
+            'likes': likes,
+            'dislikes': dislikes
+        }
+        return JsonResponse(json_response)
+
+    msg = "Could not dislike the review"
+    return HttpResponse(msg)
+
+
+@login_required(login_url='sign_in')
+def report(request):
+    if request.method == 'POST':
+        rev_id = request.POST.get('rev_id', None)
+        try:
+            rev = UserFacultyRev.objects.get(review=rev_id)
+            rev.report_count = rev.report_count + 1
+            msg = 'Thank you for reporting the view'
+            return HttpResponse(msg)
+        except:
+            print('Could not report review')
+    msg = "Could not report review"
+    return HttpResponse(msg)
