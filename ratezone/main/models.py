@@ -52,9 +52,9 @@ class Employee(models.Model):
     image = models.CharField(max_length=500, blank=True, null=True)
     main_rank = models.CharField(max_length=150)
     sub_rank = models.CharField(max_length=150, blank=True, null=True)
-    overall_rating = models.FloatField(blank=True, null=True)
-    teaching_quality = models.FloatField(blank=True, null=True)
-    exams_difficulty = models.FloatField(blank=True, null=True)
+    overall_rating = models.FloatField(blank=True, default=0.0)
+    teaching_quality = models.FloatField(blank=True, default=0.0)
+    exams_difficulty = models.FloatField(blank=True, default=0.0)
     users = models.ManyToManyField(User)
     user_watch = models.ManyToManyField(User, related_name='user_watch_faculty')
 
@@ -133,7 +133,7 @@ class UserFacultyRev(models.Model):
     difficulty_rating = models.IntegerField()
     upvotes = models.IntegerField(blank=True, null=True, default=0)
     downvotes = models.IntegerField(blank=True, null=True, default=0)
-    report_count = models.IntegerField(blank=True, null=True)
+    report_count = models.IntegerField(blank=True, null=True, default=0)
     semester_period = models.CharField(max_length=50, blank=True, null=True)
     student_thoughts = models.CharField(max_length=255, blank=True, null=True)
     teaching_quality = models.IntegerField()
@@ -146,7 +146,7 @@ class UserFacultyRev(models.Model):
 
     class Meta:
         db_table = 'user_faculty_rev'
-        unique_together = (('user', 'employee', 'review',),)
+        unique_together = (('user', 'employee', 'review'),)
 
 
 class FacultyMiscellaneous(models.Model):
@@ -216,6 +216,9 @@ class SimilarFaculty(models.Model):
     similar_faculty = models.IntegerField()
 
     objects = models.Manager()
+
+    def __str__(self):
+        return f'{self.similar_faculty}'
 
     class Meta:
         db_table = 'similar_faculty'

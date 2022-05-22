@@ -43,7 +43,7 @@ text-xs sm:text-base lg:text-lg">
 	</p>
 	</div>
 
-	<!-- <div class="mt-10">
+	<div class="mt-10">
 		<div class="px-10 mb-10 mt-4">
 			<h1 class="text-3xl md:text-5xl font-medium text-center">
 				Find what you're looking for
@@ -109,26 +109,29 @@ text-xs sm:text-base lg:text-lg">
 	</div>
 	</div>
 	</div>
-	</div> -->
+	</div>
 
 
-
-
-	<!-- Testing jQuery search -->
-	<!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
-	<!-- <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script> -->
-	<!-- <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3"></script> -->
 	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 	<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js" integrity="sha256-6XMVI0zB8cRzfZjqKcD01PBsAy3FlDASrlC8SxCpInY=" crossorigin="anonymous"></script>
 
 	<script src="/../static/libs/Fuse-6.5.3/dist/fuse.min.js"></script>
 
 	<br>
-	<form action="#" id="search" method="post">
-		{% csrf_token %}
-		<label for="bar">Search: </label>
-		<input type="text" name="bar" id="bar" style="border-color: black; border: solid;">
-	</form>
+	<div class="flex">
+		<form action="#" id="search" method="post">
+			{% csrf_token %}
+			<select name="" id="" class="select border-2 border-lime-300 rounded p-3 ">
+				<option selected value="">All departments</option>
+				<option value="">Computer Science</option>
+				<option value="">Computer Eng.</option>
+				<option value="">Math</option>
+			</select>
+			<input type="text" name="bar" id="bar" style="border-color: black; border: solid;" placeholder="Search">
+
+		</form>
+	</div>
+	
 
 	<script>
 		let profs = [];
