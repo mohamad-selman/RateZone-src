@@ -20,44 +20,7 @@
 </head>
 <body class="px-5 pt-2 pb-6
 text-xs sm:text-base lg:text-lg">
-    <header class="border-b text-left py-1">
-        <div class="container mx-auto flex items-center justify-between relative">
-            <a href="{% url 'home' %}">
-                <img src="{% static '/admin/img/logo.svg' %}" alt="Logo" width=120>
-            </a>
-            <nav>
-                <ul class="flex gap-x-3 items-center">
-                    <li>
-                        <a href="{% url 'search' %}" class="px-2 py-2 sm:px-4
-                        font-normal transition hover:bg-neutral-200
-                        rounded-md flex">
-                            Search
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'queue' %}" class="px-2 py-2 sm:px-4
-                        font-normal transition hover:bg-neutral-200
-                        rounded-md flex">
-                            My Queue
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'sign_in' %}" class="px-2 py-2 sm:px-4
-                        font-normal text-white
-                        rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]
-                        flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            Log In
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    
+    {% include 'header.html' %}
 
     <div class="mt-6">
         <div class="flex gap-x-4 items-center">
