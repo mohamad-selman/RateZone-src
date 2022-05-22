@@ -171,7 +171,7 @@ def professor(request, prof_id=None):
     sim_prof = Round(sim_prof, 2)
 
     # get all revs
-    reviews = UserFacultyRev.objects.filter(employee_id=faculty_id)
+    reviews = UserFacultyRev.objects.filter(employee_id=faculty_id).order_by('-review')
 
     workload = FacultyWorkload.objects.filter(employee_id=prof).values('workload').distinct()
     misc = FacultyMiscellaneous.objects.filter(employee_id=prof).values('miscellaneous').distinct()
@@ -197,6 +197,7 @@ def rate(request, prof_id=None):
     faculty_id = prof_id
 
     if request.method == 'POST':
+        print('Here')
         recaptcha_response = request.POST['g-recaptcha-response']
         data = {
             'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
@@ -206,11 +207,12 @@ def rate(request, prof_id=None):
         status = verify.json()
 
         print(status)
-
+        print('Got here')
         if status['success']:
             # D=request.POST['D']
             # Let user include course, or choose in general
             course_val = request.POST['course']
+            print(course_val)
             if str.isdigit(course_val):
                 course_code = course_val
                 try:
