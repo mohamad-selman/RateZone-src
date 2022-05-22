@@ -14,6 +14,7 @@ import requests
 from django.contrib import messages
 from json import loads
 from django.http import JsonResponse
+from django.db.models import Q
 
 mydb = mysql.connector.connect(database='ratezoneDB',
                                user='ratezone_userAdmin', password='ratezone@123')
@@ -25,8 +26,6 @@ def test_comments(request):
     print(f)
     data = loads(f.read())
     f.close()
-
-    print(data[6]['comment'])
 
     result = {
         'comm': data,
@@ -81,7 +80,6 @@ def convert_to_dictionary(cursor_description, query_result):
 def Round(obj, decimal):
     for element in obj:
         tmp = element.overall_rating
-        print(tmp)
         element.overall_rating = round(tmp, decimal)
     return obj
 
@@ -94,38 +92,17 @@ def Round_get(obj, dec):
 
 def searchResults(request):
     total_count = 0
-    print('Here')
     if request.method == 'POST':
-        print('Here again')
         get_name = request.POST.get('tags')
-        print(get_name)
         name = get_name.strip()
-        l = name.split(' ')
-        print(l)
-        print('length: ')
-        print(len(l))
-        if len(l) == 1:
-            query = '''
-                    SELECT E.fname, E.lname, D.dept_name AS 'department', ROUND(E.overall_rating, 2) AS 'overall_rating', 
-                    E.teaching_quality, E.employee FROM Employee AS E
-                    INNER JOIN Department AS D ON D.department=E.department_id WHERE E.fname LIKE %s OR E.lname LIKE %s
-                    '''
-            data = (get_name, get_name)
-            print(f'data is {data}')
-            cursors.execute(query, data)
-        else:
-            query = '''
-                    SELECT E.fname, E.lname, D.dept_name AS 'department', ROUND(E.overall_rating, 2) AS 'overall_rating', 
-                    E.teaching_quality, E.employee FROM Employee AS E
-                    INNER JOIN Department AS D ON D.department=E.department_id WHERE CONCAT(E.fname, ' ', E.lname) LIKE %s
-                    '''
-            print('executing here')
-            cursors.execute(query, [name])
+        get_names = name.split(' ')
 
-        prof_row = cursors.fetchall()
-        tmp = cursors.description
-        (prof, total_count) = convert_to_dictionary(tmp, prof_row)
-        print(prof)
+        if len(get_names) == 1:
+            prof = Employee.objects.filter(Q(fname__icontains=get_names[0]) | Q(lname__icontains=get_names[0]))
+        else:
+            prof = Employee.objects.filter(fname__icontains=get_names[0], lname__icontains=get_names[1])
+
+        prof = Round(prof, 2)
         result = {
             'professors': prof
         }
@@ -150,23 +127,12 @@ def searchResults(request):
     MATH_dept = Employee.objects.filter(department_id=410).order_by('-overall_rating')
     MATH_dept = Round(MATH_dept, 2)
     math_count = len(MATH_dept)
-    # courses = Course.objects.all()
 
-    course_query = '''
-                SELECT * FROM Course AS C INNER JOIN Department AS D ON C.course
-                LIKE CONCAT('%', D.department, '%')
-                '''
-    cursors.execute(course_query)
-    course_row = cursors.fetchall()
-    tmp = cursors.description
-    course_count = 0
-    (courses, course_count) = convert_to_dictionary(tmp, course_row)
-
-    # print(courses)
+    courses = Course.objects.all()
 
     tmp1 = Department.objects.all().count()
     tmp2 = Course.objects.all().count()
-    total_count = tmp1 + tmp2 + prof_count + ce_count + cs_count + math_count
+    total_count = tmp1 + tmp2 + prof_count + ce_count + cs_count + math_count + is_count
     result = {
         'professors': prof,
         'CS_dept': CS_dept,
@@ -210,7 +176,7 @@ def professor(request, prof_id=None):
     sim = em.similarfaculty_set.all()
     get_similar = []
     for i in range(0, len(sim)):
-        get_similar.append(sim[0].similar_faculty)
+        get_similar.append(sim[i].similar_faculty)
 
     for ele in get_similar:
         sim_prof.append(Employee.objects.get(employee=ele))
@@ -218,7 +184,7 @@ def professor(request, prof_id=None):
     sim_prof = Round(sim_prof, 2)
 
     # get all revs
-    reviews = UserFacultyRev.objects.filter(employee_id=faculty_id)
+    reviews = UserFacultyRev.objects.filter(employee_id=faculty_id).order_by('-review')
 
     workload = FacultyWorkload.objects.filter(employee_id=prof).values('workload').distinct()
     misc = FacultyMiscellaneous.objects.filter(employee_id=prof).values('miscellaneous').distinct()
@@ -244,6 +210,7 @@ def rate(request, prof_id=None):
     faculty_id = prof_id
 
     if request.method == 'POST':
+        print('Here')
         recaptcha_response = request.POST['g-recaptcha-response']
         data = {
             'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
@@ -253,17 +220,18 @@ def rate(request, prof_id=None):
         status = verify.json()
 
         print(status)
-
+        print('Got here')
         if status['success']:
             # D=request.POST['D']
             # Let user include course, or choose in general
             course_val = request.POST['course']
+            print(course_val)
             if str.isdigit(course_val):
                 course_code = course_val
                 try:
                     course_instance = Course.objects.get(course=course_code)
                 except:
-                   return render(request, './error.html')
+                    return render(request, './error.html')
             else:
                 course_name = course_val
                 try:
@@ -323,11 +291,14 @@ def rate(request, prof_id=None):
 @login_required(login_url='sign_in')
 def rate_page(request, prof_id):
     p = Employee.objects.get(employee=prof_id)
+    dept = Department.objects.get(dept_name=p.department)
+    c = Course.objects.filter(course__contains=dept.department)
     prof = Round_get(p, 2)
     result = {
         'fname': prof.fname,
         'lname': prof.lname,
-        'pid': prof.employee
+        'pid': prof.employee,
+        'courses': c
     }
     return render(request, './rate.html', result)
 
@@ -511,33 +482,43 @@ def like(request):
         rev_id = request.POST.get('rev_id', None)
         print(f'Rev id is {rev_id}')
         try:
+            print('Here 1 - Check if user has already interacted with the button')
             try:
-                print('Here 1')
                 get_rev = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
-                if get_rev.upvote == 1:
-                    # like already exists, return
-                    print('User Already Liked this review')
-                    msg = "User Already Liked this review"
-                    return HttpResponse(msg)
-
                 if get_rev.downvote == 1:
                     print('Here 2')
                     UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(downvote=0)
                     UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(upvote=1)
                     rev = UserFacultyRev.objects.get(review=rev_id)
                     dislikes = rev.downvotes
+                    likes = rev.upvotes
                     UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes - 1)
+                    UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes + 1)
 
+                if get_rev.upvote == 1:
+                    # User Already liked this review
+                    # Remove like
+                    record = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
+                    try:
+                        record.delete()
+                        print('Record Deleted')
+                    except:
+                        print('Could not delete record')
+                    print('Here')
+                    rev = UserFacultyRev.objects.get(review=rev_id)
+                    likes = rev.upvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes - 1)
             except:
-                # Means the user has not liked that review
-                print('First time interacting with the button')
+                print('First time executing this')
                 UserReactFaculty.objects.create(upvote=1, review_id=rev_id, user_id=user_id)
 
-            rev = UserFacultyRev.objects.get(review=rev_id)
-            likes = rev.upvotes
-            UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes + 1)
-        except:
+                rev = UserFacultyRev.objects.get(review=rev_id)
+                likes = rev.upvotes
+                UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes + 1)
+
+        except RuntimeError:
             print('Could not execute')
+
         rev = UserFacultyRev.objects.get(review=rev_id)
         likes = rev.upvotes
         dislikes = rev.downvotes
@@ -565,27 +546,38 @@ def dislike(request):
             try:
                 print('Here 1')
                 get_rev = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
-                if get_rev.downvote == 1:
-                    print('User Already disliked this review')
-                    msg = "User Already disliked this review"
-                    return HttpResponse(msg)
-
                 if get_rev.upvote == 1:
                     print('Here 2')
                     UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(upvote=0)
                     UserReactFaculty.objects.filter(review_id=rev_id, user_id=user_id).update(downvote=1)
                     rev = UserFacultyRev.objects.get(review=rev_id)
+                    dislikes = rev.downvotes
                     likes = rev.upvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes + 1)
                     UserFacultyRev.objects.filter(review=rev_id).update(upvotes=likes - 1)
+
+                if get_rev.downvote == 1:
+                    # User Already disliked this review
+                    # Remove dislike
+                    record = UserReactFaculty.objects.get(review_id=rev_id, user_id=user_id)
+                    try:
+                        record.delete()
+                        print('Record Deleted')
+                    except:
+                        print('Could not delete record')
+                    print('Here')
+                    rev = UserFacultyRev.objects.get(review=rev_id)
+                    dislikes = rev.downvotes
+                    UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes - 1)
 
             except:
                 # Means the user has not liked that review
                 print('First time interacting with the button')
                 UserReactFaculty.objects.create(downvote=1, review_id=rev_id, user_id=user_id)
 
-            rev = UserFacultyRev.objects.get(review=rev_id)
-            dislikes = rev.downvotes
-            UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes + 1)
+                rev = UserFacultyRev.objects.get(review=rev_id)
+                dislikes = rev.downvotes
+                UserFacultyRev.objects.filter(review=rev_id).update(downvotes=dislikes + 1)
         except:
             print('Could not execute')
         rev = UserFacultyRev.objects.get(review=rev_id)
