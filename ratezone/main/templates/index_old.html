@@ -8,20 +8,28 @@
 	<link rel="stylesheet" href="{% static '/admin/css/main.css' %}">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
 	<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3"></script>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3"></script> -->
 	
 	
-	<script src=
+	<!-- <script src=
 	"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
-	</script>
+	</script> -->
 
-	<script src=
+	<!-- <script src=
 	"https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
-	</script>
+	</script> -->
 
-	<link href=
+	<!-- <link href=
 	"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
-	rel="stylesheet" type="text/css" />
+	rel="stylesheet" type="text/css" /> -->
+
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet"/>
+
+
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+	
+	<script src="/../static/libs/Fuse-6.5.3/dist/fuse.min.js"></script>
 	<script type="module" src="{% static '/admin/js/search_old.js' %}"></script>
 
 	<title>RateZone</title>
@@ -111,12 +119,6 @@ text-xs sm:text-base lg:text-lg">
 	</div>
 	</div>
 
-
-	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-	<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js" integrity="sha256-6XMVI0zB8cRzfZjqKcD01PBsAy3FlDASrlC8SxCpInY=" crossorigin="anonymous"></script>
-
-	<script src="/../static/libs/Fuse-6.5.3/dist/fuse.min.js"></script>
-
 	<br>
 	<div class="flex">
 		<form action="#" id="search" method="post">
@@ -174,5 +176,22 @@ text-xs sm:text-base lg:text-lg">
 			}
 		});
 	</script>
+
+	<!-- Trying out HTMX -->
+
+	<script src="https://unpkg.com/htmx.org@1.7.0" defer></script>
+
+	<br><br>
+	<div hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+		<h3>Search for your professor</h3>
+
+		<input
+		type="search" name="q" id="" placeholder="Search..."
+		hx-post="/test2/" hx-trigger="keyup changed delay:500ms, search"
+		hx-target="#search-results">
+
+		<div id="search-results"></div>
+	</div>
+
 </body>
 </html>

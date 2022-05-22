@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render
 from .models import *
 from django.contrib.auth import logout, login, authenticate
@@ -44,6 +45,20 @@ def test(request):
     return render(request, './index_old.html',
                   {"Profs": profs})
 
+
+def test2(request):
+    q = request.POST.get('q')
+
+    if q:
+        results = Employee.objects.all()
+        urls = {}
+
+        for e in results:
+            urls[e.employee] = '/professor/' + str(e.employee)
+
+        return render(request, './search_results_htmx.html', {"results": results, "urls": urls})
+    
+    return render(request, './blank.html')
 
 # the function takes the query result and the cursor description of an executed query
 # converts from a tuple-like notation to dictionary-like notation
