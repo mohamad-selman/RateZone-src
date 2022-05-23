@@ -6,6 +6,7 @@ urlpatterns = [
     path('comm/', views.test_comments),
     path('', views.home, name='home'),
     path('test/', views.test, name='test'),
+    path('test2/', views.test2, name='test2'),
     path('course/', views.course, name='course'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('professor/', views.professor, name='professor',  kwargs={'prof_id': ''}),
