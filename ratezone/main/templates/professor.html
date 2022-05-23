@@ -295,6 +295,16 @@ text-xs sm:text-base lg:text-lg">
                             <p>Difficulty</p>
                             <p class="ml-2"><span class="text-lg lg:text-2xl">{{ rev.difficulty_rating }}</span>/5</p>
                         </div>
+                        {% if rev.course %}
+                            <div>
+                                <p>Course: {{rev.course.course}}</p>
+                                <p class="ml-2">{{ rev.course }}</p>
+                            </div>
+                        {% else %}
+                            <div>
+                                <p>Course: N/A</p>
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="flex justify-between gap-x-14 items-center mt-3">
                         <button id="report{{rev.review}}" value="{{ rev.review }}" onclick="report({{rev.review}})">
