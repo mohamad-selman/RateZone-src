@@ -11,14 +11,14 @@
             <a href="{% url 'rate_page' prof_id=e.employee %}">
             {% endif %}
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
-                flex gap-x-4 justify-between px-12
+                flex gap-x-7 px-7
                 hover:bg-neutral-300">
-                    <span>
+                    <span class="w-3/4">
                         <span class="font-medium">{{e.fname}} {{e.lname}}</span><br>
                         {{e.dept_name}} Department<br>
                         Kuwait University
                     </span>
-                    <div>
+                    <div class="w-1/4">
                         <p>Overall Rating</p>
                         <p class="md:ml-2"><span class="text-2xl">{{e.overall_rating | default_if_none:"NA"}}</span>/5</p>
                     </div>
