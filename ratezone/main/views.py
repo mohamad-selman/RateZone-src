@@ -75,15 +75,15 @@ def searchResults(request):
 
     # Provide fuzzy matching
     # Executed only once in order to add the indexes to the DB
-    # cursor.execute('CREATE FULLTEXT INDEX name ON EMPLOYEE(fname, lname) WITH PARSER NGRAM;')
-    # cursor.execute('CREATE FULLTEXT INDEX cname ON COURSE(course_name) WITH PARSER NGRAM;')
+    # cursor.execute('CREATE FULLTEXT INDEX name ON Employee(fname, lname) WITH PARSER NGRAM;')
+    # cursor.execute('CREATE FULLTEXT INDEX cname ON Course(course_name) WITH PARSER NGRAM;')
 
     input = request.POST['input']
 
     cursor.execute(f'''
         SELECT E.employee, E.fname, E.lname, D.dept_name, ROUND(E.overall_rating, 2) as overall_rating
-        FROM EMPLOYEE E
-        JOIN DEPARTMENT D
+        FROM Employee E
+        JOIN Department D
             ON E.department_id = D.department
         WHERE MATCH(fname, lname) AGAINST('{input}' IN NATURAL LANGUAGE MODE);
     ''')
@@ -91,8 +91,8 @@ def searchResults(request):
 
     cursor.execute(f'''
         SELECT C.course, C.course_name, D.dept_name, ROUND(C.overall_rating, 2) as overall_rating
-        FROM COURSE C
-        JOIN DEPARTMENT D
+        FROM Course C
+        JOIN Department D
             ON C.course DIV 1000 = D.department
         WHERE MATCH(course_name) AGAINST('{input}' IN NATURAL LANGUAGE MODE);
     ''')
