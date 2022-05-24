@@ -15,11 +15,8 @@ from django.contrib import messages
 from json import loads
 from django.http import JsonResponse
 from django.db.models import Q
-
-mydb = mysql.connector.connect(database='ratezoneDB',
-                               user='ratezone_userAdmin', password='ratezone@123')
-cursors = mydb.cursor()
-
+from django.views.decorators.http import require_http_methods
+from .db import DB_connect
 
 def test_comments(request):
     f = open('data.json', 'r')
@@ -59,24 +56,6 @@ def test2(request):
     
     return render(request, './blank.html')
 
-# the function takes the query result and the cursor description of an executed query
-# converts from a tuple-like notation to dictionary-like notation
-# needed for each custom query executed
-# Not needed if django ORM is used
-def convert_to_dictionary(cursor_description, query_result):
-    total_count = 0
-    returning_value = []
-    for r in query_result:
-        total_count += 1
-        i = 0
-        d = {}
-        while i < len(cursor_description):
-            d[cursor_description[i][0]] = r[i]
-            i += 1
-        returning_value.append(d)
-    return returning_value, total_count
-
-
 def Round(obj, decimal):
     for element in obj:
         tmp = element.overall_rating
@@ -89,58 +68,22 @@ def Round_get(obj, dec):
     obj.overall_rating = round(tmp, dec)
     return obj
 
-
+@require_http_methods(["POST"])
 def searchResults(request):
     total_count = 0
-    if request.method == 'POST':
-        get_name = request.POST.get('tags')
-        name = get_name.strip()
-        get_names = name.split(' ')
 
-        if len(get_names) == 1:
-            prof = Employee.objects.filter(Q(fname__icontains=get_names[0]) | Q(lname__icontains=get_names[0]))
-        else:
-            prof = Employee.objects.filter(fname__icontains=get_names[0], lname__icontains=get_names[1])
+    get_name = request.POST['input']
+    name = get_name.strip()
+    get_names = name.split(' ')
 
-        prof = Round(prof, 2)
-        result = {
-            'professors': prof
-        }
-        return render(request, './searchResults.html', result)
+    if len(get_names) == 1:
+        prof = Employee.objects.filter(Q(fname__icontains=get_names[0]) | Q(lname__icontains=get_names[0]))
+    else:
+        prof = Employee.objects.filter(fname__icontains=get_names[0], lname__icontains=get_names[1])
 
-    prof = Employee.objects.all().order_by('-overall_rating')
     prof = Round(prof, 2)
-    prof_count = len(prof)
-
-    CS_dept = Employee.objects.filter(department_id=418).order_by('-overall_rating')
-    CS_dept = Round(CS_dept, 2)
-    cs_count = len(CS_dept)
-
-    CE_dept = Employee.objects.filter(department_id=1612).order_by('-overall_rating')
-    CE_dept = Round(CE_dept, 2)
-    ce_count = len(CE_dept)
-
-    IS_dept = Employee.objects.filter(department_id=1830).order_by('-overall_rating')
-    IS_dept = Round(IS_dept, 2)
-    is_count = len(IS_dept)
-
-    MATH_dept = Employee.objects.filter(department_id=410).order_by('-overall_rating')
-    MATH_dept = Round(MATH_dept, 2)
-    math_count = len(MATH_dept)
-
-    courses = Course.objects.all()
-
-    tmp1 = Department.objects.all().count()
-    tmp2 = Course.objects.all().count()
-    total_count = tmp1 + tmp2 + prof_count + ce_count + cs_count + math_count + is_count
     result = {
-        'professors': prof,
-        'CS_dept': CS_dept,
-        'CE_dept': CE_dept,
-        'IS_dept': IS_dept,
-        'MATH_dept': MATH_dept,
-        'courses': courses,
-        'count': total_count
+        'professors': prof
     }
 
     return render(request, './searchResults.html', result)
@@ -360,11 +303,16 @@ def remove_from_queue(request, prof_id=None):
     user_id = user.id
     # print(f'{user_id} and {faculty_id}')
     try:
+        db, cursor = DB_connect()
 
         deletion_query = "DELETE FROM Employee_users WHERE user_id=%s AND employee_id=%s"
         data = (user_id, faculty_id)
-        cursors.execute(deletion_query, data)
+        cursor.execute(deletion_query, data)
         print('executed successfully')
+
+        cursor.close()
+        db.close()
+
     except:
         print('Error')
     return HttpResponse(status=200)
