@@ -3,14 +3,14 @@ from . import views
 
 
 urlpatterns = [
-    path('comm/', views.test_comments),
+    # path('comm/', views.test_comments),
     path('', views.home, name='home'),
-    path('test/', views.test, name='test'),
-    path('test2/', views.test2, name='test2'),
+    # path('test/', views.test, name='test'),
+    # path('test2/', views.test2, name='test2'),
     path('course/', views.course, name='course'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('professor/', views.professor, name='professor',  kwargs={'prof_id': ''}),
-    path('professorTwo/<str:prof_name>', views.professorTwo, name='professorTwo'),
+    # path('professor/', views.professor, name='professor',  kwargs={'prof_id': ''}),
+    # path('professorTwo/<str:prof_name>', views.professorTwo, name='professorTwo'),
     path('professor/<int:prof_id>/', views.professor, name='professor'),
     path('add_to_queue/', views.add_to_queue, name='queue'),
     path('queue/', views.queue, name='queue'),
