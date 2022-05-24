@@ -465,9 +465,10 @@ def dashboard(request):
 
     # print(user_obj)
     rev_result = Round(rev_result, 2)
+    zipped_response = zip(rev_result, revs)
     content = {
         'user': user_obj,
-        'revs': rev_result
+        'revs': zipped_response
     }
     return render(request, './dashboard.html', content)
 
@@ -606,3 +607,42 @@ def report(request):
             print('Could not report review')
     msg = "Could not report review"
     return HttpResponse(msg)
+
+
+@csrf_exempt
+@login_required(login_url='sign_in')
+def delete_review(request):
+    if request.method == 'POST':
+        print('Here')
+        rev_id = request.POST.get('rev_id', None)
+        print(rev_id)
+        try:
+            print('Here First')
+            try:
+                misc = FacultyMiscellaneous.objects.get(review_id=rev_id)
+                misc.delete()
+            except:
+                print('Misc: <Empty set>')
+
+            try:
+                personality = FacultyPersonality.objects.get(review_id=rev_id)
+                personality.delete()
+            except:
+                print('Personality: <Empty set>')
+
+            try:
+                workload = FacultyWorkload.objects.get(review_id=rev_id)
+                workload.delete()
+            except:
+                print('Workload: <Empty set>')
+
+            record = UserFacultyRev.objects.get(review=rev_id)
+            record.delete()
+            print('Review')
+
+        except:
+            print('Could not delete review')
+        print('Redirect to dashboard')
+        return redirect(dashboard)
+
+    return render(request, './error.html')

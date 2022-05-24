@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static '/admin/css/main.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{% static '/admin/js/delete_review.js' %}"></script>
     <script>
         function myFunction() {
             var x = document.getElementById("myInput");
@@ -85,7 +87,11 @@ text-xs sm:text-base lg:text-lg">
 
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden" >
-                    <strong>Major:</strong><p id="major">Computer Science</p>
+                    {% if user.major %}
+                        <strong>Major:</strong><p>user.major</p>
+                    {% else %}
+                        <strong>Major:</strong><p>--------</p>
+                    {% endif %}
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="modifyText('major')">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -128,7 +134,7 @@ text-xs sm:text-base lg:text-lg">
         text-[#154854] items-center">
             Ratings
         </p>
-        {% for rev in revs %}
+        {% for rev, review in revs %}
         <div class="text-base">
             <a href="{% url 'professor' prof_id=rev.employee %}">
                 <div class="my-4 p-3 bg-neutral-300 rounded-lg
@@ -136,18 +142,26 @@ text-xs sm:text-base lg:text-lg">
                     <span>
                         <span class="font-medium">{{ rev.fname }}, {{ rev.lname }}</span><br>
                         {{ rev.department}} department<br>
-                        Kuwait University
+                        {% if review.course %}
+                            Course {{review.course.course}} : {{ review.course }}
+                        {% else %}
+                            Course N/A
+                        {% endif %}
                     </span>
                     <div>
                         <p>Overall Rating</p>
                         <p class="ml-2"><span class="text-2xl">{{ rev.overall_rating }}</span>/5</p>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                    onclick="deleteProfessor0()">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
                 </div>
             </a>
+            <button id="{{ review.review }}" onclick="delete_review({{ review.review }})" class="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded inline-flex items-center">
+                {% csrf_token %}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <span>Delete Review</span>
+            </button>
+
         </div>
         {% endfor %}
     </div>
