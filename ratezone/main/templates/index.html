@@ -9,9 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
- 
-    <script src="{% static 'libs/Fuse-6.5.3/dist/fuse.min.js' %}"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3"></script> -->
+
     <title>RateZone</title>
 </head>
 
@@ -32,49 +30,51 @@ class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
     </div>
 
     <!-- Searching -->
-    <div class="mt-10 px-10 mb-10 mt-4">
+    <div class="mt-10 px-4 mb-10 mt-4">
         <h1 class="text-3xl md:text-5xl font-medium text-center">
             Find what you're looking for
         </h1>
 
-        <!-- Radio buttons (Add/Rate) -->
-        <div class="grid grid-cols-2 gap-2 mx-auto max-w-xl mt-6">
-            <div>
-                <input class="hidden" id="radio_1" type="radio" name="next" checked>
-                <label class="flex flex-col bg-white
-                p-3 border-2 border-neutral-300 rounded-md
-                cursor-pointer" for="radio_1">
-                    <span class="text-center text-lg sm:text-xl font-medium">
-                        Find
-                    </span>
-                </label>
+        <form>
+            <!-- Radio buttons (Add/Rate) -->
+            <div class="grid grid-cols-2 gap-2 mx-auto max-w-xl mt-6">
+                <div>
+                    <input class="hidden" id="radio_1" type="radio" name="next" value="f" checked>
+                    <label class="flex flex-col bg-white
+                    p-3 border-2 border-neutral-300 rounded-md
+                    cursor-pointer" for="radio_1">
+                        <span class="text-center text-lg sm:text-xl font-medium">
+                            Find
+                        </span>
+                    </label>
+                </div>
+                <div>
+                    <input class="hidden" id="radio_2" type="radio" value="r" name="next">
+                    <label class="flex flex-col bg-white
+                    p-3 border-2 border-neutral-300 rounded-md
+                    cursor-pointer" for="radio_2">
+                        <span class="text-center text-lg sm:text-xl font-medium">
+                            Rate
+                        </span>
+                    </label>
+                </div>
             </div>
-            <div>
-                <input class="hidden" id="radio_2" type="radio" name="next">
-                <label class="flex flex-col bg-white
-                p-3 border-2 border-neutral-300 rounded-md
-                cursor-pointer" for="radio_2">
-                    <span class="text-center text-lg sm:text-xl font-medium">
-                        Rate
-                    </span>
-                </label>
-            </div>
-        </div>
 
-        <!-- Search bar -->
-        <div class="relative mx-auto max-w-xl mt-6">
-            <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <!-- Search bar -->
+            <div class="relative mx-auto max-w-xl mt-6">
+                <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <input name="input" placeholder="Search by name ..."
+                class="block p-4 pl-10 w-full text-sm text-gray-900
+                bg-gray-50 rounded-lg border border-gray-300
+                focus:ring-[#F9C041] focus:border-[#F9C041]"
+                hx-post="/searchResults/" 
+                hx-trigger="keyup changed delay:200ms, search" 
+                hx-target="#search-results" 
+                hx-indicator=".htmx-indicator">
             </div>
-            <input name="input" placeholder="Search by name ..."
-            class="block p-4 pl-10 w-full text-sm text-gray-900
-            bg-gray-50 rounded-lg border border-gray-300
-            focus:ring-[#F9C041] focus:border-[#F9C041]"
-            hx-post="/searchResults/" 
-            hx-trigger="keyup changed delay:200ms, search" 
-            hx-target="#search-results" 
-            hx-indicator=".htmx-indicator">
-        </div>
+        </form>
 
         <!-- div to load the results into -->
         <div id="search-results" class="max-w-xl mt-6 mx-auto"></div>

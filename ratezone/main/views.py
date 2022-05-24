@@ -68,25 +68,46 @@ def Round_get(obj, dec):
     obj.overall_rating = round(tmp, dec)
     return obj
 
+
 @require_http_methods(["POST"])
 def searchResults(request):
-    total_count = 0
+    db, cursor = DB_connect()
 
-    get_name = request.POST['input']
-    name = get_name.strip()
-    get_names = name.split(' ')
+    # Provide fuzzy matching
+    # Executed only once in order to add the indexes to the DB
+    # cursor.execute('CREATE FULLTEXT INDEX name ON EMPLOYEE(fname, lname) WITH PARSER NGRAM;')
+    # cursor.execute('CREATE FULLTEXT INDEX cname ON COURSE(course_name) WITH PARSER NGRAM;')
 
-    if len(get_names) == 1:
-        prof = Employee.objects.filter(Q(fname__icontains=get_names[0]) | Q(lname__icontains=get_names[0]))
-    else:
-        prof = Employee.objects.filter(fname__icontains=get_names[0], lname__icontains=get_names[1])
+    input = request.POST['input']
 
-    prof = Round(prof, 2)
-    result = {
-        'professors': prof
+    cursor.execute(f'''
+        SELECT E.employee, E.fname, E.lname, D.dept_name, ROUND(E.overall_rating, 2) as overall_rating
+        FROM EMPLOYEE E
+        JOIN DEPARTMENT D
+            ON E.department_id = D.department
+        WHERE MATCH(fname, lname) AGAINST('{input}' IN NATURAL LANGUAGE MODE);
+    ''')
+    employee = cursor.fetchall()
+
+    cursor.execute(f'''
+        SELECT C.course, C.course_name, D.dept_name, ROUND(C.overall_rating, 2) as overall_rating
+        FROM COURSE C
+        JOIN DEPARTMENT D
+            ON C.course DIV 1000 = D.department
+        WHERE MATCH(course_name) AGAINST('{input}' IN NATURAL LANGUAGE MODE);
+    ''')
+    courses = cursor.fetchall()
+
+    context = {
+        'employee': employee,
+        'courses': courses,
+        'next': request.POST['next'], # redirect to the rating form or to the reviews page
     }
 
-    return render(request, './searchResults.html', result)
+    cursor.close()
+    db.close()
+
+    return render(request, './searchResults.html', context)
 
 
 def professorTwo(request, prof_name):
