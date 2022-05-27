@@ -30,8 +30,6 @@
 
     <title>RateZone</title>
 
-    <script src="{% static '/admin/js/typewriter.js' %}"></script>
-
 </head>
 
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
@@ -44,10 +42,9 @@ class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
         <div class="sm:w-3/4 md:w-full lg:w-3/4 xl:w-3/5 overflow-hidden">
             <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_MeTWrj.json"  background="transparent"  speed="1" loop autoplay></lottie-player>
         </div>
-        <p class="text-2xl md:text-3xl lg:text-4xl xl:text-3xl
-        text-justify mx-auto">
-            At RateZone, we have hundreds of professors, TAs, and courses ratings
-        </p>
+
+        <div id="ratezone_app" class="text-2xl md:text-3xl lg:text-4xl xl:text-3xl text-justify mx-auto"></div>
+
     </div>
 
     <!-- Searching -->
@@ -101,4 +98,7 @@ class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
         <div id="search-results" class="max-w-xl mt-6 mx-auto"></div>
     </div>
 </body>
+
+    <script src="{% static '/admin/js/typewriter.js' %}"></script>
+
 </html>
