@@ -1,5 +1,6 @@
 import re
 from django.shortcuts import render
+from scipy.fftpack import idct
 from .models import *
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.models import User
@@ -18,6 +19,236 @@ from django.db.models import Q
 from django.views.decorators.http import require_http_methods
 from .db import DB_connect
 
+def home(request):
+    return render(request, './index.html')
+
+def search(request):
+    return redirect('home')
+
+@login_required(login_url='sign_in')
+def rate(request, item, id):
+    db, cursor = DB_connect()
+
+    if item == 'instructor':
+        cursor.execute(f'''
+            SELECT fname, lname
+            FROM Employee
+            WHERE employee={id};
+        ''')
+        ins = cursor.fetchone()
+
+        cursor.execute(f'''
+            SELECT C.course, C.course_name
+            FROM Employee E
+            JOIN Department D
+                ON E.department_id = D.department
+            JOIN Course C
+                ON C.course DIV 1000 = D.department
+            WHERE employee={id};
+        ''')
+        courses = cursor.fetchall()
+
+        context = {
+            'item': item,
+            'id': id,
+            'fname': ins['fname'],
+            'lname': ins['lname'],
+            'courses': courses
+        }
+
+    elif item == 'course':
+        cursor.execute(f'''
+            SELECT course_name
+            FROM Course
+            WHERE course={id};
+        ''')
+        course = cursor.fetchone()
+
+        context = {
+            'item': item,
+            'id': id,
+            'course_name': course['course_name'],
+        }
+
+    elif item == 'dept':
+        cursor.execute(f'''
+            SELECT dept_name
+            FROM Department
+            WHERE department={id};
+        ''')
+        dept = cursor.fetchone()
+
+        context = {
+            'item': item,
+            'id': id,
+            'dept_name': dept['dept_name'],
+        }
+
+    cursor.close()
+    db.close()
+
+    return render(request, 'rate.html', context)
+
+@login_required(login_url='sign_in')
+def submit_rate(request, item, id):
+    uname = request.user.username
+    user = User.objects.get(username=uname)
+
+    if request.method == 'POST':
+        recaptcha_response = request.POST['g-recaptcha-response']
+        data = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        }
+        verify = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        status = verify.json()
+
+        if status['success']:
+            if item == 'instructor':
+                course_val = request.POST['course']
+                if str.isdigit(course_val):
+                    course_code = course_val
+                    try:
+                        course_instance = Course.objects.get(course=course_code)
+                    except:
+                        return render(request, './error.html')
+                else:
+                    course_name = course_val
+                    try:
+                        course_instance = Course.objects.get(course_name=course_name)
+                    except:
+                        return render(request, './error.html')
+
+                quality = request.POST['quality']
+                difficulty = request.POST['difficulty']
+                overall_rate = request.POST['rate']
+                workload = request.POST.getlist('workload')
+                personality = request.POST.getlist('personality')
+                misc = request.POST.getlist('misc')
+                comment = request.POST['comment']
+
+                try:
+                    em = Employee.objects.get(employee=id)
+                    u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
+                                                        student_thoughts=comment,
+                                                        teaching_quality=quality, course_id=course_instance.course,
+                                                        employee_id=em.employee, user_id=user.id)
+
+                    # Create records for workload, personality, and misc
+                    try:
+                        # insert each element
+                        for element in workload:
+                            FacultyWorkload.objects.create(employee=em, workload=element, user=user, review=u_rate)
+                        for element in personality:
+                            FacultyPersonality.objects.create(employee=em, personality=element, user=user, review=u_rate)
+                        for element in misc:
+                            FacultyMiscellaneous.objects.create(employee=em, miscellaneous=element, user=user,
+                                                                review=u_rate)
+                    except:
+                        print('Failed to insert tags')
+
+                    try:
+                        # after each rate
+                        # Updates the teaching quality, exams difficulty, and overall rating scores
+                        update_scores(id)
+                        # similar_professors()
+                    except:
+                        print('Could not update scores')
+                except:
+                    print('Could not review')
+
+            elif item == 'course':
+                print('')
+
+            elif item == 'dept':
+                print('')
+
+        context = {
+            'item': item,
+            'id': id,
+        }
+
+    return render(request, 'reviewSubmitted.html', context)
+
+def course(request, id):
+    db, cursor = DB_connect()
+
+    cursor.execute(f'''
+        SELECT C.course_name, D.dept_name, C.overall_rating
+        FROM Course C
+        JOIN Department D
+            ON C.course DIV 1000 = D.department
+        WHERE course={id};
+    ''')
+    course = cursor.fetchone()
+
+    cursor.execute(f'''
+        SELECT count(*) as rev_count
+        FROM user_course_rev
+        WHERE course_id={id};
+    ''')
+    rev_count = cursor.fetchone()
+
+    cursor.execute(f'''
+        SELECT student_thoughts, enjoyment_rating, effort_required, upvotes, downvotes
+        FROM user_course_rev
+        WHERE course_id={id};
+    ''')
+    reviews = cursor.fetchall()
+
+    context = {
+        'course': id,
+        'course_name': course['course_name'],
+        'dept_name': course['dept_name'],
+        'overall_rating': course['overall_rating'],
+        'rev_count': rev_count['rev_count'],
+        'reviews': reviews,
+    }
+
+    cursor.close()
+    db.close()
+
+    return render(request, 'course.html', context)
+
+def dept(request, id):
+    db, cursor = DB_connect()
+
+    cursor.execute(f'''
+        SELECT dept_name, overall_rating, admin_support, activities
+        FROM Department
+        WHERE department={id};
+    ''')
+    dept = cursor.fetchone()
+
+    cursor.execute(f'''
+        SELECT count(*) as rev_count
+        FROM dept_gen_com
+        WHERE department_id={id};
+    ''')
+    rev_count = cursor.fetchone()
+
+    cursor.execute(f'''
+        SELECT general_comment
+        FROM dept_gen_com
+        WHERE department_id={id};
+    ''')
+    reviews = cursor.fetchall()
+
+    context = {
+        'department': id,
+        'dept_name': dept['dept_name'],
+        'overall_rating': dept['overall_rating'],
+        'admin_support': dept['admin_support'],
+        'activities': dept['activities'],
+        'rev_count': rev_count['rev_count'],
+        'reviews': reviews,
+    }
+
+    cursor.close()
+    db.close()
+
+    return render(request, 'dept.html', context)
+
 
 def test_comments(request):
     f = open('data.json', 'r')
@@ -30,11 +261,6 @@ def test_comments(request):
     }
 
     return render(request, './comm.html', result)
-
-
-# Create your views here.
-def home(request):
-    return render(request, './index.html')
 
 
 def test(request):
@@ -188,110 +414,6 @@ def professor(request, prof_id=None):
 
 
 @login_required(login_url='sign_in')
-def rate(request, prof_id=None):
-    uname = request.user.username
-    user = User.objects.get(username=uname)
-    faculty_id = prof_id
-
-    if request.method == 'POST':
-        print('Here')
-        recaptcha_response = request.POST['g-recaptcha-response']
-        data = {
-            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
-            'response': recaptcha_response
-        }
-        verify = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
-        status = verify.json()
-
-        print(status)
-        print('Got here')
-        if status['success']:
-            # D=request.POST['D']
-            # Let user include course, or choose in general
-            course_val = request.POST['course']
-            print(course_val)
-            if str.isdigit(course_val):
-                course_code = course_val
-                try:
-                    course_instance = Course.objects.get(course=course_code)
-                except:
-                    return render(request, './error.html')
-            else:
-                course_name = course_val
-                try:
-                    course_instance = Course.objects.get(course_name=course_name)
-                except:
-                    return render(request, './error.html')
-
-            quality = request.POST['quality']
-            difficulty = request.POST['difficulty']
-            overall_rate = request.POST['rate']
-            workload = request.POST.getlist('workload')
-            personality = request.POST.getlist('personality')
-            misc = request.POST.getlist('misc')
-            comment = request.POST['comment']
-
-            try:
-                em = Employee.objects.get(employee=faculty_id)
-                u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
-                                                       student_thoughts=comment,
-                                                       teaching_quality=quality, course_id=course_instance.course,
-                                                       employee_id=em.employee, user_id=user.id)
-
-                # Create records for workload, personality, and misc
-
-                try:
-                    # insert each element
-                    for element in workload:
-                        FacultyWorkload.objects.create(employee=em, workload=element, user=user, review=u_rate)
-                    for element in personality:
-                        FacultyPersonality.objects.create(employee=em, personality=element, user=user, review=u_rate)
-                    for element in misc:
-                        FacultyMiscellaneous.objects.create(employee=em, miscellaneous=element, user=user,
-                                                            review=u_rate)
-                except:
-                    print('Failed to insert tags')
-
-                if u_rate:
-                    print('A record has been created')
-
-                print('Success')
-
-                try:
-                    # after each rate
-                    # Updates the teaching quality, exams difficulty, and overall rating scores
-                    update_scores(faculty_id)
-                    # similar_professors()
-                except:
-                    print('Could not update scores')
-            except:
-                print('Could not review')
-        else:
-            messages.error(request, 'Invalid reCAPTCHA. Please try again.')
-
-    return render(request, './reviewSubmitted.html', {'prof': faculty_id})
-
-
-@login_required(login_url='sign_in')
-def rate_page(request, prof_id):
-    p = Employee.objects.get(employee=prof_id)
-    dept = Department.objects.get(dept_name=p.department)
-    c = Course.objects.filter(course__contains=dept.department)
-    prof = Round_get(p, 2)
-    result = {
-        'fname': prof.fname,
-        'lname': prof.lname,
-        'pid': prof.employee,
-        'courses': c
-    }
-    return render(request, './rate.html', result)
-
-
-def search(request):
-    return render(request, './search.html')
-
-
-@login_required(login_url='sign_in')
 def queue(request):
     # we need professor id and user id
     user_id = request.user.id
@@ -441,11 +563,6 @@ def sign_up(request):
 def logoutUser(request):
     logout(request)
     return redirect('home')
-
-
-def course(request):
-    return render(request, './course.html')
-
 
 @login_required(login_url='sign_in')
 def rate_course(request):
