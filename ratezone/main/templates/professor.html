@@ -30,7 +30,7 @@
     <script src="{% static '/admin/js/like_dislike.js' %}"></script>
     <script src="{% static '/admin/js/report.js' %}"></script>
 
-    <!-- <title>RMP</title> -->
+    <title>Ratezone - {{prof.fname}} {{prof.lname}}</title>
 </head>
 <body class="px-5 pt-2 pb-6
 text-xs sm:text-base lg:text-lg">
@@ -46,11 +46,11 @@ text-xs sm:text-base lg:text-lg">
                     <div>
                         <span class="font-semibold
                         text-xl md:text-2xl mb-2">
-                            {{ prof.fname }} {{ prof.lname }}
+                            {{prof.fname}} {{prof.lname}}
                         </span><br>
                         <span>
                             Kuwait University<br>
-                            {{ prof.department}} department
+                            {{prof.department}} department
                         </span>
                     </div>
                 </div>
@@ -75,7 +75,7 @@ text-xs sm:text-base lg:text-lg">
                     <button class="mb-3 py-2 px-4 w-full
                     flex gap-x-2 items-center text-left
                     hover:bg-neutral-300 border border-neutral-300 rounded-lg"
-                    onclick="location.href = `{% url 'rate_page' prof_id=prof.employee %}`;" >
+                    onclick="location.href = `{% url 'rate' item='instructor' id=prof.employee %}`;" >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
@@ -126,9 +126,6 @@ text-xs sm:text-base lg:text-lg">
 
             <div class="mt-4 md:mt-6 px-10 py-3
             text-center rounded-md bg-neutral-200">
-                <div class="mb-2">
-                    Recommended by <span class="font-semibold">{{ avg }}%</span> of students
-                </div>
                 <div>
                     Overall Rating
 		    <p class="font-bold text-xl lg:text-3xl">{{ prof.overall_rating }}/5</p>

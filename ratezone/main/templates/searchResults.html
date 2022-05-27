@@ -29,7 +29,7 @@
 
     <div id="Courses">
         {% for c in courses %}
-        <a href="{% url 'course' %}">
+        <a href="{% url 'course' id=c.course %}">
             <div class="my-4 py-3 border border-gray-300 rounded-lg
             flex gap-x-4 justify-between px-12
             hover:bg-neutral-300">
