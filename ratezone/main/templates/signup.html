@@ -47,9 +47,9 @@ text-xs sm:text-base lg:text-lg">
                         {% csrf_token %}
                         <div class="flex flex-col mb-5">
                             <label
-                            for="name"
+                            for="fname"
                             class="mb-1 text-xs tracking-wide text-gray-600">
-                                Name:
+                                First Name:
                             </label>
                             <div class="relative">
                                 <div class="
@@ -67,9 +67,9 @@ text-xs sm:text-base lg:text-lg">
                                 </div>
 
                                 <input
-                                id="name"
+                                id="fname"
                                 type="text"
-                                name="name" required
+                                name="fname" required
                                 class="
                                     text-sm
                                     placeholder-gray-500
@@ -81,10 +81,51 @@ text-xs sm:text-base lg:text-lg">
                                     py-2
                                     focus:outline-none focus:border-blue-400
                                 "
-                                placeholder="Enter your name"
+                                placeholder="Enter your first name"
                                 />
                             </div>
                         </div>
+                        <div class="flex flex-col mb-5">
+                            <label
+                            for="lname"
+                            class="mb-1 text-xs tracking-wide text-gray-600">
+                                Last Name:
+                            </label>
+                            <div class="relative">
+                                <div class="
+                                    inline-flex
+                                    items-center
+                                    justify-center
+                                    absolute
+                                    left-0
+                                    top-0
+                                    h-full
+                                    w-10
+                                    text-gray-400
+                                ">
+                                    <i class="fas fa-user text-blue-500"></i>
+                                </div>
+
+                                <input
+                                id="lname"
+                                type="text"
+                                name="lname" required
+                                class="
+                                    text-sm
+                                    placeholder-gray-500
+                                    pl-10
+                                    pr-4
+                                    rounded-2xl
+                                    border border-gray-400
+                                    w-full
+                                    py-2
+                                    focus:outline-none focus:border-blue-400
+                                "
+                                placeholder="Enter your last name"
+                                />
+                            </div>
+                        </div>
+
                         <div class="flex flex-col mb-5">
                             <label
                             for="username"
@@ -207,7 +248,50 @@ text-xs sm:text-base lg:text-lg">
                                 placeholder="Enter your password"
                                 />
                             </div>
+
+
+                         <div class="flex flex-col mb-6">
+                            <label
+                                for="major"
+                                class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
+                                    Major (Optional):
+                            </label>
+                            <div class="relative">
+                                <div class="
+                                    inline-flex
+                                    items-center
+                                    justify-center
+                                    absolute
+                                    left-0
+                                    top-0
+                                    h-full
+                                    w-10
+                                    text-gray-400"
+                                >
+                                    <span>
+                                        <i class="fas fa-lock text-blue-500"></i>
+                                    </span>
+                                </div>
+
+                                <input
+                                id="major"
+                                type="text"
+                                name="major"
+                                class="
+                                    text-sm
+                                    placeholder-gray-500
+                                    pl-10
+                                    pr-4
+                                    rounded-2xl
+                                    border border-gray-400
+                                    w-full
+                                    py-2
+                                    focus:outline-none focus:border-blue-400"
+                                placeholder="Enter your Major"
+                                />
+                            </div>
                         </div>
+
 
                         <div class="flex w-full">
                             <button
@@ -233,6 +317,7 @@ text-xs sm:text-base lg:text-lg">
                                 duration-150
                                 ease-in"
                             >
+
                                 <span class="mr-2 uppercase" >Sign Up</span>
                                 <span>
                                     <svg

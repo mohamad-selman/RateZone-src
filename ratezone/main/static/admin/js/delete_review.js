@@ -10,11 +10,11 @@ function delete_review(rev_id) {
             },
 
             success: function(res, status) {
-                console.log('Success')
-                alert('Review Deleted')
+                Swal.fire(  'Review successfully deleted',  '', 'success')
+                location.reload();
             },
             error: function(res, status) {
-                alert('Error!' + res + status);
+                Swal.fire(  'Review could not be deleted',  '', 'error')
             }
         })
 }

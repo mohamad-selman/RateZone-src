@@ -18,6 +18,15 @@ urlpatterns = [
     path('report/', views.report, name='report'),
     # path('follow/', views.follow_updates, name='follow_updates'),
     path('delete_review/', views.delete_review, name='delete_review'),
+<<<<<<< HEAD
+=======
+    path('change_username/', views.change_username, name='change_username'),
+    path('change_fname/', views.change_fname, name='change_fname'),
+    path('change_lname/', views.change_lname, name='change_lname'),
+    path('change_email/', views.change_email, name='change_email'),
+    path('rate_page/<int:prof_id>/', views.rate_page, name='rate_page'),
+    path('rateCourse', views.rate_course, name='rate_course'),
+>>>>>>> ec804db58db847e6cb87ab5ab381c7534ba4e58e
     path('search/', views.search, name='search'),
     path('searchResults/', views.searchResults, name='searchResults'),
     path('login/', views.sign_in, name='sign_in'),
