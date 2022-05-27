@@ -18,6 +18,7 @@ from django.db.models import Q
 from django.views.decorators.http import require_http_methods
 from .db import DB_connect
 
+
 def test_comments(request):
     f = open('data.json', 'r')
     print(f)
@@ -120,7 +121,7 @@ def searchResults(request):
     context = {
         'employee': employee,
         'courses': courses,
-        'next': request.POST['next'], # redirect to the rating form or to the reviews page
+        'next': request.POST['next'],  # redirect to the rating form or to the reviews page
     }
 
     cursor.close()

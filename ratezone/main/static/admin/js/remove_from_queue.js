@@ -1,19 +1,12 @@
-$(document).ready(function() {
+function removeFromQ(pid) {
 
-    $('#removeFrom-queue').click(function(event) {
-        event.preventDefault();
-        alert('You are here');
-        var tmp = $(this).val();
-        alert(tmp);
         $.ajax({
-            url: '/remove_from_queue/' + tmp,
+            url: '/remove_from_queue/' + pid,
             success: function() {
-                alert('Professor removed from queue');
+                Swal.fire(  'Professor Removed From Queue',  '', 'success')
             },
             error: function(retval, status) {
-                alert(retval + ' : ' + status);
+                Swal.fire(  'Professor Could Not be Removed From Queue',  '', 'error')
             }
         })
-    })
-
-})
+    }
