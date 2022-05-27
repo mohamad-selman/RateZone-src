@@ -15,11 +15,8 @@ from django.contrib import messages
 from json import loads
 from django.http import JsonResponse
 from django.db.models import Q
-
-mydb = mysql.connector.connect(database='ratezoneDB',
-                               user='ratezone_userAdmin', password='ratezone@123')
-cursors = mydb.cursor()
-
+from django.views.decorators.http import require_http_methods
+from .db import DB_connect
 
 def test_comments(request):
     f = open('data.json', 'r')
@@ -91,60 +88,45 @@ def Round_get(obj, dec):
     return obj
 
 
+@require_http_methods(["POST"])
 def searchResults(request):
-    total_count = 0
-    if request.method == 'POST':
-        get_name = request.POST.get('tags')
-        name = get_name.strip()
-        get_names = name.split(' ')
+    db, cursor = DB_connect()
 
-        if len(get_names) == 1:
-            prof = Employee.objects.filter(Q(fname__icontains=get_names[0]) | Q(lname__icontains=get_names[0]))
-        else:
-            prof = Employee.objects.filter(fname__icontains=get_names[0], lname__icontains=get_names[1])
+    # Provide fuzzy matching
+    # Executed only once in order to add the indexes to the DB
+    # cursor.execute('CREATE FULLTEXT INDEX name ON Employee(fname, lname) WITH PARSER NGRAM;')
+    # cursor.execute('CREATE FULLTEXT INDEX cname ON Course(course_name) WITH PARSER NGRAM;')
 
-        prof = Round(prof, 2)
-        result = {
-            'professors': prof
-        }
-        return render(request, './searchResults.html', result)
+    input = request.POST['input']
 
-    prof = Employee.objects.all().order_by('-overall_rating')
-    prof = Round(prof, 2)
-    prof_count = len(prof)
+    cursor.execute(f'''
+        SELECT E.employee, E.fname, E.lname, D.dept_name, ROUND(E.overall_rating, 2) as overall_rating
+        FROM Employee E
+        JOIN Department D
+            ON E.department_id = D.department
+        WHERE MATCH(fname, lname) AGAINST('{input}' IN NATURAL LANGUAGE MODE);
+    ''')
+    employee = cursor.fetchall()
 
-    CS_dept = Employee.objects.filter(department_id=418).order_by('-overall_rating')
-    CS_dept = Round(CS_dept, 2)
-    cs_count = len(CS_dept)
+    cursor.execute(f'''
+        SELECT C.course, C.course_name, D.dept_name, ROUND(C.overall_rating, 2) as overall_rating
+        FROM Course C
+        JOIN Department D
+            ON C.course DIV 1000 = D.department
+        WHERE MATCH(course_name) AGAINST('{input}' IN NATURAL LANGUAGE MODE);
+    ''')
+    courses = cursor.fetchall()
 
-    CE_dept = Employee.objects.filter(department_id=1612).order_by('-overall_rating')
-    CE_dept = Round(CE_dept, 2)
-    ce_count = len(CE_dept)
-
-    IS_dept = Employee.objects.filter(department_id=1830).order_by('-overall_rating')
-    IS_dept = Round(IS_dept, 2)
-    is_count = len(IS_dept)
-
-    MATH_dept = Employee.objects.filter(department_id=410).order_by('-overall_rating')
-    MATH_dept = Round(MATH_dept, 2)
-    math_count = len(MATH_dept)
-
-    courses = Course.objects.all()
-
-    tmp1 = Department.objects.all().count()
-    tmp2 = Course.objects.all().count()
-    total_count = tmp1 + tmp2 + prof_count + ce_count + cs_count + math_count + is_count
-    result = {
-        'professors': prof,
-        'CS_dept': CS_dept,
-        'CE_dept': CE_dept,
-        'IS_dept': IS_dept,
-        'MATH_dept': MATH_dept,
+    context = {
+        'employee': employee,
         'courses': courses,
-        'count': total_count
+        'next': request.POST['next'], # redirect to the rating form or to the reviews page
     }
 
-    return render(request, './searchResults.html', result)
+    cursor.close()
+    db.close()
+
+    return render(request, './searchResults.html', context)
 
 
 def professorTwo(request, prof_name):
@@ -369,11 +351,16 @@ def remove_from_queue(request, prof_id=None):
     user_id = user.id
     # print(f'{user_id} and {faculty_id}')
     try:
+        db, cursor = DB_connect()
 
         deletion_query = "DELETE FROM Employee_users WHERE user_id=%s AND employee_id=%s"
         data = (user_id, faculty_id)
-        cursors.execute(deletion_query, data)
+        cursor.execute(deletion_query, data)
         print('executed successfully')
+
+        cursor.close()
+        db.close()
+
     except:
         print('Error')
     return HttpResponse(status=200)

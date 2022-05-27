@@ -1,379 +1,49 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
+<div class="w-full">
+    <!-- <p class="mt-4 mb-4">
+        <span class="font-medium">{{count}}</span> total search results
+    </p> -->
 
-    <link rel="stylesheet" href="../static/admin/css/main.css">
-    <script>
-        function loadAll() {
-            var ptmp = document.getElementById("Professors");
-            var ctmp = document.getElementById("Courses");
-            var tatmp = document.getElementById("TAs");
-
-            var CSdept_vals = document.getElementById("CSDept");
-            var CEdept_vals = document.getElementById("CEDept");
-            var ISdept_vals = document.getElementById("ISDept");
-            var MATHdept_vals = document.getElementById("MATHDept");
-
-            ctmp.style.display = "block";
-            ptmp.style.display = "block";
-            tatmp.style.display = "block";
-
-            CSdept_vals.style.display = "none";
-            CEdept_vals.style.display = "none";
-            ISdept_vals.style.display = "none";
-            MATHdept_vals.style.display = "none";
-        }
-
-        function loadCourses() {
-            var ptmp = document.getElementById("Professors");
-            var ctmp = document.getElementById("Courses");
-            var tatmp = document.getElementById("TAs");
-
-            var CSdept_vals = document.getElementById("CSDept");
-            var CEdept_vals = document.getElementById("CEDept");
-            var ISdept_vals = document.getElementById("ISDept");
-            var MATHdept_vals = document.getElementById("MATHDept");
-
-            ctmp.style.display = "block";
-            ptmp.style.display = "none";
-            tatmp.style.display = "none";
-            CSdept_vals.style.display = "none";
-            CEdept_vals.style.display = "none";
-            ISdept_vals.style.display = "none";
-            MATHdept_vals.style.display = "none";
-        }
-
-        function loadProfessors() {
-            var ptmp = document.getElementById("Professors");
-            var ctmp = document.getElementById("Courses");
-            var tatmp = document.getElementById("TAs");
-
-            var CSdept_vals = document.getElementById("CSDept");
-            var CEdept_vals = document.getElementById("CEDept");
-            var ISdept_vals = document.getElementById("ISDept");
-            var MATHdept_vals = document.getElementById("MATHDept");
-
-            ptmp.style.display = "block";
-            ctmp.style.display = "none";
-            tatmp.style.display = "none";
-
-            CSdept_vals.style.display = "none";
-            CEdept_vals.style.display = "none";
-            ISdept_vals.style.display = "none";
-            MATHdept_vals.style.display = "none";
-        }
-
-        function loadTAs() {
-            var ptmp = document.getElementById("Professors");
-            var ctmp = document.getElementById("Courses");
-            var tatmp = document.getElementById("TAs");
-
-            var CSdept_vals = document.getElementById("CSDept");
-            var CEdept_vals = document.getElementById("CEDept");
-            var ISdept_vals = document.getElementById("ISDept");
-            var MATHdept_vals = document.getElementById("MATHDept");
-
-            tatmp.style.display = "block";
-            ctmp.style.display = "none";
-            ptmp.style.display = "none";
-
-            CSdept_vals.style.display = "none";
-            CEdept_vals.style.display = "none";
-            ISdept_vals.style.display = "none";
-            MATHdept_vals.style.display = "none";
-        }
-
-        function load_CS() {
-            var ptmp = document.getElementById("Professors");
-            var ctmp = document.getElementById("Courses");
-            var tatmp = document.getElementById("TAs");
-
-            var CSdept_vals = document.getElementById("CSDept");
-            var CEdept_vals = document.getElementById("CEDept");
-            var ISdept_vals = document.getElementById("ISDept");
-            var MATHdept_vals = document.getElementById("MATHDept");
-
-            ctmp.style.display = "none";
-            tatmp.style.display = "none";
-            ptmp.style.display = "none";
-
-            CSdept_vals.style.display = "block";
-            CEdept_vals.style.display = "none";
-            ISdept_vals.style.display = "none";
-            MATHdept_vals.style.display = "none";
-        }
-
-        function load_CE() {
-            var ptmp = document.getElementById("Professors");
-            var ctmp = document.getElementById("Courses");
-            var tatmp = document.getElementById("TAs");
-
-            var CSdept_vals = document.getElementById("CSDept");
-            var CEdept_vals = document.getElementById("CEDept");
-            var ISdept_vals = document.getElementById("ISDept");
-            var MATHdept_vals = document.getElementById("MATHDept");
-
-            ctmp.style.display = "none";
-            tatmp.style.display = "none";
-            ptmp.style.display = "none";
-
-            CSdept_vals.style.display = "none";
-            CEdept_vals.style.display = "block";
-            ISdept_vals.style.display = "none";
-            MATHdept_vals.style.display = "none";
-        }
-
-        function load_IS() {
-            var ptmp = document.getElementById("Professors");
-            var ctmp = document.getElementById("Courses");
-            var tatmp = document.getElementById("TAs");
-
-            var CSdept_vals = document.getElementById("CSDept");
-            var CEdept_vals = document.getElementById("CEDept");
-            var ISdept_vals = document.getElementById("ISDept");
-            var MATHdept_vals = document.getElementById("MATHDept");
-
-            ctmp.style.display = "none";
-            tatmp.style.display = "none";
-            ptmp.style.display = "none";
-
-            CSdept_vals.style.display = "none";
-            CEdept_vals.style.display = "none";
-            MATHdept_vals.style.display = "none";
-            ISdept_vals.style.display = "block";
-        }
-
-        function load_MATH() {
-            var ptmp = document.getElementById("Professors");
-            var ctmp = document.getElementById("Courses");
-            var tatmp = document.getElementById("TAs");
-
-            var CSdept_vals = document.getElementById("CSDept");
-            var CEdept_vals = document.getElementById("CEDept");
-            var ISdept_vals = document.getElementById("ISDept");
-            var MATHdept_vals = document.getElementById("MATHDept");
-
-            ctmp.style.display = "none";
-            tatmp.style.display = "none";
-            ptmp.style.display = "none";
-
-            CSdept_vals.style.display = "none";
-            CEdept_vals.style.display = "none";
-            ISdept_vals.style.display = "none";
-            MATHdept_vals.style.display = "block";
-        }
-    </script>
-
-</head>
-<body class="px-5 pt-2 pb-6
-text-xs sm:text-base lg:text-lg">
-    {% include 'header.html' %}
-
-
-    <div class="mt-6 w-full lg:w-3/4">
-        <p class="mt-4 mb-4">
-            <span class="font-medium">{{ count }}</span> total search results
-        </p>
-
-	{% include 'filter_dropdown.html' %}
-
-        <div id="Professors">
-	    {% for prof in professors %}
-            <a href="{% url 'professor' prof_id=prof.employee %}">
+    <div id="Professors">
+        {% for e in employee %}
+            {% if next == 'f' %}
+            <a href="{% url 'professor' prof_id=e.employee %}">
+            {% else %}
+            <a href="{% url 'rate_page' prof_id=e.employee %}">
+            {% endif %}
                 <div class="my-4 py-3 border border-gray-300 rounded-lg
-                flex gap-x-4 justify-between px-12
+                flex gap-x-7 px-7
                 hover:bg-neutral-300">
-
-                    <span>
-                        <span class="font-medium">{{ prof.fname }} {{ prof.lname }}</span><br>
-                        {{ prof.department }} Department<br>
+                    <span class="w-3/4">
+                        <span class="font-medium">{{e.fname}} {{e.lname}}</span><br>
+                        {{e.dept_name}} Department<br>
                         Kuwait University
                     </span>
-                    {% if prof.overall_rating %}
-		    <div>
+                    <div class="w-1/4">
                         <p>Overall Rating</p>
-			<p class="md:ml-2"><span class="text-2xl">{{ prof.overall_rating }}</span>/5</p>
-                    </div>
-		    {% else %}
-                    <div>
-                        <p>Overall Rating</p>
-                        <p class="md:ml-2"><span class="text-2xl">NA</span>/5</p>
-		    </div>
-                    {% endif %}
-		</div>
-            </a>
-	    {% endfor %}
-        </div>
-	   <div id="TAs">
-            {% for ta in TAs %}
-            <a href=" url 'professor' prof_id=ta.employee %}">
-                <div class="my-4 py-3 border border-gray-300 rounded-lg
-                flex gap-x-4 justify-between px-12
-                hover:bg-neutral-300">
-                    <span>
-                        <span class="font-medium">{{ ta.fname }} {{ ta.lname }}</span><br>
-                        {{ ta.department }} department<br>
-                        Kuwait University
-                    </span>
-                    <div>
-                        <p>Overall Rating</p>
-                        {% if ta.overall_rating %}
-                            <p class="md:ml-2"><span class="text-2xl">{{ ta.overall_rating }}</span>/5</p>
-                        {% else %}
-                            <p class="md:ml-2"><span class="text-2xl">NA</span>/5</p>
-                        {% endif %}
+                        <p class="md:ml-2"><span class="text-2xl">{{e.overall_rating | default_if_none:"NA"}}</span>/5</p>
                     </div>
                 </div>
             </a>
-	    {% endfor %}
-        </div>
-
-        <div id="Courses">
-            {% for course in courses %}
-            <a href="{% url 'course' %}">
-                <div class="my-4 py-3 border border-gray-300 rounded-lg
-                flex gap-x-4 justify-between px-12
-                hover:bg-neutral-300">
-                    <span>
-                        <span class="font-medium">{{ course.course }}: {{ course.course_name}}</span><br>
-                        {{ course.department }} department<br>
-                        Kuwait University
-                    </span>
-                    <div>
-                        <p>Overall Rating</p>
-                        {% if course.overall_rating %}
-                            <p class="md:ml-2"><span class="text-2xl">{{ course.overall_rating }}</span>/5</p>
-                        {% else %}
-                            <p class="md:ml-2"><span class="text-2xl">NA</span>/5</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-
-        <div id="CSDept">
-	    {% for dep in CS_dept %}
-            <a href="{% url 'professor' prof_id=dep.employee %}">
-                <div class="my-4 py-3 border border-gray-300 rounded-lg
-                flex gap-x-4 justify-between px-12
-                hover:bg-neutral-300">
-                    <span>
-                        <span class="font-medium">{{ dep.fname }} {{ dep.lname }}</span><br>
-                        {{ dep.department }} Department<br>
-                        Kuwait University
-                    </span>
-                    <div>
-                        <p>Overall Rating</p>
-                        {% if dep.overall_rating %}
-			            <p class="md:ml-2">
-                            <span class="text-2xl">{{ dep.overall_rating }}</span>/5
-                        </p>
-                        {% else %}
-			            <p class="md:ml-2">
-                            <span class="text-2xl">NA</span>/5
-                        </p>
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-	    {% endfor %}
-        </div>
-
-
-        <div id="CEDept">
-            {% for dep in CE_dept %}
-            <a href="{% url 'professor' prof_id=dep.employee %}">
-                <div class="my-4 py-3 border border-gray-300 rounded-lg
-                flex gap-x-4 justify-between px-12
-                hover:bg-neutral-300">
-                    <span>
-                        <span class="font-medium">{{ dep.fname }} {{ dep.lname }}</span><br>
-                        {{ dep.department }} department<br>
-                        Kuwait University
-                    </span>
-                    <div>
-                        {% if dep.overall_rating %}
-                            <p>Overall Rating</p>
-                            <p class="md:ml-2">
-                                <span class="text-2xl">{{dep.overall_rating}}</span>/5
-                            </p>
-                        {% else %}
-                            <p>Overall Rating</p>
-                            <p class="md:ml-2">
-                                <span class="text-2xl">NA</span>/5
-                            </p>
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-
-
-
-        <div id="ISDept">
-            {% for dep in IS_dept %}
-            <a href="{% url 'professor' prof_id=dep.employee %}">
-                <div class="my-4 py-3 border border-gray-300 rounded-lg
-                flex gap-x-4 justify-between px-12
-                hover:bg-neutral-300">
-                    <span>
-                        <span class="font-medium">{{ dep.fname }} {{ dep.lname }}</span><br>
-                        {{ dep.department }} department<br>
-                        Kuwait University
-                    </span>
-                    <div>
-                        <p>Overall Rating</p>
-                        {% if dep.overall_rating %}
-			            <p class="md:ml-2">
-                            <span class="text-2xl">{{ dep.overall_rating }}</span>/5
-                        </p>
-                        {% else %}
-			            <p class="md:ml-2">
-                            <span class="text-2xl">NA</span>/5
-                        </p>
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-	
-        <div id="MATHDept">
-	    {% for dep in MATH_dept %}
-            <a href="{% url 'professor' prof_id=dep.employee %}">
-                <div class="my-4 py-3 border border-gray-300 rounded-lg
-                flex gap-x-4 justify-between px-12
-                hover:bg-neutral-300">
-                    <span>
-                        <span class="font-medium">{{ dep.fname }} {{ dep.lname }}</span><br>
-                        {{ dep.department }} department<br>
-                        Kuwait University
-                    </span>
-                    <div>
-                        <p>Overall Rating</p>
-                        {% if dep.overall_rating %}
-			            <p class="md:ml-2">
-                            <span class="text-2xl">{{ dep.overall_rating }}</span>/5
-                        </p>
-                        {% else %}
-			            <p class="md:ml-2">
-                            <span class="text-2xl">NA</span>/5
-                        </p>
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-	    {% endfor %}
-        </div>
-
-
+        {% endfor %}
     </div>
-</body>
-</html>
+
+    <div id="Courses">
+        {% for c in courses %}
+        <a href="{% url 'course' %}">
+            <div class="my-4 py-3 border border-gray-300 rounded-lg
+            flex gap-x-4 justify-between px-12
+            hover:bg-neutral-300">
+                <span>
+                    <span class="font-medium">{{c.course}}: {{c.course_name}}</span><br>
+                    {{c.dept_name}} department<br>
+                    Kuwait University
+                </span>
+                <div>
+                    <p>Overall Rating</p>
+                    <p class="md:ml-2"><span class="text-2xl">{{c.overall_rating | default_if_none:"NA"}}</span>/5</p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
