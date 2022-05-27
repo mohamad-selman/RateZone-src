@@ -7,7 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static '/admin/css/main.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="{% static '/admin/js/delete_review.js' %}"></script>
+        <script src="{% static '/admin/js/change.js' %}"></script>
     <script>
         function myFunction() {
             var x = document.getElementById("myInput");
@@ -24,16 +27,6 @@
         function deleteProfessor1() {
             var tmp = document.getElementById("prof1");
             tmp.style.display = "none";
-        }
-        function modifyText(id) {
-            var tmp = document.getElementById(id);
-            // prompt the user to enter new text
-            var text = window.prompt('Enter the new value: ')
-            if (text === "") {
-                alert('ERROR! You must enter a value');
-                return;
-            }
-            tmp.innerHTML = text;
         }
     </script>
     <!-- <title>RMP</title> -->
@@ -56,9 +49,9 @@ text-xs sm:text-base lg:text-lg">
             gap-x-4 sm:gap-x-10">
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden" >
-                    <strong>First Name:</strong><p id="Fname">{{ user.username }}</p>
+                    <strong>First Name:</strong><p id="Fname">{{ user.first_name }}</p>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                    onclick="modifyText('Fname')">
+                    onclick="change_fname()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
                 </div>
@@ -70,17 +63,16 @@ text-xs sm:text-base lg:text-lg">
                     {% else %}
                         <strong>Last Name:</strong><p  id="">--------</p>
                     {% endif %}
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                    onclick="modifyText('Lname')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" onclick="change_lname()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
                 </div>
 
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
-                flex gap-x-4 justify-around overflow-hidden">
-                    <strong>School:</strong><p id="school">Kuwait University</p>
+                flex gap-x-4 justify-around overflow-hidden" >
+                    <strong>Username :</strong><p id="uname">{{ user.username }}</p>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                    onclick="modifyText('school')">
+                    onclick="change_username()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
                 </div>
@@ -88,12 +80,11 @@ text-xs sm:text-base lg:text-lg">
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden" >
                     {% if user.major %}
-                        <strong>Major:</strong><p>user.major</p>
+                        <strong>Major:</strong><p id="major">user.major</p>
                     {% else %}
                         <strong>Major:</strong><p>--------</p>
                     {% endif %}
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                    onclick="modifyText('major')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" onclick="change_major()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
                 </div>
@@ -110,8 +101,7 @@ text-xs sm:text-base lg:text-lg">
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden">
                     <strong>Email:</strong><p id= "email">{{ user.email }}</p>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                    onclick="modifyText('email')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" onclick="change_email()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
                 </div>

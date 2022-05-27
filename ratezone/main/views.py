@@ -56,8 +56,9 @@ def test2(request):
             urls[e.employee] = '/professor/' + str(e.employee)
 
         return render(request, './search_results_htmx.html', {"results": results, "urls": urls})
-    
+
     return render(request, './blank.html')
+
 
 # the function takes the query result and the cursor description of an executed query
 # converts from a tuple-like notation to dictionary-like notation
@@ -329,6 +330,14 @@ def add_to_queue(request):
         faculty_id = prof_id
         uname = request.user.username
         user = User.objects.get(username=uname)
+        try:
+            e = Employee.objects.get(employee=faculty_id)
+            emp = Employee.objects.filter(users=user)
+            for element in emp:
+                if element == e:
+                    return HttpResponse(status=400)
+        except:
+            print('Error here')
         user_id = user.id
         try:
             if prof_id is not None:
@@ -419,17 +428,19 @@ def sign_up(request):
 
         if status['success']:
             print('Heree')
-            fname = request.POST['name']
+            fname = request.POST['fname']
+            lname = request.POST['lname']
             username = request.POST['username']
             user_email = request.POST['email']
             passw = request.POST['password']
+            major = request.POST['major']
 
-            print(f'Record: {fname}, {username}, {user_email}, {passw}')
+            print(f'Record: {fname}, {lname}, {username}, {user_email}, {passw}, {major}')
 
             try:
                 print('Here')
-                User.objects.create_user(password=passw, username=username, first_name=fname, email=user_email)
-                print('HI')
+                User.objects.create_user(password=passw, username=username, first_name=fname, last_name=lname,
+                                         email=user_email, major=major)
                 print('Got here')
                 return redirect('sign_in')
             except:
@@ -644,5 +655,57 @@ def delete_review(request):
             print('Could not delete review')
         print('Redirect to dashboard')
         return redirect(dashboard)
+
+    return render(request, './error.html')
+
+
+@login_required(login_url='sign_in')
+def change_username(request):
+    if request.method == "POST":
+        uname = request.user.username
+        user = User.objects.get(username=uname)
+        new_username = request.POST.get('uname')
+        user.username = new_username
+        user.save()
+        return HttpResponse(user.username)
+
+    return render(request, './error.html')
+
+
+@login_required(login_url='sign_in')
+def change_fname(request):
+    if request.method == "POST":
+        uname = request.user.username
+        user = User.objects.get(username=uname)
+        new_fname = request.POST.get('fname')
+        user.first_name = new_fname
+        user.save()
+        return HttpResponse(user.first_name)
+
+    return render(request, './error.html')
+
+
+@login_required(login_url='sign_in')
+def change_lname(request):
+    if request.method == "POST":
+        uname = request.user.username
+        user = User.objects.get(username=uname)
+        new_lname = request.POST.get('lname')
+        user.last_name = new_lname
+        user.save()
+        return HttpResponse(user.last_name)
+
+    return render(request, './error.html')
+
+
+@login_required(login_url='sign_in')
+def change_email(request):
+    if request.method == "POST":
+        uname = request.user.username
+        user = User.objects.get(username=uname)
+        new_email = request.POST.get('email')
+        user.email = new_email
+        user.save()
+        return HttpResponse(user.email)
 
     return render(request, './error.html')
