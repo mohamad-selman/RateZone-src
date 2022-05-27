@@ -19,7 +19,6 @@ from django.db.models import Q
 from django.views.decorators.http import require_http_methods
 from .db import DB_connect
 
-<<<<<<< HEAD
 def home(request):
     return render(request, './index.html')
 
@@ -250,8 +249,6 @@ def dept(request, id):
 
     return render(request, 'dept.html', context)
 
-=======
->>>>>>> ec804db58db847e6cb87ab5ab381c7534ba4e58e
 
 def test_comments(request):
     f = open('data.json', 'r')
