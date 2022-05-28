@@ -33,6 +33,7 @@ class Department(models.Model):
     dept_name = models.CharField(max_length=50)
     overall_rating = models.FloatField(blank=True, null=True)
     admin_support = models.FloatField(blank=True, null=True)
+    activities = models.FloatField(blank=True, null=True)
     users = models.ManyToManyField(User)
 
     objects = models.Manager()
