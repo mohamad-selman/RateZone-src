@@ -19,11 +19,14 @@ from django.db.models import Q
 from django.views.decorators.http import require_http_methods
 from .db import DB_connect
 
+
 def home(request):
     return render(request, './index.html')
 
+
 def search(request):
     return redirect('home')
+
 
 @login_required(login_url='sign_in')
 def rate(request, item, id):
@@ -89,6 +92,7 @@ def rate(request, item, id):
 
     return render(request, 'rate.html', context)
 
+
 @login_required(login_url='sign_in')
 def submit_rate(request, item, id):
     uname = request.user.username
@@ -130,9 +134,9 @@ def submit_rate(request, item, id):
                 try:
                     em = Employee.objects.get(employee=id)
                     u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
-                                                        student_thoughts=comment,
-                                                        teaching_quality=quality, course_id=course_instance.course,
-                                                        employee_id=em.employee, user_id=user.id)
+                                                           student_thoughts=comment,
+                                                           teaching_quality=quality, course_id=course_instance.course,
+                                                           employee_id=em.employee, user_id=user.id)
 
                     # Create records for workload, personality, and misc
                     try:
@@ -140,7 +144,8 @@ def submit_rate(request, item, id):
                         for element in workload:
                             FacultyWorkload.objects.create(employee=em, workload=element, user=user, review=u_rate)
                         for element in personality:
-                            FacultyPersonality.objects.create(employee=em, personality=element, user=user, review=u_rate)
+                            FacultyPersonality.objects.create(employee=em, personality=element, user=user,
+                                                              review=u_rate)
                         for element in misc:
                             FacultyMiscellaneous.objects.create(employee=em, miscellaneous=element, user=user,
                                                                 review=u_rate)
@@ -169,6 +174,7 @@ def submit_rate(request, item, id):
         }
 
     return render(request, 'reviewSubmitted.html', context)
+
 
 def course(request, id):
     db, cursor = DB_connect()
@@ -209,6 +215,7 @@ def course(request, id):
     db.close()
 
     return render(request, 'course.html', context)
+
 
 def dept(request, id):
     db, cursor = DB_connect()
@@ -563,6 +570,7 @@ def sign_up(request):
 def logoutUser(request):
     logout(request)
     return redirect('home')
+
 
 @login_required(login_url='sign_in')
 def rate_course(request):
