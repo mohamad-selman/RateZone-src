@@ -30,17 +30,17 @@ text-xs sm:text-base lg:text-lg">
     </div>
     
     <div class="mt-4 flex justify-center gap-x-6">
-        <div class="px-4 py-2 sm:px-6
-        font-normal text-white text-center
-        rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]">
-            {% if item == 'instructor' %}
-            <a href="{% url 'professor' prof_id=id %}">Return to Instructor Page</a>
-            {% elif item == 'course' %}
-            <a href="{% url 'course' id=id %}">Return to Course Page</a>
-            {% elif item == 'dept' %}
-            <a href="{% url 'dept' id=id %}">Return to Department Page</a>
-            {% endif %}
-        </div>
+        {% if item == 'instructor' %}
+        <a class="px-4 py-2 sm:px-6 font-normal text-white text-center rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]"
+        href="{% url 'professor' prof_id=id %}">Return to Instructor Page</a>
+        {% elif item == 'course' %}
+        <a class="px-4 py-2 sm:px-6 font-normal text-white text-center rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]"
+        href="{% url 'course' id=id %}">Return to Course Page</a>
+        {% elif item == 'dept' %}
+        <a class="px-4 py-2 sm:px-6 font-normal text-white text-center rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]"
+        href="{% url 'dept' id=id %}">Return to Department Page</a>
+        {% endif %}
+
         <a href="{% url 'home' %}"
         class="px-4 py-2 sm:px-6
         font-normal text-white text-center
