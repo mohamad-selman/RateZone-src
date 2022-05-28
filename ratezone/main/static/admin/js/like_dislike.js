@@ -1,9 +1,10 @@
 function like(rev_id) {
-        if ( (document.querySelector('[name=csrfmiddlewaretoken]') ) == null) {
+        if ( document.querySelector('[name=csrfmiddlewaretoken]') === null) {
                 Swal.fire(  'You need to be logged in to like reviews',  '', 'error')
-                window.location.replace("https://ratezone.io/login");
-
-        }
+		setTimeout(function(){
+    			window.location.replace("https://ratezone.io/login");
+		}, 1500);
+	}
 
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 //        alert('Review ID is ' + rev_id)
@@ -43,11 +44,14 @@ function like(rev_id) {
 }
 
 function dislike(rev_id) {
-        if ( (document.querySelector('[name=csrfmiddlewaretoken]') ) == null) {
-                Swal.fire(  'You need to be logged in to like reviews',  '', 'error')
-                window.location.replace("https://ratezone.io/login");
 
+        if ( document.querySelector('[name=csrfmiddlewaretoken]') === null) {
+                Swal.fire(  'You need to be logged in to dislike reviews',  '', 'error')
+                setTimeout(function(){
+                        window.location.replace("https://ratezone.io/login");
+                }, 1500);
         }
+
 
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         $.ajax({
