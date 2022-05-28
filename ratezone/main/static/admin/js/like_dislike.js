@@ -1,7 +1,6 @@
 function like(rev_id) {
         if ( (document.querySelector('[name=csrfmiddlewaretoken]') ) == null) {
                 Swal.fire(  'You need to be logged in to like reviews',  '', 'error')
-                Swal.fire(  'You need to be logged in to like reviews',  '', 'error')
                 window.location.replace("https://ratezone.io/login");
 
         }
@@ -44,6 +43,12 @@ function like(rev_id) {
 }
 
 function dislike(rev_id) {
+        if ( (document.querySelector('[name=csrfmiddlewaretoken]') ) == null) {
+                Swal.fire(  'You need to be logged in to like reviews',  '', 'error')
+                window.location.replace("https://ratezone.io/login");
+
+        }
+
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         $.ajax({
             method: "POST",
