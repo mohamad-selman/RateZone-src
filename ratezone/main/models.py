@@ -69,6 +69,26 @@ class Employee(models.Model):
         db_table = 'Employee'
 
 
+class UserDeptRev(models.Model):
+    review = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, blank=True, null=True)
+    overall_rating = models.IntegerField()
+    support_rating = models.IntegerField()
+    activities_rating = models.IntegerField()
+    upvotes = models.IntegerField(blank=True, null=True)
+    downvotes = models.IntegerField(blank=True, null=True)
+    report_count = models.IntegerField(blank=True, null=True)
+    student_thoughts = models.CharField(max_length=500, blank=True, null=True)
+    # users = models.ManyToManyField(User, through='UserReactCourse')
+
+    objects = models.Manager()
+
+    class Meta:
+        db_table = 'user_dept_rev'
+        unique_together = (('user', 'department', 'review'),)
+
+
 class Course(models.Model):
     course = models.IntegerField(primary_key=True)
     course_name = models.CharField(max_length=50, null=True)
@@ -92,18 +112,8 @@ class Course(models.Model):
         db_table = 'Course'
 
 
-class DeptGeneralcomments(models.Model):
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    general_comment = models.CharField(max_length=255)
-
-    objects = models.Manager()
-
-    class Meta:
-        db_table = 'dept_gen_com'
-
-
 class UserCourseRev(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    # employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     review = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
@@ -113,7 +123,6 @@ class UserCourseRev(models.Model):
     report_count = models.IntegerField(blank=True, null=True)
     semester_period = models.CharField(max_length=50, blank=True, null=True)
     student_thoughts = models.CharField(max_length=500, blank=True, null=True)
-    course_tag = models.CharField(max_length=50, blank=True, null=True)
     enjoyment_rating = models.IntegerField()
     effort_required = models.IntegerField()
     # users = models.ManyToManyField(User, through='UserReactCourse')
@@ -123,6 +132,22 @@ class UserCourseRev(models.Model):
     class Meta:
         db_table = 'user_course_rev'
         unique_together = (('user', 'course', 'review'),)
+
+
+class CourseTags(models.Model):
+    review = models.ForeignKey(UserCourseRev, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    tag = models.CharField(max_length=50, null=True, blank=False, default="", editable=False)
+
+    objects = models.Manager()
+
+    def __str__(self):
+        retval = f"Course {self.course} has {self.tag}"
+        return retval
+
+    class Meta:
+        db_table = 'Course_tags'
+        unique_together = (('review', 'course', 'tag'),)
 
 
 class UserFacultyRev(models.Model):

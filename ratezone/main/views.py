@@ -158,10 +158,48 @@ def submit_rate(request, item, id):
                     print('Could not review')
 
             elif item == 'course':
-                print('')
+                db, cursor = DB_connect()
+
+                enjoyment = request.POST['enjoyment']
+                effort = request.POST['effort']
+                overall_rate = request.POST['rate']
+                tags = request.POST.getlist('tag')
+                comment = request.POST['comment']
+
+                cursor.execute(f'''
+                    INSERT INTO user_course_rev(user_id, course_id, enjoyment_rating, effort_required, overall_rating, student_thoughts)
+                    VALUES({request.user.id}, {id}, {enjoyment}, {effort}, {overall_rate}, '{comment}');
+                ''')
+
+                cursor.execute(f'''
+                    SELECT LAST_INSERT_ID() as review;
+                ''')
+                review = cursor.fetchone()['review']
+
+                for t in tags:
+                    cursor.execute(f'''
+                        INSERT INTO Course_tags(course_id, review_id, tag)
+                        VALUES({id}, {review}, '{t}');
+                    ''')
+
+                cursor.close()
+                db.close()
 
             elif item == 'dept':
-                print('')
+                db, cursor = DB_connect()
+
+                support = request.POST['support']
+                act = request.POST['act']
+                overall_rate = request.POST['rate']
+                comment = request.POST['comment']
+
+                cursor.execute(f'''
+                    INSERT INTO user_dept_rev(user_id, department_id, support_rating, activities_rating, overall_rating, student_thoughts)
+                    VALUES({request.user.id}, {id}, {support}, {act}, {overall_rate}, '{comment}');
+                ''')
+
+                cursor.close()
+                db.close()
 
         context = {
             'item': item,
@@ -222,14 +260,14 @@ def dept(request, id):
 
     cursor.execute(f'''
         SELECT count(*) as rev_count
-        FROM dept_gen_com
+        FROM user_dept_rev
         WHERE department_id={id};
     ''')
     rev_count = cursor.fetchone()
 
     cursor.execute(f'''
-        SELECT general_comment
-        FROM dept_gen_com
+        SELECT student_thoughts, upvotes, downvotes
+        FROM user_dept_rev
         WHERE department_id={id};
     ''')
     reviews = cursor.fetchall()
