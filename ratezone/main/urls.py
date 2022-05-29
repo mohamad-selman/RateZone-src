@@ -33,4 +33,7 @@ urlpatterns = [
     path('dept/<int:id>/', views.dept, name='dept'),
     path('rate/<str:item>/<int:id>/', views.rate, name='rate'),
     path('submit_rate/<str:item>/<int:id>/', views.submit_rate, name='submit_rate'),
+
+    # Abdulaziz Faraj
+    path('bot/',views.bot,name='bot'),
 ]
