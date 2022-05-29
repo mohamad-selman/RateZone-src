@@ -18,18 +18,44 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.views.decorators.http import require_http_methods
 from .db import DB_connect
-
-# Abdulaziz Faraj
 from django.core.mail import send_mail
 import os
 from twilio.rest import Client
 from datetime import datetime
+from .classification import predict
 
 def home(request):
     return render(request, './index.html')
 
 def search(request):
     return redirect('home')
+
+def labeled_reviews(request):
+    db, cursor = DB_connect()
+
+    cursor.execute(f'''
+        SELECT count(*) as count
+        FROM user_faculty_rev
+        WHERE helpful = 0;
+    ''')
+    total = cursor.fetchone()
+
+    cursor.execute(f'''
+        SELECT review, employee_id, user_id, teaching_quality, difficulty_rating, overall_rating, student_thoughts
+        FROM user_faculty_rev
+        WHERE helpful = 0;
+    ''')
+    reviews = cursor.fetchall()
+
+    context = {
+        'count': total['count'],
+        'reviews': reviews,
+    }
+
+    cursor.close()
+    db.close()
+
+    return render(request, 'labeled_reviews.html', context)
 
 @login_required(login_url='sign_in')
 def rate(request, item, id):
@@ -133,12 +159,18 @@ def submit_rate(request, item, id):
                 misc = request.POST.getlist('misc')
                 comment = request.POST['comment']
 
+                helpful = 1
+                if comment != None and len(comment) != 0:
+                   helpful = predict(comment)
+
                 try:
                     em = Employee.objects.get(employee=id)
-                    u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
-                                                        student_thoughts=comment,
-                                                        teaching_quality=quality, course_id=course_instance.course,
-                                                        employee_id=em.employee, user_id=user.id)
+                    u_rate = UserFacultyRev.objects.create(
+                                overall_rating=overall_rate, difficulty_rating=difficulty,
+                                student_thoughts=comment, helpful=helpful,
+                                teaching_quality=quality, course_id=course_instance.course,
+                                employee_id=em.employee, user_id=user.id
+                            )
 
                     # Create records for workload, personality, and misc
                     try:
@@ -309,8 +341,7 @@ def test_comments(request):
 
 def test(request):
     profs = Employee.objects.all()
-    return render(request, './index_old.html',
-                  {"Profs": profs})
+    return render(request, './index_old.html', {"Profs": profs})
 
 
 def test2(request):
@@ -438,7 +469,7 @@ def professor(request, prof_id=None):
     sim_prof = Round(sim_prof, 2)
 
     # get all revs
-    reviews = UserFacultyRev.objects.filter(employee_id=faculty_id).order_by('-review')
+    reviews = UserFacultyRev.objects.filter(employee_id=faculty_id).order_by('-helpful', '-review')
 
     workload = FacultyWorkload.objects.filter(employee_id=prof).values('workload').distinct()
     misc = FacultyMiscellaneous.objects.filter(employee_id=prof).values('miscellaneous').distinct()
