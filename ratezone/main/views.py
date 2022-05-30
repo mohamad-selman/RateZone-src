@@ -19,6 +19,14 @@ from django.db.models import Q
 from django.views.decorators.http import require_http_methods
 from .db import DB_connect
 
+<<<<<<< HEAD
+=======
+# Abdulaziz Faraj
+from django.core.mail import send_mail
+import os
+from twilio.rest import Client
+from datetime import datetime
+>>>>>>> b0231c1495a7f0c8c3b07f4759a216a5d8c31d08
 
 def home(request):
     return render(request, './index.html')
@@ -860,3 +868,114 @@ def change_email(request):
         return HttpResponse(user.email)
 
     return render(request, './error.html')
+
+
+
+account_sid = 'AC769a838aa381b9b6e804efb14d04faf7'
+auth_token = '7f33ba807192520ba912664d77ecb7ed'
+client = Client(account_sid, auth_token)
+
+# if request.method == 'POST':
+#         bot(request)
+
+@csrf_exempt
+def bot(request):
+    
+    
+    if request.method == 'POST':
+        message=request.POST["Body"]
+        message= message.split()
+        print(message)
+        how_send_name=request.POST["ProfileName"]
+        how_send_number=request.POST["From"]
+
+        str_m='Error'
+  
+        if (message[0]== "Department" or message[0]== "department") and len(message) ==1  :
+            d = Department.objects.all().order_by('dept_name')
+
+            str_m= 'Here all department in ku:\n'
+            j=1
+            for i in d :
+                str_m += '{}- {} \n'.format(j,i)
+                j+=1
+            
+            
+
+
+        elif (message[0]== "Department" or message[0]== "department") and  len(message)>1  :
+
+            try:
+                str_d=''
+                for z in range(1, len(message)) :
+                    str_d+= '{}'.format(message[z])
+                    if(z<(len(message)-1)):
+                        str_d+= ' '
+
+                # str_d+= 'A'
+                print(str_d)
+
+                d=Department.objects.get(dept_name=str_d)
+
+                p = Employee.objects.filter(main_rank='Faculty', department_id=d.department).order_by('fname')
+                # print(p)
+
+                str_m= 'Here all Instructor in *{}* department:\n'.format(d.dept_name)
+                j=1
+                for i in p :
+                    str_m += '{}- {} {}\n'.format(j,i.fname,i.lname)
+                    j+=1
+
+                if j==1:
+                    str_m='*NO Inofrmation to see*'
+
+            except:
+                str_m = 'Invalid input, Please try again'
+
+        elif message[0]== "Instructor" or message[0]== "instructor" :
+
+            try :
+            
+                fname = message[1]
+                lname = message[2]
+
+                em = Employee.objects.get(fname=fname, lname=lname)
+
+                
+                revs = UserFacultyRev.objects.filter(employee=em).order_by('-review')[0:3]
+                rev_count = UserFacultyRev.objects.filter(employee_id=em.employee).aggregate(Count('review'))
+
+
+                str_m= 'Here some information about Instructor:\n*{} {}*\n{} department \n\n'.format(message[1],message[2],em.department)
+                str_m += 'overall rating based on {} votes is: *{:.2f}/5*\n\n'.format(rev_count['review__count'],em.overall_rating)
+
+                j=1
+                for i in revs :
+                    str_m += '{}- Student({}):\noverall is {}\nthought is "{}"\n'.format(j,i.user,i.overall_rating,i.student_thoughts)
+                    j+=1
+
+                str_m += '\nfor more information about {} {}\nClick the URL:\n*https://ratezone.io/instructor/{}/* \n*OR* you can visit web site:\n*ratezone.io* '.format(message[1],message[2],em.employee)
+
+            except:
+                str_m = 'Invalid name, Please try again'
+
+        elif message[0]== "Help":
+            str_m='*Department*\nto list all departments\n\n*Department* <name of department>\nto list instructor names\n\n*Instructor* <name of instructor>\nsummary about instructor\n',
+
+        else :
+            str_m = "Wlcome {} to Rate zone BOT\nsend *Help* to show available option.\n".format(how_send_name)
+            
+
+        
+        
+        m=client.messages.create(
+            from_='whatsapp:+14155238886',
+            body=str_m,
+            to=how_send_number
+            )
+
+        # how_send_name=request.POST["ProfileName"]
+        # how_send_number=request.POST["From"]
+        #     print(request.POST)
+    print('Whatsapp connection :',how_send_number)
+    return HttpResponse("thank you")

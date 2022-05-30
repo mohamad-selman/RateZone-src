@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-ct*nrq-gfqbpgf0ntg(lneqhsfe374e%(vz5e^$#i$7po!im@_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['54.93.227.65', '127.0.0.1', '.ratezone.software', '.ratezone.io']
-
+ALLOWED_HOSTS = ['54.93.227.65', 'e8c5-37-37-176-165.in.ngrok.io','127.0.0.1', '.ratezone.software', '.ratezone.io']
 
 # Application definition
 
@@ -163,4 +162,6 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 GOOGLE_RECAPTCHA_SECRET_KEY = '6Lc_jHwfAAAAAKDwkKm7SMTGNn7laVbDACgumVJR'
+
+
 
