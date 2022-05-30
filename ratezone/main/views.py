@@ -9,7 +9,6 @@ from django.db.models import Avg, Sum, Count
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .decorators import *
-import mysql.connector
 from django.conf import settings
 import requests
 from django.contrib import messages
@@ -18,7 +17,6 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.views.decorators.http import require_http_methods
 from .db import DB_connect
-# Abdulaziz Faraj
 from django.core.mail import send_mail
 import os
 from twilio.rest import Client

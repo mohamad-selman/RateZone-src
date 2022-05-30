@@ -61,8 +61,8 @@ text-xs sm:text-base lg:text-lg">
                 bg-[#154854] text-white text-center py-2 px-4 rounded-lg">
                     Recommended by 89% of students
                 </div> -->
-    {% if user.is_authenticated %}
                 <div class="mt-3 md:mt-0">
+                    {% if user.is_authenticated %}
                     <button id="addP-to-queue" value="{{ prof.employee }}" class="mb-3 py-2 px-4 w-full
                     flex gap-x-2 items-center text-left
                     hover:bg-neutral-300 border border-neutral-300 rounded-lg">
@@ -71,6 +71,7 @@ text-xs sm:text-base lg:text-lg">
                         </svg>
                         Add Professor {{ prof.lname }} to My Queue
                     </button>
+                    {% endif %}
                     <input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
 
                     {% csrf_token %}
@@ -93,37 +94,6 @@ text-xs sm:text-base lg:text-lg">
                         Follow Updates
                     </button>
                 </div>
-    {% else %}
-                <div class="mt-3 md:mt-0">
-                    <button class="mb-3 py-2 px-4 w-full
-                    flex gap-x-2 items-center text-left
-                    hover:bg-neutral-300 border border-neutral-300 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        Add Professor {{ prof.lname }} to My Queue
-                    </button>
-                    <button class="mb-3 py-2 px-4 w-full
-                    flex gap-x-2 items-center text-left
-                    hover:bg-neutral-300 border border-neutral-300 rounded-lg" onclick="location.href = `{% url 'sign_in' %}`;" >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        Rate Professor {{ prof.lname }}
-                    </button>
-                    <button class="mb-3 py-2 px-4 w-full
-                    flex gap-x-2 items-center text-left
-                    hover:bg-neutral-300 border border-neutral-300 rounded-lg"
-                    onclick="location.href = '#';" >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                        </svg>
-                        Follow Updates
-                    </button>
-
-                </div>
-    {% endif %}
-
             </div>
 
             <div class="mt-4 md:mt-6 px-10 py-3
@@ -135,10 +105,10 @@ text-xs sm:text-base lg:text-lg">
 
                 </div>
             </div>
-
-	</section>
+	    </section>
 
         <section class="mt-8">
+            {% if workload or personality or misc %}
             <span class="ml-4 py-2 px-6
             bg-[#154854] text-white rounded-full relative
             text-center">
@@ -147,64 +117,50 @@ text-xs sm:text-base lg:text-lg">
             <div class="-mt-3.5 mb-6 px-4 sm:px-8 lg:px-14
             border border-neutral-300 rounded-lg
             md:flex md:gap-x-6 md:justify-around">
+                {% if workload %}
                 <ul class="text-center my-6">
                     <p class="font-semibold mb-2 md:text-lg">
                         Workload
                     </p>
-                    {% if workload %}
                     {% for element in workload %}
                     <li class="border rounded-full
                     py-1 px-4 my-1.5 w-fit mx-auto">
                         {{ element.workload }}
                     </li>
                     {% endfor %}
-                    {% else %}
-                    <li class="border rounded-full
-                    py-1 px-4 my-1.5 w-fit mx-auto">
-                        NA
-                    </li>
-                    {% endif %}
                 </ul>
+                {% endif %}
+                {% if personality %}
                 <ul class="text-center my-6">
                     <p class="font-semibold mb-2 md:text-lg">
                         Personality
                     </p>
-                    {% if personality %}
                     {% for element in personality %}
                     <li class="border rounded-full
                     py-1 px-4 my-1.5 w-fit mx-auto">
                         {{ element.personality }}
                     </li>
                     {% endfor %}
-                    {% else %}
-                    <li class="border rounded-full
-                    py-1 px-4 my-1.5 w-fit mx-auto">
-                        NA
-                    </li>
-                    {% endif %}
                 </ul>
+                {% endif %}
+                {% if misc %}
                 <ul class="text-center my-6">
                     <p class="font-semibold mb-2 md:text-lg">
                         Miscellaneous
                     </p>
-                    {% if misc %}
                     {% for element in misc %}
                     <li class=" border rounded-full
                     py-1 px-4 my-1.5 w-fit mx-auto">
                         {{ element.miscellaneous }}
                     </li>
                     {% endfor %}
-                    {% else %}
-                    <li class="border rounded-full
-                    py-1 px-4 my-1.5 w-fit mx-auto">
-                        NA
-                    </li>
-                    {% endif %}
                 </ul>
+                {% endif %}
             </div>
+            {% endif %}
         </section>
+        {% if similar_professors %}
         <section class="mt-8">
-
             <span class="ml-4 py-2 px-6
             bg-[#154854] text-white rounded-full relative
             text-center">
@@ -233,20 +189,20 @@ text-xs sm:text-base lg:text-lg">
                     <div class="swiper-container" x-ref="container">
                         <div class="swiper-wrapper text-center">
                             <!-- Slides -->
-			    <!-- Loop here -->
-		            {% for professor in similar_professors %}
+                            <!-- Loop here -->
+                            {% for professor in similar_professors %}
                             <div class="swiper-slide p-4">
                                 <div class="flex flex-col h-full rounded-lg shadow overflow-hidden">
                                     <a href="{% url 'professor' prof_id=professor.employee %}" class="flex-shrink-0 p-2
                                     border-neutral-300 bg-neutral-200 hover:bg-neutral-300">
-					    <h3 class="font-semibold my-2">{{ professor.fname}} {{professor.lname }}</h3>
+                                        <h3 class="font-semibold my-2">{{ professor.fname}} {{professor.lname }}</h3>
                                         <p class="mb-2">Computer Science Department</p>
-					<p>Overall Rating: <span class="font-semibold">{{ professor.overall_rating}}/5</span></p>
+                                        <p>Overall Rating: <span class="font-semibold">{{ professor.overall_rating}}/5</span></p>
                                     </a>
                                 </div>
                             </div>
-           		    {% endfor %} 
-			    <!-- end loop here --> 
+                            {% endfor %} 
+                        <!-- end loop here --> 
                         </div>
                     </div>
             
@@ -260,8 +216,9 @@ text-xs sm:text-base lg:text-lg">
                         </button>
                     </div>
                 </div>
-	    </div>
+	        </div>
         </section>
+        {% endif %}
 
         <section>
             <p class="mt-16 mb-6">
@@ -275,17 +232,18 @@ text-xs sm:text-base lg:text-lg">
                     Top Rating
                 </span> -->
                 {% for rev in revs %}
-
                 <div class="-mt-3.5 mb-6 py-4 px-4 sm:px-8 lg:px-14
                 border border-neutral-300 rounded-lg">
                     {% if rev.student_thoughts %}
-                    <p>
-                        {{ rev.student_thoughts }}
-                    </p>
-                    {% else %}
-                    <p>No comment</p>
+                    <p>{{ rev.student_thoughts }}</p>
                     {% endif %}
                     <div class="flex gap-x-7 mt-3">
+                        {% if rev.course %}
+                        <div>
+                            <p>Course: {{rev.course.course}}</p>
+                            <p>{{ rev.course }}</p>
+                        </div>
+                        {% endif %}
                         <div>
                             <p>Quality</p>
                             <p class="ml-2"><span class="text-lg lg:text-2xl">{{ rev.teaching_quality }}</span>/5</p>
@@ -294,16 +252,6 @@ text-xs sm:text-base lg:text-lg">
                             <p>Difficulty</p>
                             <p class="ml-2"><span class="text-lg lg:text-2xl">{{ rev.difficulty_rating }}</span>/5</p>
                         </div>
-                        {% if rev.course %}
-                            <div>
-                                <p>Course: {{rev.course.course}}</p>
-                                <p class="ml-2">{{ rev.course }}</p>
-                            </div>
-                        {% else %}
-                            <div>
-                                <p>Course: N/A</p>
-                            </div>
-                        {% endif %}
                     </div>
                     <div class="flex justify-between gap-x-14 items-center mt-3">
                         <button id="report{{rev.review}}" value="{{ rev.review }}" onclick="report({{rev.review}})">
@@ -331,8 +279,7 @@ text-xs sm:text-base lg:text-lg">
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-
+                {% endfor %}
             </div>
         </section>
     </div>
