@@ -13,23 +13,13 @@
     <script src="https://unpkg.com/flowbite@1.4.5/dist/flowbite.js"></script>
     <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
 
-
-   <script src=
-"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
-    </script>
-
-    <script src=
-"https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
-    </script>
-
-    <link href=
-"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
-        rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css" />
     <script type="module" src="{% static '/admin/js/search.js' %}"></script>
     <script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
 
     <title>RateZone</title>
-
 </head>
 
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
@@ -37,7 +27,7 @@ class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
     {% include 'header.html' %}
 
     <!-- The animation -->
-    <div class="container border-b border-neutral-300 pb-4
+    <div class="z-0 container border-b border-neutral-300 pb-4
     md:grid md:grid-cols-2 md:gap-x-4 md:items-center md:justify-around">
         <div class="sm:w-3/4 md:w-full lg:w-3/4 xl:w-3/5 overflow-hidden">
             <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_MeTWrj.json"  background="transparent"  speed="1" loop autoplay></lottie-player>
