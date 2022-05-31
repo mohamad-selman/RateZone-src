@@ -27,15 +27,12 @@ urlpatterns = [
     path('login/', views.sign_in, name='sign_in'),
     path('logout/', views.logoutUser, name='logoutUser'),
     path('signup/', views.sign_up, name='sign_up'),
-
     path('course/<int:id>', views.course, name='course'),
     path('instructor/<int:prof_id>/', views.professor, name='professor'),
     path('dept/<int:id>/', views.dept, name='dept'),
     path('rate/<str:item>/<int:id>/', views.rate, name='rate'),
     path('submit_rate/<str:item>/<int:id>/', views.submit_rate, name='submit_rate'),
-
-    # Abdulaziz Faraj
     path('bot/',views.bot,name='bot'),
     path('l/',views.language,name='language'),
-    # re_path('activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/',  views.activate, name='activate'), 
+    path('admin/labeled_reviews/', views.labeled_reviews, name='labeled_reviews'),
 ]

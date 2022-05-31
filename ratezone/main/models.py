@@ -163,6 +163,7 @@ class UserFacultyRev(models.Model):
     semester_period = models.CharField(max_length=50, blank=True, null=True)
     student_thoughts = models.CharField(max_length=255, blank=True, null=True)
     teaching_quality = models.IntegerField()
+    helpful = models.BooleanField(default=True)
 
     objects = models.Manager()
 
