@@ -636,7 +636,7 @@ def sign_up(request):
             try:
                 print('Here')
                 User.objects.create_user(password=passw, username=username, first_name=fname, last_name=lname,
-                                         email=user_email, major=major)
+                                         email=user_email)
                 print('Got here')
                 return redirect('sign_in')
             except:
