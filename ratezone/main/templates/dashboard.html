@@ -35,21 +35,24 @@
 text-xs sm:text-base lg:text-lg">
     {% include 'header.html' %}
 
-    <div class="mt-6
-    w-full sm:w-9/12 lg:w-7/12 xl:w-6/12">
+    {% if request.session.lan != "ar" %}
+    <div class="mt-6w-full sm:w-9/12 lg:w-7/12 xl:w-6/12" dir="ltr">                
+    {% else %}
+    <div class="mt-6w-full sm:w-9/12 lg:w-7/12 xl:w-6/12" dir="rtl">               
+    {% endif %}
         <div>
             <p class="px-1 py-0.5 border-b-2 border-black
             font-extrabold antialiased w-fit
             text-lg sm:text-xl lg:text-2xl
             text-[#154854] items-center">
-                Profile
+            {% if request.session.lan != "ar" %}Profile{% else %}الملف الشخصي{% endif %}
             </p>
             <div class="grid
             grid-cols-1 sm:grid-cols-2
             gap-x-4 sm:gap-x-10">
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden" >
-                    <strong>First Name:</strong><p id="Fname">{{ user.first_name }}</p>
+                    <strong>{% if request.session.lan != "ar" %}First Name:{% else %}الإسم الأول{% endif %}</strong><p id="Fname">{{ user.first_name }}</p>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="change_fname()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -59,9 +62,9 @@ text-xs sm:text-base lg:text-lg">
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden">
                     {% if user.last_name %}
-                        <strong>Last Name:</strong><p  id="Lname">{{ user.last_name }}</p>
+                        <strong>{% if request.session.lan != "ar" %}Last Name:{% else %}الإسم الأخير{% endif %}</strong><p  id="Lname">{{ user.last_name }}</p>
                     {% else %}
-                        <strong>Last Name:</strong><p  id="">--------</p>
+                        <strong>{% if request.session.lan != "ar" %}Last Name:{% else %}الإسم الأخير{% endif %}</strong><p  id="">--------</p>
                     {% endif %}
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" onclick="change_lname()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -70,7 +73,7 @@ text-xs sm:text-base lg:text-lg">
 
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden" >
-                    <strong>Username :</strong><p id="uname">{{ user.username }}</p>
+                    <strong>{% if request.session.lan != "ar" %}Username:{% else %}إسم المستخدم{% endif %}</strong><p id="uname">{{ user.username }}</p>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="change_username()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -80,9 +83,9 @@ text-xs sm:text-base lg:text-lg">
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden" >
                     {% if user.major %}
-                        <strong>Major:</strong><p id="major">user.major</p>
+                        <strong>{% if request.session.lan != "ar" %}Major:{% else %}التخصص{% endif %}</strong><p id="major">user.major</p>
                     {% else %}
-                        <strong>Major:</strong><p>--------</p>
+                        <strong>{% if request.session.lan != "ar" %}Major:{% else %}التخصص{% endif %}</strong><p>--------</p>
                     {% endif %}
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" onclick="change_major()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -95,12 +98,12 @@ text-xs sm:text-base lg:text-lg">
             font-extrabold antialiased w-fit
             text-lg sm:text-xl lg:text-2xl
             text-[#154854] items-center">
-                Account Settings
+            {% if request.session.lan != "ar" %}Account Settings{% else %}إعدادات الحساب{% endif %}
             </p>
             <div class="grid grid-cols-1 gap-4 gap-x-10">
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex gap-x-4 justify-around overflow-hidden">
-                    <strong>Email:</strong><p id= "email">{{ user.email }}</p>
+                    <strong>{% if request.session.lan != "ar" %}Email:{% else %}الإميل{% endif %}</strong><p id= "email">{{ user.email }}</p>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" onclick="change_email()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
@@ -108,7 +111,7 @@ text-xs sm:text-base lg:text-lg">
 
                 <div class="my-4 p-3 border border-neutral-300 rounded-lg
                 flex shrink overflow-hidden  md:shrink-0 gap-x-4 justify-around">
-                    <strong>Password:</strong><input type="password" value="{{ user.password }}" id="myInput">
+                    <strong>{% if request.session.lan != "ar" %}Password:{% else %}الرقم السري{% endif %}</strong><input type="password" value="{{ user.password }}" id="myInput">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     onclick="myFunction()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -122,10 +125,10 @@ text-xs sm:text-base lg:text-lg">
         font-extrabold antialiased w-fit
         text-lg sm:text-xl lg:text-2xl
         text-[#154854] items-center">
-            Ratings
+        {% if request.session.lan != "ar" %}Ratings{% else %}التقيمات{% endif %}
         </p>
         {% for rev, review in revs %}
-        <div class="text-base">
+        <div class="text-base"  dir="ltr">
             <a href="{% url 'professor' prof_id=rev.employee %}">
                 <div class="my-4 p-3 bg-neutral-300 rounded-lg
                  flex gap-x-4 justify-around overflow-hidden" id="prof">
@@ -149,7 +152,7 @@ text-xs sm:text-base lg:text-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
-                <span>Delete Review</span>
+                <span>{% if request.session.lan != "ar" %}Delete Review{% else %}حذف التقيم{% endif %}</span>
             </button>
 
         </div>

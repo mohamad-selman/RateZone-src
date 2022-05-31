@@ -32,6 +32,7 @@ urlpatterns = [
     path('dept/<int:id>/', views.dept, name='dept'),
     path('rate/<str:item>/<int:id>/', views.rate, name='rate'),
     path('submit_rate/<str:item>/<int:id>/', views.submit_rate, name='submit_rate'),
-    path('bot/', views.bot, name='bot'),
+    path('bot/',views.bot,name='bot'),
+    path('l/',views.language,name='language'),
     path('admin/labeled_reviews/', views.labeled_reviews, name='labeled_reviews'),
 ]

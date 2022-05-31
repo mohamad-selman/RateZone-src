@@ -13,23 +13,13 @@
     <script src="https://unpkg.com/flowbite@1.4.5/dist/flowbite.js"></script>
     <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
 
-
-   <script src=
-"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
-    </script>
-
-    <script src=
-"https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
-    </script>
-
-    <link href=
-"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
-        rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css" />
     <script type="module" src="{% static '/admin/js/search.js' %}"></script>
     <script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
 
     <title>RateZone</title>
-
 </head>
 
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
@@ -37,7 +27,7 @@ class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
     {% include 'header.html' %}
 
     <!-- The animation -->
-    <div class="container border-b border-neutral-300 pb-4
+    <div class="z-0 container border-b border-neutral-300 pb-4
     md:grid md:grid-cols-2 md:gap-x-4 md:items-center md:justify-around">
         <div class="sm:w-3/4 md:w-full lg:w-3/4 xl:w-3/5 overflow-hidden">
             <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_MeTWrj.json"  background="transparent"  speed="1" loop autoplay></lottie-player>
@@ -48,9 +38,13 @@ class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
     </div>
 
     <!-- Searching -->
-    <div class="mt-10 px-4 mb-10 mt-4">
+    {% if request.session.lan != "ar" %}
+    <div class="mt-10 px-4 mb-10 mt-4" dir="ltr">
+    {% else %}
+    <div class="mt-10 px-4 mb-10 mt-4" dir="rtl">
+    {% endif %}
         <h1 class="text-3xl md:text-5xl font-medium text-center">
-            Find what you're looking for
+            {% if request.session.lan != "ar" %}Find what you're looking for{% else %}اعثر  على ما تبحث عنه{% endif %}
         </h1>
 
         <form onsubmit="event.preventDefault();">
@@ -62,7 +56,7 @@ class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
                     p-3 border-2 border-neutral-300 rounded-md
                     cursor-pointer" for="radio_1">
                         <span class="text-center text-lg sm:text-xl font-medium">
-                            Find
+                            {% if request.session.lan != "ar" %}Find{% else %}اعثر{% endif %}
                         </span>
                     </label>
                 </div>
@@ -72,14 +66,14 @@ class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
                     p-3 border-2 border-neutral-300 rounded-md
                     cursor-pointer" for="radio_2">
                         <span class="text-center text-lg sm:text-xl font-medium">
-                            Rate
+                            {% if request.session.lan != "ar" %}Rate{% else %}قيم{% endif %}
                         </span>
                     </label>
                 </div>
             </div>
 
             <!-- Search bar -->
-            <div class="relative mx-auto max-w-xl mt-6">
+            <div class="relative mx-auto max-w-xl mt-6"  dir="ltr">
                 <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                     <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>

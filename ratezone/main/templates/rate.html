@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+
+<html lang="en">               
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,14 +28,19 @@
 <body class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
     {% include 'header.html' %}
 
-    <div class="mt-6">
+    {% if request.session.lan != "ar" %}
+    <div class="mt-6" dir="ltr">                
+    {% else %}
+    <div class="mt-6" dir="rtl">               
+    {% endif %}
+    
         <div class="flex gap-x-4 items-center">
             {% if item == 'instructor' %}
-            <p class="pl-2 font-normal text-2xl">You are rating {{fname}} {{lname}}</p>
+            <p class="pl-2 font-normal text-2xl">{% if request.session.lan != "ar" %}You are rating{% else %} قيم {% endif %}  {{fname}} {{lname}}</p>
             {% elif item == 'course' %}
-            <p class="pl-2 font-normal text-2xl">You are rating {{id}}: {{course_name}}</p>
+            <p class="pl-2 font-normal text-2xl">{% if request.session.lan != "ar" %}You are rating{% else %} قيم {% endif %}  {{id}}: {{course_name}}</p>
             {% elif item == 'dept' %}
-            <p class="pl-2 font-normal text-2xl">You are rating {{dept_name}} Department</p>
+            <p class="pl-2 font-normal text-2xl">{% if request.session.lan != "ar" %}You are rating{% else %} قيم {% endif %}  {{dept_name}} {% if request.session.lan != "ar" %}Department{% else %} قسم {% endif %}</p>
             {% endif %}
 
             <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_drbe9mf2.json"  background="transparent" style="width: 300px;" speed="1" loop autoplay></lottie-player>
@@ -42,13 +49,13 @@
         <form id="form-rate" action="{% url 'submit_rate' item=item id=id %}" method="POST" class="mt-5">
             {% csrf_token %}
             <p class="mb-3 font-semibold">
-                First, your rating.
+                {% if request.session.lan != "ar" %}First, your rating.{% else %}اولاً تقيمك.{% endif %}
             </p>
 
             {% if item == 'instructor' %}
             <div>
                 <p class="font-normal mt-6">
-                    1. What course are you rating {{fname}} {{lname}} on?
+                    {% if request.session.lan != "ar" %}1. What course are you rating{% else %}1. ماهي المادة التي تقيم بها{% endif %} {{fname}} {{lname}} {% if request.session.lan != "ar" %}on?{% else %}؟{% endif %}
                 </p>
                 <select class="js-example-basic-single mt-4 ml-4 p-2 bg-neutral-100 rounded-md" name="course">
                     {% for course in courses %}
@@ -57,7 +64,7 @@
                 </select>
     
                 <p class="font-normal mt-6">
-                    2. What is your rating for the teaching quality? (1: Bad, 5: Excellent)
+                    {% if request.session.lan != "ar" %}2. What is your rating for the teaching quality? (1: Bad, 5: Excellent){% else %}2. ماهو تقيمك لجودة التعليم ؟ (1: سيئ،     5:ممتاز){% endif %}
                 </p>
                 <div class="mt-3 ml-6 flex gap-x-2">
                     <input class="hidden" type="radio" id="q1" name="quality" value="1">
@@ -92,7 +99,7 @@
                 </div>
 
                 <p class="font-normal mt-8">
-                    3. What is your rating for the difficulty? (1: Very Easy, 5: Very Hard)
+                    {% if request.session.lan != "ar" %}3. What is your rating for the difficulty? (1: Very Easy, 5: Very Hard){% else %}3. ماهو تقيمك لصعوبة ؟ (1: سيئ،     5:ممتاز){% endif %}
                 </p>
                 <div class="mt-3 ml-6 flex gap-x-2">
                     <input class="hidden" type="radio" id="d1" name="difficulty" value="1">
@@ -127,7 +134,7 @@
                 </div>
 
                 <p class="font-normal mt-8">
-                    4. What is your overall rating for this professor?
+                    {% if request.session.lan != "ar" %}4. What is your overall rating for this professor?{% else %}4. ماهو تقيمك بشكل عام للأستاذ ؟{% endif %}
                 </p>
                 <div class="mt-3 ml-6 flex gap-x-2">
                     <input class="hidden" type="radio" id="r1" name="rate" value="1">
@@ -162,7 +169,7 @@
                 </div>
 
                 <p class="font-normal mt-8">
-                    4. For each category, select tags you feel describe this Professor best.
+                    {% if request.session.lan != "ar" %}5. For each category, select tags you feel describe this Professor best.{% else %}5. من كل قسم، اختر الخيار المناسب للأستاذ.{% endif %}
                 </p>
                 <div class="ml-6">
                     <p class="mt-4 font-semibold">Workload</p>
@@ -550,14 +557,23 @@
             </div>
             {% endif %}
 
+            <!-- {% if request.session.lan != "ar" %}4. What is your overall rating for this professor?{% else %}4. ماهو تقيمك بشكل عام للأستاذ ؟{% endif %} -->
+
             <p class="font-semibold mt-10">
-                Next, your thoughts.
+                {% if request.session.lan != "ar" %}Next, your thoughts.{% else %}تانياً، تعليقك.{% endif %}
             </p>
             <div class="mt-3 form-group form-group--textarea">
+                {% if request.session.lan != "ar" %}
                 <textarea class="w-full p-3 mt-3 bg-neutral-100 border border-neutral-300 rounded-md"
                 rows="4"
                 placeholder="Anything you want to say!"
                 name="comment"></textarea>
+                {% else %}
+                <textarea class="w-full p-3 mt-3 bg-neutral-100 border border-neutral-300 rounded-md"
+                rows="4"
+                placeholder="اي تعليق تريد اضافة"
+                name="comment"></textarea>
+                {% endif %}
             </div>
 
             <div class="flex justify-center m-3">
@@ -569,14 +585,14 @@
                 g-recaptcha
                 font-normal text-white px-4 py-2
                 rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]">
-                    Submit my Review
+                {% if request.session.lan != "ar" %}Submit my Review{% else %}ارسال التقيم{% endif %}
                 </button>
             </div>
 
             <div class="success-msg" style="color: #270;
             background-color: #DFF2BF; display: none;">
                 <i class="fa fa-check"></i>
-                Success Rate.
+                {% if request.session.lan != "ar" %}Success Rate.{% else %}تقيم ناجج{% endif %}
             </div>
         </form>
     </div>
