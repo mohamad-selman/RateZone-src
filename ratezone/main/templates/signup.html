@@ -20,7 +20,11 @@
 text-xs sm:text-base lg:text-lg">
     {% include 'header.html' %}
 
-    <div class="mt-6">
+    {% if request.session.lan != "ar" %}
+    <div class="mt-6"  dir="ltr">
+    {% else %}
+    <div class="mt-6"  dir="rtl">
+    {% endif %}
         <div class="min-h-screen flex flex-col items-center justify-center">
             <div class="
                 flex flex-col
@@ -36,7 +40,7 @@ text-xs sm:text-base lg:text-lg">
                 max-w-md"
             >
                 <div class="font-medium self-center text-xl sm:text-3xl text-gray-800">
-                    Join us Now
+                    {% if request.session.lan != "ar" %}Join us Now{% else %}إنضم الإن{% endif %}
                 </div>
                 <div class="mt-4 self-center text-xl sm:text-sm text-gray-800">
                     Enter your credentials to get access account
@@ -49,7 +53,7 @@ text-xs sm:text-base lg:text-lg">
                             <label
                             for="fname"
                             class="mb-1 text-xs tracking-wide text-gray-600">
-                                First Name:
+                            {% if request.session.lan != "ar" %}First Name:{% else %}الإسم الأول{% endif %}
                             </label>
                             <div class="relative">
                                 <div class="
@@ -81,7 +85,7 @@ text-xs sm:text-base lg:text-lg">
                                     py-2
                                     focus:outline-none focus:border-blue-400
                                 "
-                                placeholder="Enter your first name"
+                                placeholder="Enter your first name" dir="ltr"
                                 />
                             </div>
                         </div>
@@ -89,7 +93,7 @@ text-xs sm:text-base lg:text-lg">
                             <label
                             for="lname"
                             class="mb-1 text-xs tracking-wide text-gray-600">
-                                Last Name:
+                            {% if request.session.lan != "ar" %}Last Name:{% else %}الإسم الأخير{% endif %}
                             </label>
                             <div class="relative">
                                 <div class="
@@ -121,7 +125,7 @@ text-xs sm:text-base lg:text-lg">
                                     py-2
                                     focus:outline-none focus:border-blue-400
                                 "
-                                placeholder="Enter your last name"
+                                placeholder="Enter your last name"  dir="ltr"
                                 />
                             </div>
                         </div>
@@ -130,7 +134,7 @@ text-xs sm:text-base lg:text-lg">
                             <label
                             for="username"
                             class="mb-1 text-xs tracking-wide text-gray-600">
-                                Username:
+                            {% if request.session.lan != "ar" %}Username:{% else %}إسم المستخدم{% endif %}
                             </label>
                             <div class="relative">
                                 <div
@@ -163,7 +167,7 @@ text-xs sm:text-base lg:text-lg">
                                     py-2
                                     focus:outline-none focus:border-blue-400
                                 "
-                                placeholder="Enter your username"
+                                placeholder="Enter your username"  dir="ltr"
                                 />
                             </div>
                         </div>
@@ -171,7 +175,7 @@ text-xs sm:text-base lg:text-lg">
                             <label
                             for="email"
                             class="mb-1 text-xs tracking-wide text-gray-600">
-                                E-Mail Address:
+                            {% if request.session.lan != "ar" %}E-Mail Address:{% else %}البريد الإلكتروني{% endif %}
                             </label>
                             <div class="relative">
                                 <div
@@ -204,7 +208,7 @@ text-xs sm:text-base lg:text-lg">
                                     py-2
                                     focus:outline-none focus:border-blue-400
                                 "
-                                placeholder="Enter your email"
+                                placeholder="Enter your email"  dir="ltr"
                                 />
                             </div>
                         </div>
@@ -212,7 +216,7 @@ text-xs sm:text-base lg:text-lg">
                             <label
                                 for="password"
                                 class="mb-1 text-xs tracking-wide text-gray-600">
-                                    Password:
+                                {% if request.session.lan != "ar" %}Password:{% else %}الرقم السري{% endif %}
                             </label>
                             <div class="relative">
                                 <div class="
@@ -245,7 +249,7 @@ text-xs sm:text-base lg:text-lg">
                                     w-full
                                     py-2
                                     focus:outline-none focus:border-blue-400"
-                                placeholder="Enter your password"
+                                placeholder="Enter your password"  dir="ltr"
                                 />
                             </div>
                         </div>
@@ -254,7 +258,7 @@ text-xs sm:text-base lg:text-lg">
                             <label
                                 for="major"
                                 class="mb-1 text-xs tracking-wide text-gray-600">
-                                    Major (Optional):
+                                {% if request.session.lan != "ar" %}Major (Optional):{% else %}التخصص (اختياري){% endif %}
                             </label>
                             <div class="relative">
                                 <div class="
@@ -287,11 +291,10 @@ text-xs sm:text-base lg:text-lg">
                                     w-full
                                     py-2
                                     focus:outline-none focus:border-blue-400"
-                                placeholder="Enter your Major"
+                                placeholder="Enter your Major"  dir="ltr"
                                 />
                             </div>
                         </div>
-
 
                         <div class="flex w-full">
                             <button
@@ -317,8 +320,8 @@ text-xs sm:text-base lg:text-lg">
                                 duration-150
                                 ease-in"
                             >
-
-                                <span class="mr-2 uppercase" >Sign Up</span>
+                                <span class="mr-2 uppercase" >
+                                    {% if request.session.lan != "ar" %}Sign Up{% else %}تسجيل{% endif %}</span>
                                 <span>
                                     <svg
                                         class="h-6 w-6"
@@ -352,11 +355,11 @@ text-xs sm:text-base lg:text-lg">
                 "
                 >
                     <span class="ml-2">
-                        You have an account?
+                        {% if request.session.lan != "ar" %}You have an account?{% else %}هل لديك حساب؟  {% endif %}
                         <a
                             href="{% url 'sign_in' %}"
                             class="text-xs ml-2 text-[#F0A501] font-semibold">
-                                Login here
+                            {% if request.session.lan != "ar" %}Login here{% else %}تسجيل الدخول{% endif %}
                         </a>
                     </span>
                 </a>

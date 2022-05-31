@@ -38,7 +38,11 @@
 text-xs sm:text-base lg:text-lg">
     {% include 'header.html' %}
 
-    <div class="mt-6 sm:px-10 md:px-14">
+    {% if request.session.lan != "ar" %}
+    <div class="mt-6 sm:px-10 md:px-14"  dir="ltr"></div>
+    {% else %}
+    <div class="mt-6 sm:px-10 md:px-14"  dir="rtl">
+    {% endif %}
         <section>
             <div class="md:flex md:gap-x-6 md:justify-between md:items-center">
                 <div class="ml-3 flex gap-x-3 items-center">
@@ -69,7 +73,8 @@ text-xs sm:text-base lg:text-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                        Add Professor {{ prof.lname }} to My Queue
+                        {% if request.session.lan != "ar" %}Add Professor{% else %}اضف الأستاذ{% endif %} {{ prof.lname }} 
+                        {% if request.session.lan != "ar" %}to My Queue{% else %}الى قائمة اختياراتي{% endif %}
                     </button>
                     {% endif %}
                     <input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
@@ -82,7 +87,7 @@ text-xs sm:text-base lg:text-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                        Rate Professor {{ prof.lname }}
+                        {% if request.session.lan != "ar" %}Rate Professor{% else %}قيم الأستاذ{% endif %} {{ prof.lname }}
                     </button>
                     <button class="mb-3 py-2 px-4 w-full
                     flex gap-x-2 items-center text-left
@@ -91,7 +96,7 @@ text-xs sm:text-base lg:text-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-8 md:w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
-                        Follow Updates
+                        {% if request.session.lan != "ar" %}Follow Updates{% else %}اطلعني على كل جديد{% endif %}
                     </button>
                 </div>
             </div>
@@ -99,9 +104,13 @@ text-xs sm:text-base lg:text-lg">
             <div class="mt-4 md:mt-6 px-10 py-3
             text-center rounded-md bg-neutral-200">
                 <div>
-                    Overall Rating
+            {% if request.session.lan != "ar" %}Overall Rating{% else %}التقييم العام{% endif %}
 		    <p class="font-bold text-xl lg:text-3xl">{{ prof.overall_rating }}/5</p>
+            {% if request.session.lan != "ar" %}
 		    <p class="mt-4">based on <span class="font-semibold">{{ rev_count }}</span> total votes from students.</p>
+            {% else %}
+            <p class="mt-4">إعتماداً على  <span class="font-semibold">{{ rev_count }} </span> تقيم من قبل الطلبة </p>
+            {% endif %}
 
                 </div>
             </div>
@@ -112,7 +121,7 @@ text-xs sm:text-base lg:text-lg">
             <span class="ml-4 py-2 px-6
             bg-[#154854] text-white rounded-full relative
             text-center">
-                Top tags
+            {% if request.session.lan != "ar" %}Top tags{% else %}اعلى العناوين{% endif %}
             </span>
             <div class="-mt-3.5 mb-6 px-4 sm:px-8 lg:px-14
             border border-neutral-300 rounded-lg
@@ -164,7 +173,7 @@ text-xs sm:text-base lg:text-lg">
             <span class="ml-4 py-2 px-6
             bg-[#154854] text-white rounded-full relative
             text-center">
-                Similar Professors
+            {% if request.session.lan != "ar" %}Similar Professors{% else %}الأساتذة المشابهين{% endif %}
             </span>
             <div class="-mt-3.5 mb-6 pt-2 px-4 sm:px-8 lg:px-14
 			border border-neutral-300 rounded-lg">
@@ -222,7 +231,7 @@ text-xs sm:text-base lg:text-lg">
 
         <section>
             <p class="mt-16 mb-6">
-              {{ rev_count }} Total student Reviews
+                {% if request.session.lan != "ar" %}{{ rev_count }} Total student Reviews{% else %} مجموع الطلبة المقيمين {{ rev_count }}{% endif %}
             </p>
 
             <div class="lg:w-9/12">
@@ -245,11 +254,11 @@ text-xs sm:text-base lg:text-lg">
                         </div>
                         {% endif %}
                         <div>
-                            <p>Quality</p>
+                            <p>{% if request.session.lan != "ar" %}Quality{% else %}الجودة{% endif %}</p>
                             <p class="ml-2"><span class="text-lg lg:text-2xl">{{ rev.teaching_quality }}</span>/5</p>
                         </div>
                         <div>
-                            <p>Difficulty</p>
+                            <p>{% if request.session.lan != "ar" %}Difficulty{% else %}الصعوبة{% endif %}</p>
                             <p class="ml-2"><span class="text-lg lg:text-2xl">{{ rev.difficulty_rating }}</span>/5</p>
                         </div>
                     </div>

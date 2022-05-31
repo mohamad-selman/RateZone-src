@@ -38,9 +38,13 @@ class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
     </div>
 
     <!-- Searching -->
-    <div class="mt-10 px-4 mb-10 mt-4">
+    {% if request.session.lan != "ar" %}
+    <div class="mt-10 px-4 mb-10 mt-4" dir="ltr">
+    {% else %}
+    <div class="mt-10 px-4 mb-10 mt-4" dir="rtl">
+    {% endif %}
         <h1 class="text-3xl md:text-5xl font-medium text-center">
-            Find what you're looking for
+            {% if request.session.lan != "ar" %}Find what you're looking for{% else %}اعثر  على ما تبحث عنه{% endif %}
         </h1>
 
         <form onsubmit="event.preventDefault();">
@@ -52,7 +56,7 @@ class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
                     p-3 border-2 border-neutral-300 rounded-md
                     cursor-pointer" for="radio_1">
                         <span class="text-center text-lg sm:text-xl font-medium">
-                            Find
+                            {% if request.session.lan != "ar" %}Find{% else %}اعثر{% endif %}
                         </span>
                     </label>
                 </div>
@@ -62,14 +66,14 @@ class="px-5 pt-2 pb-6 text-xs sm:text-base lg:text-lg">
                     p-3 border-2 border-neutral-300 rounded-md
                     cursor-pointer" for="radio_2">
                         <span class="text-center text-lg sm:text-xl font-medium">
-                            Rate
+                            {% if request.session.lan != "ar" %}Rate{% else %}قيم{% endif %}
                         </span>
                     </label>
                 </div>
             </div>
 
             <!-- Search bar -->
-            <div class="relative mx-auto max-w-xl mt-6">
+            <div class="relative mx-auto max-w-xl mt-6"  dir="ltr">
                 <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                     <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>

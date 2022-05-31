@@ -1,4 +1,5 @@
 import re
+
 from django.shortcuts import render
 from scipy.fftpack import idct
 from .models import *
@@ -22,6 +23,7 @@ import os
 from twilio.rest import Client
 from datetime import datetime
 from .classification import predict
+
 
 def home(request):
     return render(request, './index.html')
@@ -605,7 +607,6 @@ def sign_in(request):
 
     return render(request, './signin.html')
 
-
 @unauthenticated_user
 def sign_up(request):
     if request.method == 'POST':
@@ -630,6 +631,7 @@ def sign_up(request):
             major = request.POST['major']
 
             print(f'Record: {fname}, {lname}, {username}, {user_email}, {passw}, {major}')
+
 
             try:
                 print('Here')
@@ -901,13 +903,46 @@ def change_email(request):
     return render(request, './error.html')
 
 
+def function_send_mail (user_email,subject,message):
+    send_mail(
+        subject,
+        message,
+        'ratezone22@gmail.com',
+        [user_email],
+        fail_silently=False,
+    )
+    return 1
+
+
+def language (request):
+    request.session.modified = True
+
+    if request.method == "POST":
+        
+        num = request.session.get('lan')
+
+        print(num)
+
+        if num is None:
+            request.session['lan'] ='ar'
+        elif request.session['lan'] =='ar' :
+            request.session['lan'] = 'en'
+        elif request.session['lan'] =='en' :
+            request.session['lan'] = 'ar'
+        
+        
+        print(request.session['lan'])
+        # print(request.path_info)
+
+    # return HttpResponseRedirect("/")
+    return  render(request, './index.html')
+     
+
 
 account_sid = 'AC769a838aa381b9b6e804efb14d04faf7'
-auth_token = '7f33ba807192520ba912664d77ecb7ed'
+auth_token = 'ffba9c2f7def12659c5f80123a1c7743'
 client = Client(account_sid, auth_token)
 
-# if request.method == 'POST':
-#         bot(request)
 
 @csrf_exempt
 def bot(request):
@@ -961,7 +996,7 @@ def bot(request):
                     str_m='*NO Inofrmation to see*'
 
             except:
-                str_m = 'Invalid input, Please try again'
+                str_m = 'Invalid Department name, Please try again'
 
         elif message[0]== "Instructor" or message[0]== "instructor" :
 
@@ -976,19 +1011,22 @@ def bot(request):
                 revs = UserFacultyRev.objects.filter(employee=em).order_by('-review')[0:3]
                 rev_count = UserFacultyRev.objects.filter(employee_id=em.employee).aggregate(Count('review'))
 
-
-                str_m= 'Here some information about Instructor:\n*{} {}*\n{} department \n\n'.format(message[1],message[2],em.department)
-                str_m += 'overall rating based on {} votes is: *{:.2f}/5*\n\n'.format(rev_count['review__count'],em.overall_rating)
-
+                
+                if(rev_count['review__count'] !=0):
+                    str_m= 'Here some information about Instructor:\n*{} {}*\n{} department \n\n'.format(message[1],message[2],em.department)
+                    str_m += 'Overall rating based on {} votes is: *{:.2f}/5*\n\n'.format(rev_count['review__count'],em.overall_rating)
+                else :
+                    str_m= 'Here some information about Instructor:\n*{} {}*\n{} department \n\n'.format(message[1],message[2],em.department)
+                    str_m += '*Unfortunately* we don''t have any votes until now\n\n'
                 j=1
                 for i in revs :
-                    str_m += '{}- Student({}):\noverall is {}\nthought is "{}"\n'.format(j,i.user,i.overall_rating,i.student_thoughts)
+                    str_m += '{}- Overall is {}\n     thought is "{}"\n'.format(j,i.overall_rating,i.student_thoughts)
                     j+=1
 
-                str_m += '\nfor more information about {} {}\nClick the URL:\n*https://ratezone.io/instructor/{}/* \n*OR* you can visit web site:\n*ratezone.io* '.format(message[1],message[2],em.employee)
+                str_m += '\nfor more information about {} {}\nClick the URL:\n*https://ratezone.io/instructor/{}/* \n*OR* \nyou can visit web site:\n*ratezone.io* '.format(message[1],message[2],em.employee)
 
             except:
-                str_m = 'Invalid name, Please try again'
+                str_m = 'Invalid Instructor name, Please try again'
 
         elif message[0]== "Help":
             str_m='*Department*\nto list all departments\n\n*Department* <name of department>\nto list instructor names\n\n*Instructor* <name of instructor>\nsummary about instructor\n',

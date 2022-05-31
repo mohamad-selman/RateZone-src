@@ -19,7 +19,11 @@
 text-xs sm:text-base lg:text-lg">
     {% include 'header.html' %}
 
-    <div class="min-h-screen flex flex-col items-center justify-center">
+    {% if request.session.lan != "ar" %}
+    <div class="min-h-screen flex flex-col items-center justify-center"  dir="ltr">
+    {% else %}
+    <div class="min-h-screen flex flex-col items-center justify-center"  dir="rtl">
+    {% endif %}
         <div class="
             flex flex-col
             bg-white
@@ -34,7 +38,7 @@ text-xs sm:text-base lg:text-lg">
             max-w-md
         ">
             <div class="font-medium self-center text-xl sm:text-3xl text-gray-800">
-                Welcome Back
+                {% if request.session.lan != "ar" %}Welcome Back{% else %}اهلا بعودتك{% endif %}
             </div>
             <div class="mt-4 self-center text-xl sm:text-sm text-gray-800">
                 Enter your credentials to access your account
@@ -47,7 +51,7 @@ text-xs sm:text-base lg:text-lg">
                         <label
                             for="username"
                             class="mb-1 text-xs tracking-wide text-gray-600">
-                            Username:
+                            {% if request.session.lan != "ar" %}Username:{% else %}إسم المستخدم{% endif %}
                         </label>
                         <div class="relative">
                             <div
@@ -80,7 +84,7 @@ text-xs sm:text-base lg:text-lg">
                                     py-2
                                     focus:outline-none focus:border-blue-400
                                 "
-                                placeholder="Enter your username"
+                                placeholder="Enter your username"  dir="ltr"
                             />
                         </div>
                     </div>
@@ -88,7 +92,7 @@ text-xs sm:text-base lg:text-lg">
                         <label
                             for="password"
                             class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
-                            Password:
+                            {% if request.session.lan != "ar" %}Password:{% else %}الرقم السري{% endif %}
                         </label>
                         <div class="relative">
                             <div
@@ -123,7 +127,7 @@ text-xs sm:text-base lg:text-lg">
                                     py-2
                                     focus:outline-none focus:border-blue-400
                                 "
-                                placeholder="Enter your password"
+                                placeholder="Enter your password"  dir="ltr"
                             />
                         </div>
                     </div>
@@ -153,7 +157,8 @@ text-xs sm:text-base lg:text-lg">
                                 ease-in
                             "
                             >
-                            <span class="mr-2 uppercase">Sign In</span>
+                            <span class="mr-2 uppercase">
+                                {% if request.session.lan != "ar" %}Sign In{% else %}تسجيل الدخول{% endif %}</span>
                             <span>
                                 <svg
                                     class="h-6 w-6"
@@ -177,7 +182,7 @@ text-xs sm:text-base lg:text-lg">
 						font-medium rounded-lg text-sm px-5 py-2.5 text-center
 						inline-flex items-center justify-center mb-2">
 							<svg class="w-4 h-4 mr-2 -ml-1" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path></svg>
-							Sign in with Google
+							{% if request.session.lan != "ar" %}Sign in with Google{% else %}تسجيل الدخول بإستخدام قوقل{% endif %}
 						</a>
 					</div>
                 </form>
@@ -195,11 +200,11 @@ text-xs sm:text-base lg:text-lg">
                     text-xs text-center
                 ">
                 <span class="ml-2">
-                    You don't have an account?
+                    {% if request.session.lan != "ar" %}You don't have an account?{% else %}ليس لديك حساب ؟ {% endif %}
                     <a
                     href="{% url 'sign_up' %}"
                     class="text-xs ml-2 text-[#F0A501] font-semibold">
-                        Register now
+                    {% if request.session.lan != "ar" %}Register now{% else %}سجل الأن{% endif %}
                     </a>
                 </span>
             </a>
