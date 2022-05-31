@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from os.path import join
+from flask import Flask, request
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +26,7 @@ SECRET_KEY = 'django-insecure-ct*nrq-gfqbpgf0ntg(lneqhsfe374e%(vz5e^$#i$7po!im@_
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG_TOOLBAR_PATCH_SETTINGS = False 
 
 ALLOWED_HOSTS = ['54.93.227.65', 'e8c5-37-37-176-165.in.ngrok.io','127.0.0.1', '.ratezone.software', '.ratezone.io']
 
@@ -44,19 +46,22 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-
     'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+# request.session.modified = True
 
 ROOT_URLCONF = 'ratezone.urls'
 
@@ -70,6 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.i18n',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -124,6 +130,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+LANGUAGES = [
+  ('ar', ('Arabic')),
+  ('en', ('English')),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -163,5 +173,12 @@ SOCIALACCOUNT_PROVIDERS = {
 
 GOOGLE_RECAPTCHA_SECRET_KEY = '6Lc_jHwfAAAAAKDwkKm7SMTGNn7laVbDACgumVJR'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ratezone22@gmail.com'
+EMAIL_HOST_PASSWORD = 'bkbocvvaqshwcprx'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'default from email'
 
 

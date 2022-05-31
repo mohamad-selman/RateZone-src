@@ -13,26 +13,27 @@
 text-xs sm:text-base lg:text-lg">
     {% include 'header.html' %}
 
-    <div class="mt-6">
+    <div class="mt-6" dir="ltr">
         <div class="md:flex md:gap-x-3 md:items-center justify-center">
             <div class="overflow-hidden">
                 <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_la3rbh6t.json" background="transparent" speed="1" style="width: 400px; height: 400px;" loop autoplay></lottie-player>
             </div>
             <div>
                 <h1 class="text-3xl sm:text-5xl font-medium text-center md:text-left">
-                    Thank you for your rating!
+                    {% if request.session.lan != "ar" %}Thank you for your rating!{% else %}! شكراً لهذا التقيم{% endif %}
                 </h1>
                 <p class="mt-6 text-xl sm:text-2xl text-center md:text-left">
-                    We will update the page soon!
+                    {% if request.session.lan != "ar" %}We will update the page soon!{% else %}سيتم تحديث الصفحة قريباً{% endif %}
                 </p>        
             </div>
         </div>
     </div>
     
-    <div class="mt-4 flex justify-center gap-x-6">
+
+    <div class="mt-4 flex justify-center gap-x-6" dir="ltr">
         {% if item == 'instructor' %}
         <a class="px-4 py-2 sm:px-6 font-normal text-white text-center rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]"
-        href="{% url 'professor' prof_id=id %}">Return to Instructor Page</a>
+        href="{% url 'professor' prof_id=id %}">{% if request.session.lan != "ar" %}Return to Instructor Page{% else %}العودة الى صفحة الأستاذ{% endif %}</a>
         {% elif item == 'course' %}
         <a class="px-4 py-2 sm:px-6 font-normal text-white text-center rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]"
         href="{% url 'course' id=id %}">Return to Course Page</a>
@@ -45,7 +46,7 @@ text-xs sm:text-base lg:text-lg">
         class="px-4 py-2 sm:px-6
         font-normal text-white text-center
         rounded-md bg-[#154854] transition hover:bg-[#1B5E6D]">
-            Return to Home Page
+        {% if request.session.lan != "ar" %}Return to Home Page{% else %}العودة الى الصفحة الرئيسية{% endif %}
         </a>
     </div>
 </body>
