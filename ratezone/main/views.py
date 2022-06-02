@@ -169,10 +169,6 @@ def submit_rate(request, item, id):
 
                 try:
                     em = Employee.objects.get(employee=id)
-                    u_rate = UserFacultyRev.objects.create(overall_rating=overall_rate, difficulty_rating=difficulty,
-                                                           student_thoughts=comment,
-                                                           teaching_quality=quality, course_id=course_instance.course,
-                                                           employee_id=em.employee, user_id=user.id)
                     u_rate = UserFacultyRev.objects.create(
                                 overall_rating=overall_rate, difficulty_rating=difficulty,
                                 student_thoughts=comment, helpful=helpful,
@@ -636,7 +632,13 @@ def sign_up(request):
             try:
                 print('Here')
                 User.objects.create_user(password=passw, username=username, first_name=fname, last_name=lname,
-                                         email=user_email, major=major)
+                                         email=user_email)
+
+                message ='Hello, {}\nThanks For Sign Up And Welcome to RateZone!.'.format(user_email)
+                message += '''
+                \n\nWe are delighted to have you on board. As with all great journeys, there\'s always a beginning. Our goal is to make your experience of RateZone fun and useful. Check the ratings and reviews of your past/current/future instructors. Help us grow by contributing and adding some reviews and ratings of your own.
+                '''
+                function_send_mail (user_email,"SIGN UP",message)
                 print('Got here')
                 return redirect('sign_in')
             except:
@@ -935,12 +937,12 @@ def language (request):
         # print(request.path_info)
 
     # return HttpResponseRedirect("/")
-    return  render(request, './index.html')
+    return  redirect(home)
      
 
 
 account_sid = 'AC769a838aa381b9b6e804efb14d04faf7'
-auth_token = 'ffba9c2f7def12659c5f80123a1c7743'
+auth_token = '7e846e71e2c5cdf8e0941ecd4788e6ed'
 client = Client(account_sid, auth_token)
 
 

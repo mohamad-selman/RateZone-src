@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-ct*nrq-gfqbpgf0ntg(lneqhsfe374e%(vz5e^$#i$7po!im@_
 DEBUG = True
 # DEBUG_TOOLBAR_PATCH_SETTINGS = False 
 
-ALLOWED_HOSTS = ['54.93.227.65', 'e8c5-37-37-176-165.in.ngrok.io','127.0.0.1', '.ratezone.software', '.ratezone.io']
+ALLOWED_HOSTS = ['18.185.124.78', 'e8c5-37-37-176-165.in.ngrok.io','127.0.0.1', '.ratezone.software', '.ratezone.io']
 
 # Application definition
 
