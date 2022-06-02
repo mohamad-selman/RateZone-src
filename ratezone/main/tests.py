@@ -2,6 +2,13 @@ from django.test import TestCase, RequestFactory
 from main.models import *
 from django.contrib.auth.models import User, AnonymousUser
 from .views import *
+from django.test.client import Client
+from django.urls import reverse
+import pytest
+from django.test import RequestFactory
+from django.urls import Resolver404
+from main.updating_scores import *
+from ratezone.wsgi import application
 
 
 # Create your tests here.
@@ -184,3 +191,69 @@ class QueueViewTest(TestCase):
         print(f'Queue status code for user {self.user}: {response.status_code}')
         print('----------------------------------------------------------------------')
         self.assertEqual(response.status_code, 200)
+
+
+class UrlsTest(TestCase):
+    def test_views(self):
+        response = self.client.get('/instructor/11')
+        self.assertEqual(response.status_code, 301)
+        print('----------------------------------------------------------------------')
+        print(f'Testing URL instructor for id 11: {response}')
+        print('----------------------------------------------------------------------')
+        response = self.client.get('/course/418223')
+        self.assertEqual(response.status_code, 200)
+        print('----------------------------------------------------------------------')
+        print(f'Testing URL course for id 418223 - Systems Programming: {response}')
+        print('----------------------------------------------------------------------')
+        response = self.client.get('/dept/418')
+        self.assertEqual(response.status_code, 301)
+        print('----------------------------------------------------------------------')
+        print(f'Testing URL dept for id 418 - Computer Science: {response}')
+        print('----------------------------------------------------------------------')
+
+
+def test_handles_request(rf: RequestFactory):
+    with pytest.raises(Resolver404):
+        application.resolve_request(rf.get("/"))
+
+
+class TestUpdatingScores(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.objUser = User.objects.create_user(password='testpass123', username='testUser', first_name='user1_fname',
+                                               last_name='user1_lname', email='test@gmail.com')
+
+        cls.objDept = Department.objects.create(department=418, dept_name='Computer Science', overall_rating=4)
+        csdept = Department.objects.get(department=418)
+        Employee.objects.create(department=csdept, fname='fname_test1', lname='lname_test1',
+                                main_rank='Faculty', sub_rank='Associate Professor',
+                                overall_rating=4.5, teaching_quality=4, exams_difficulty=4)
+        Course.objects.create(course=418223, course_name='Systems Programming', overall_rating=4.5,
+                              effort_required=4.5, enjoyment_rating=4)
+        get_user = User.objects.get(username='testUser')
+        get_emp = Employee.objects.get(fname='fname_test1', lname='lname_test1')
+        get_course = Course.objects.get(course=418223)
+        cls.obj = UserFacultyRev.objects.create(overall_rating=4, difficulty_rating=4,
+                                                teaching_quality=4, course_id=get_course.course,
+                                                employee_id=get_emp.employee, user_id=get_user.id)
+
+    def test_user(self):
+        get_user = User.objects.get(username='testUser')
+        get_emp = Employee.objects.get(fname='fname_test1', lname='lname_test1')
+        get_course = Course.objects.get(course=418223)
+        get_review = UserFacultyRev.objects.get(course_id=get_course.course, user_id=get_user.id,
+                                                employee_id=get_emp.employee)
+        print('----------------------------------------------------------------------')
+        update_scores(get_emp.employee)
+
+
+class TestView(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.objUser = User.objects.create_user(password='testpass123', username='testUser', first_name='user1_fname',
+                                               last_name='user1_lname', email='test@gmail.com')
+
+    def test_call_login(self):
+        self.client.login(username='testUser', password='testpass123')
+        response = self.client.get('/dashboard')
+        self.assertEqual(response.status_code, 301)

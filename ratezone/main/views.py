@@ -633,12 +633,6 @@ def sign_up(request):
                 print('Here')
                 User.objects.create_user(password=passw, username=username, first_name=fname, last_name=lname,
                                          email=user_email)
-
-                message ='Hello, {}\nThanks For Sign Up And Welcome to RateZone!.'.format(user_email)
-                message += '''
-                \n\nWe are delighted to have you on board. As with all great journeys, there\'s always a beginning. Our goal is to make your experience of RateZone fun and useful. Check the ratings and reviews of your past/current/future instructors. Help us grow by contributing and adding some reviews and ratings of your own.
-                '''
-                function_send_mail (user_email,"SIGN UP",message)
                 print('Got here')
                 return redirect('sign_in')
             except:
