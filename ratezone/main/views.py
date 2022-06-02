@@ -1,5 +1,4 @@
 import re
-
 from django.shortcuts import render
 from scipy.fftpack import idct
 from .models import *
@@ -265,7 +264,7 @@ def course(request, id):
     course = cursor.fetchone()
 
     cursor.execute(f'''
-        SELECT count(*) as rev_count
+        SELECT count(*) as rev_count, sum(overall_rating) as sum
         FROM user_course_rev
         WHERE course_id={id};
     ''')
@@ -282,7 +281,7 @@ def course(request, id):
         'course': id,
         'course_name': course['course_name'],
         'dept_name': course['dept_name'],
-        'overall_rating': course['overall_rating'],
+        'overall_rating': rev_count['sum'] / rev_count['rev_count'],
         'rev_count': rev_count['rev_count'],
         'reviews': reviews,
     }
@@ -303,8 +302,8 @@ def dept(request, id):
     ''')
     dept = cursor.fetchone()
 
-    cursor.execute(f'''
-        SELECT count(*) as rev_count
+    cursor.execute(f''' 
+        SELECT count(*) as rev_count, sum(overall_rating) as sum_overall, sum(activities_rating) as sum_activities, sum(support_rating) as sum_support
         FROM user_dept_rev
         WHERE department_id={id};
     ''')
@@ -320,9 +319,9 @@ def dept(request, id):
     context = {
         'department': id,
         'dept_name': dept['dept_name'],
-        'overall_rating': dept['overall_rating'],
-        'admin_support': dept['admin_support'],
-        'activities': dept['activities'],
+        'overall_rating': rev_count['sum_overall'] / rev_count['rev_count'],
+        'admin_support': rev_count['sum_support'] / rev_count['rev_count'],
+        'activities': rev_count['sum_activities'] / rev_count['rev_count'],
         'rev_count': rev_count['rev_count'],
         'reviews': reviews,
     }
