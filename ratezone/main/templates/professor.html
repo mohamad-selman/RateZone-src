@@ -105,7 +105,11 @@ text-xs sm:text-base lg:text-lg">
             text-center rounded-md bg-neutral-200">
                 <div>
             {% if request.session.lan != "ar" %}Overall Rating{% else %}التقييم العام{% endif %}
-		    <p class="font-bold text-xl lg:text-3xl">{{ prof.overall_rating }}/5</p>
+            {% if prof.overall_rating == 0.0 %}
+            <p class="font-bold text-xl lg:text-3xl">NA/5</p>
+            {% else %}
+            <p class="font-bold text-xl lg:text-3xl">{{ prof.overall_rating }}/5</p>
+            {% endif %}
             {% if request.session.lan != "ar" %}
 		    <p class="mt-4">based on <span class="font-semibold">{{ rev_count }}</span> total votes from students.</p>
             {% else %}
@@ -247,7 +251,7 @@ text-xs sm:text-base lg:text-lg">
                     <p>{{ rev.student_thoughts }}</p>
                     {% endif %}
                     <div class="flex gap-x-7 mt-3">
-                        {% if rev.course %}
+                        {% if rev.course and rev.course.course != 0 %}
                         <div>
                             <p>Course: {{rev.course.course}}</p>
                             <p>{{ rev.course }}</p>

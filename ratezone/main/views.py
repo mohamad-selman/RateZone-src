@@ -140,7 +140,7 @@ def submit_rate(request, item, id):
 
         if status['success']:
             if item == 'instructor':
-                course_val = request.POST['course']
+                course_val = request.POST.get('course', '0')
                 if str.isdigit(course_val):
                     course_code = course_val
                     try:
